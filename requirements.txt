@@ -1,0 +1,4 @@
+# SNIPER CashFlow Analyzer — Web has NO third-party dependencies.
+# The backend and core are pure Python standard library.
+# This file exists because Python hosts (e.g. Render) run
+# `pip install -r requirements.txt` as the default build step.
