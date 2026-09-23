@@ -170,6 +170,29 @@ details.advanced[open] > summary { margin-bottom: 8px; }
 
 .svg-curve { width: 100%; height: auto; display: block; }
 
+/* ---------- mobile card view (tables become cards on narrow screens) ---------- */
+.cards { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.lvl-card {
+  background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--navy);
+  border-radius: 8px; padding: 9px 12px;
+}
+.lvl-card.emerg { border-left-color: var(--warn); }
+.lvl-head {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  font-size: 14px; margin-bottom: 5px; flex-wrap: wrap;
+}
+details.set-card > summary { cursor: pointer; list-style: none; }
+details.set-card > summary::-webkit-details-marker { display: none; }
+details.set-card[open] > summary { margin-bottom: 6px; }
+.kv-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 3px 14px; font-size: 13px;
+}
+.kv { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px dashed #ececf2; }
+.kv .k { color: var(--muted); }
+.kv .v { font-weight: 600; }
+.kv .v.neg { color: var(--warn); }
+
 @media (max-width: 720px) {
   .topbar-inner { padding: 8px 10px; }
   .brand-text small { display: none; }

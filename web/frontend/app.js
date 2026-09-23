@@ -41,6 +41,29 @@ const fmtMoney = v => fmt(v, 2);
 const fmtLot = v => fmt(v, 2);
 const fmtPct = v => fmt(v, 2);
 
+/* mobile-friendly card view (auto on narrow screens, user can toggle) */
+function isNarrow() { return window.matchMedia("(max-width: 720px)").matches; }
+function useCards() {
+  if (S.ui.cards === "cards") return true;
+  if (S.ui.cards === "table") return false;
+  return isNarrow();
+}
+function viewToggle() {
+  const mode = S.ui.cards || "auto";
+  const label = mode === "cards" ? "การ์ด" : mode === "table" ? "ตาราง"
+    : (useCards() ? "การ์ด (อัตโนมัติ)" : "ตาราง (อัตโนมัติ)");
+  const next = mode === "cards" ? "table" : "cards";
+  return el("button", { class: "btn-ghost btn-small", onclick: () => {
+    S.ui.cards = next;
+    if (S.ui.rerender) S.ui.rerender();
+  } }, "มุมมอง: " + label + " ⇄");
+}
+function kv(k, v, neg) {
+  return el("div", { class: "kv" },
+    el("span", { class: "k" }, k),
+    el("span", { class: "v" + (neg ? " neg" : "") }, v));
+}
+
 const STATUS_LABELS = {
   VERIFIED_FROM_DOCUMENTATION: "Verified / From-document",
   OBSERVED_FROM_TESTING: "Observed",
@@ -481,6 +504,21 @@ function pageGrid(page) {
     }).catch(err => { busy(btn, false); resultBox.replaceChildren(errorBox(err)); });
   }
 
+  function gridRowCard(r) {
+    return el("div", { class: "lvl-card" },
+      el("div", { class: "lvl-head" },
+        el("b", null, "ชั้น " + r.level),
+        el("span", { class: "na" }, "lot " + fmtLot(r.lot))),
+      el("div", { class: "kv-grid" },
+        kv("Entry", fmt(r.entry_price, 2)),
+        kv("ระยะ ($)", fmt(r.distance_from_start, 2)),
+        kv("Lot สะสม", fmtLot(r.cumulative_lot)),
+        kv("Exposure ($)", fmtMoney(r.exposure)),
+        kv("Floating P/L ($)", fmtMoney(r.floating_pl_at_open), r.floating_pl_at_open < 0),
+        kv("Margin ($)", fmtMoney(r.margin)),
+        kv("Avg Entry", r.avg_entry === null ? "N/A" : fmt(r.avg_entry, 2))));
+  }
+
   function renderGrid(data, basket, levels, basketDepth) {
     const g = data.grid;
     const rows = g.rows.map(r => el("tr", null,
@@ -494,9 +532,12 @@ function pageGrid(page) {
       numCell(r.margin, 2),
       numCell(r.avg_entry, 2)));
     const b = basket.basket;
+    S.ui.rerender = () => renderGrid(data, basket, levels, basketDepth);
     resultBox.replaceChildren(
       el("div", { class: "card" },
-        el("h2", null, "ผลลัพธ์ — Grid " + g.side + " · " + g.rows.length + " ชั้น · start " + fmt(g.start_price, 2)),
+        el("div", { style: "display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap" },
+          el("h2", null, "ผลลัพธ์ — Grid " + g.side + " · " + g.rows.length + " ชั้น · start " + fmt(g.start_price, 2)),
+          viewToggle()),
         validationList(data.validation),
         el("div", { class: "metric-grid" },
           metric("Total Lot", fmt(g.total_lot, 2)),
@@ -506,9 +547,11 @@ function pageGrid(page) {
                  (g.final_floating_pl < 0 ? "-" : "") + "$" + fmtMoney(Math.abs(g.final_floating_pl)),
                  "(ที่จุด trigger ล่าสุด)"),
           metric("Avg Entry", fmt(g.avg_entry, 2))),
-        dataTable(
-          ["Level", "ระยะราคา ($)", "Entry Price", "Lot", "Lot สะสม", "Exposure ($)", "Floating P/L ($)", "Margin ($)", "Avg Entry"],
-          rows),
+        useCards()
+          ? el("div", { class: "cards" }, g.rows.map(gridRowCard))
+          : dataTable(
+              ["Level", "ระยะราคา ($)", "Entry Price", "Lot", "Lot สะสม", "Exposure ($)", "Floating P/L ($)", "Margin ($)", "Avg Entry"],
+              rows),
         assumptionsBlock(data)),
       el("div", { class: "card" },
         el("h2", null, "Basket / Partial Close Simulation (ความลึก " + b.levels + " ชั้น)"),
@@ -624,6 +667,25 @@ function pageWorstCase(page) {
     }).catch(err => { busy(btn, false); resultBox.replaceChildren(errorBox(err)); });
   }
 
+  function wcRowCard(r) {
+    return el("div", { class: "lvl-card" + (r.emergency_triggered ? " emerg" : "") },
+      el("div", { class: "lvl-head" },
+        el("b", null, r.scenario + " · เลื่อน $" + fmt(r.adverse_move, 0)),
+        r.emergency_triggered
+          ? el("span", { class: "badge sev-WARNING", title: r.emergency_note }, "⚠ Emergency")
+          : el("span", { class: "na" }, "—")),
+      el("div", { class: "kv-grid" },
+        kv("Grid Levels", String(r.grid_levels)),
+        kv("Total Lots", fmtLot(r.total_lots)),
+        kv("Floating P/L ($)", fmtMoney(r.floating_pl), r.floating_pl < 0),
+        kv("Margin ($)", fmtMoney(r.estimated_margin_used)),
+        kv("Equity ($)", fmtMoney(r.equity)),
+        kv("DD %", fmtPct(r.drawdown_pct)),
+        kv("Margin Level %", r.margin_level_pct === null ? "N/A" : fmt(r.margin_level_pct, 2)),
+        kv("เหลือทุน ($)", fmtMoney(r.remaining_capital)),
+        kv("End Price", fmt(r.end_price, 2))));
+  }
+
   function renderWorst(data) {
     const rows = data.results.map((r, i) => el("tr", null,
       el("td", null, r.scenario),
@@ -641,13 +703,18 @@ function pageWorstCase(page) {
         ? el("span", { class: "badge sev-WARNING", title: r.emergency_note }, "⚠ Emergency")
         : el("span", { class: "na" }, "—"))));
     const notes = [...new Set(data.results.map(r => r.emergency_note))];
+    S.ui.rerender = () => renderWorst(data);
     resultBox.replaceChildren(
       el("div", { class: "card" },
-        el("h2", null, "ผลลัพธ์ (" + data.results.length + " สถานการณ์) — ทุน $" + fmtMoney(data.capital)),
+        el("div", { style: "display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap" },
+          el("h2", null, "ผลลัพธ์ (" + data.results.length + " สถานการณ์) — ทุน $" + fmtMoney(data.capital)),
+          viewToggle()),
         validationList(data.validation),
-        dataTable(
-          ["Scenario", "Movement ($)", "End Price", "Grid Levels", "Total Lots", "Floating P/L ($)", "Margin ($)", "Equity ($)", "DD %", "Margin Level %", "เหลือทุน ($)", "Emergency"],
-          rows),
+        useCards()
+          ? el("div", { class: "cards" }, data.results.map(wcRowCard))
+          : dataTable(
+              ["Scenario", "Movement ($)", "End Price", "Grid Levels", "Total Lots", "Floating P/L ($)", "Margin ($)", "Equity ($)", "DD %", "Margin Level %", "เหลือทุน ($)", "Emergency"],
+              rows),
         el("h3", null, "หมายเหตุ Emergency"),
         el("ul", { class: "issue-list" }, notes.map(n => el("li", null, el("span", { class: "na" }, n)))),
         el("p", { class: "sub" }, "Margin Level % ต่ำ = ใกล้ถูก stop-out ตามกฎโบรกเกอร์ — ดูธงเตือนความเสี่ยงเต็มรูปแบบที่หน้า Risk Dashboard (threshold ปรับได้)"),
@@ -835,6 +902,39 @@ function pageSetBuilder(page) {
     }).catch(err => { busy(btn, false); resultBox.replaceChildren(errorBox(err)); });
   }
 
+  function setCard(r, i) {
+    const m = r.metrics;
+    const warns = m.warnings || [];
+    return el("details", { class: "lvl-card set-card" },
+      el("summary", { class: "lvl-head" },
+        el("span", null,
+          el("b", null, "#" + (i + 1) + " "),
+          "step " + fmt(r.grid_step, 2) + " · lot " + fmt(r.base_lot, 2) +
+          " · mult " + fmt(r.multiplier, 2)),
+        el("span", { class: "badge pass-" + r.passed }, r.passed ? "ผ่าน" : "ไม่ผ่าน")),
+      el("div", { class: "kv-grid" },
+        kv("Basket $", fmt(r.basket_target, 2)),
+        kv("MaxGrid", String(r.max_grid)),
+        kv("Capital", "$" + fmt(r.capital, 0)),
+        kv("Total Lots", fmtLot(m.total_lots)),
+        kv("Max Lot", fmtLot(m.max_single_lot)),
+        kv("DD %", fmtPct(m.estimated_dd_percent)),
+        kv("Worst P/L ($)", fmtMoney(m.estimated_worst_floating_loss), m.estimated_worst_floating_loss < 0),
+        kv("Margin ($)", fmtMoney(m.estimated_margin)),
+        kv("Margin %", fmtPct(m.margin_usage_percent)),
+        kv("Capacity", String(m.grid_capacity_levels)),
+        kv("เด้งกลับ→Target", m.price_move_to_basket_target === null ? "N/A" : "$" + fmt(m.price_move_to_basket_target, 4))),
+      warns.length
+        ? el("div", { style: "margin-top:6px;font-size:12.5px" },
+            el("b", null, "คำเตือน (" + warns.length + ")"),
+            el("ul", { class: "issue-list", style: "margin-top:4px" },
+              warns.map(w => el("li", null, el("span", { class: "na" }, w)))))
+        : el("p", { class: "sub", style: "margin:4px 0 0" }, "ไม่มีคำเตือน"),
+      r.filter_reasons.length
+        ? el("p", { class: "sub", style: "margin:4px 0 0" }, "ไม่ผ่าน filter: " + r.filter_reasons.join("; "))
+        : null);
+  }
+
   function renderSets(data) {
     const rows = [];
     data.combinations.forEach((r, i) => {
@@ -870,14 +970,19 @@ function pageSetBuilder(page) {
       });
       rows.push(main, detail);
     });
+    S.ui.rerender = () => renderSets(data);
     resultBox.replaceChildren(
       el("div", { class: "card" },
-        el("h2", null, "ผลลัพธ์ " + data.total + " ชุด — ผ่าน filter " + data.passed_count + " / ไม่ผ่าน " + data.filtered_count),
-        el("p", { class: "sub" }, data.note + " คลิกแถวเพื่อดูคำเตือนของชุดนั้น"),
-        dataTable(
-          ["#", "GridStep", "BaseLot", "Mult", "Basket $", "MaxGrid", "Capital",
-           "Total Lots", "Max Lot", "DD %", "Worst P/L ($)", "Margin ($)", "Margin %", "Capacity", "Filter", "เหตุผล"],
-          rows),
+        el("div", { style: "display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap" },
+          el("h2", null, "ผลลัพธ์ " + data.total + " ชุด — ผ่าน filter " + data.passed_count + " / ไม่ผ่าน " + data.filtered_count),
+          viewToggle()),
+        el("p", { class: "sub" }, data.note + (useCards() ? " แตะการ์ดเพื่อดูรายละเอียด/คำเตือน" : " คลิกแถวเพื่อดูคำเตือนของชุดนั้น")),
+        useCards()
+          ? el("div", { class: "cards" }, data.combinations.map((r, i) => setCard(r, i)))
+          : dataTable(
+              ["#", "GridStep", "BaseLot", "Mult", "Basket $", "MaxGrid", "Capital",
+               "Total Lots", "Max Lot", "DD %", "Worst P/L ($)", "Margin ($)", "Margin %", "Capacity", "Filter", "เหตุผล"],
+              rows),
         assumptionsBlock(data)));
   }
 
