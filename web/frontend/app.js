@@ -1,4 +1,4 @@
-/* SNIPER CashFlow Analyzer — Web frontend.
+/* SNIPER CashFlow — Web frontend.
  * Contains NO calculation formulas: every number shown is computed by the
  * backend (which calls the shared core/). This file only collects inputs,
  * calls the API, and formats/renders results.
@@ -263,7 +263,7 @@ function render() {
 function pageHome(page) {
   page.append(
     el("div", { class: "hero" },
-      el("h1", null, "SNIPER CashFlow Analyzer"),
+      el("h1", null, "SNIPER CashFlow"),
       el("p", null, "เครื่องมือคำนวณ/จำลอง EA SNIPER CashFlow V1.68 — Grid, Lot, Basket Close, Worst Case และความเสี่ยง — ใช้ Calculation Core ชุดเดียวกับโปรแกรม Desktop ผลลัพธ์เหมือนกันเป๊ะเมื่อ input เหมือนกัน"),
       disclaimerBanner(),
       el("a", { class: "btn-gold", href: "#/settings", style: "display:inline-block;margin-top:14px;text-decoration:none;padding:12px 26px;font-size:16px" }, "เริ่มใช้ Calculator"),

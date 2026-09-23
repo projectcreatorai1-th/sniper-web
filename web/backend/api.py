@@ -1,4 +1,4 @@
-"""API handlers for the SNIPER CashFlow Analyzer web backend.
+"""API handlers for the SNIPER CashFlow web backend.
 
 Every number returned by these handlers is computed by core/* - this module
 contains NO formulas. It parses/validates the request, calls the core
@@ -126,7 +126,7 @@ def health() -> dict:
     rules = ModelVersionStore().active_rules()
     return {
         "status": "ok",
-        "service": "SNIPER CashFlow Analyzer Web",
+        "service": "SNIPER CashFlow Web",
         "ea_version": EA_VERSION,
         "model_version": rules.model_version,
         "core": "core/ (single source of truth)",

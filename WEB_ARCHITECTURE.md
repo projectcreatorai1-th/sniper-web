@@ -1,4 +1,4 @@
-# WEB ARCHITECTURE — SNIPER CashFlow Analyzer (Web Version)
+# WEB ARCHITECTURE — SNIPER CashFlow (Web Version)
 
 > อัปเดต: 2026-09-23 · Web ของ EA SNIPER CashFlow V1.68 Simulator
 > **`core/` คือ Source of Truth เดียว** — Web เรียกใช้ผ่าน Backend โดยตรง ไม่มีสูตรซ้ำ

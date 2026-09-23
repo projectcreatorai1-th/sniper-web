@@ -1,5 +1,5 @@
 @echo off
-rem SNIPER CashFlow Analyzer - Web: START (or just open the browser if already running)
+rem SNIPER CashFlow - Web: START (or just open the browser if already running)
 rem Stop with: stop_web.bat  (or close the minimized server console)
 setlocal
 cd /d "%~dp0"
@@ -16,7 +16,7 @@ curl -s -o nul http://127.0.0.1:%PORT%/api/health
 if not errorlevel 1 goto :open
 
 :start
-echo Starting SNIPER CashFlow Analyzer Web (port %PORT%) ...
+echo Starting SNIPER CashFlow Web (port %PORT%) ...
 start "SNIPER Web Server" /min cmd /c python web\backend\run_server.py
 
 set /a TRIES=0

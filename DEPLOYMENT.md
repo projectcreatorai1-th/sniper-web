@@ -1,4 +1,4 @@
-# DEPLOYMENT — SNIPER CashFlow Analyzer (Web)
+# DEPLOYMENT — SNIPER CashFlow (Web)
 
 > เว็บเป็น WSGI application มาตรฐาน (pure Python stdlib) — deploy กับ WSGI server ใดก็ได้
 > ไม่มี database / login / secrets / external service: แอปเป็น calculator ล้วน ๆ stateless ทุก request

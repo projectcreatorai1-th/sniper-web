@@ -1,5 +1,5 @@
 @echo off
-rem SNIPER CashFlow Analyzer - Web: STOP
+rem SNIPER CashFlow - Web: STOP
 rem Kills the web server started by start_web.bat - PID file first, then port lookup
 setlocal
 cd /d "%~dp0"

@@ -191,8 +191,8 @@ def export_report_html(bundle: ReportBundle, path: str) -> None:
     esc = html_mod.escape
 
     parts.append("<html><head><meta charset='utf-8'>")
-    parts.append(f"<title>SNIPER CashFlow Analyzer Report</title><style>{_CSS}</style></head><body>")
-    parts.append("<h1>SNIPER CashFlow Analyzer — Report</h1>")
+    parts.append(f"<title>SNIPER CashFlow Report</title><style>{_CSS}</style></head><body>")
+    parts.append("<h1>SNIPER CashFlow — Report</h1>")
     parts.append(f"<p class='small'>Generated {esc(d['generated'])} · App v{d['app_version']}</p>")
     parts.append(f"<div class='banner'><b>{esc(d['disclaimer'])}</b></div>")
 

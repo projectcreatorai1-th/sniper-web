@@ -41,7 +41,7 @@ def main() -> None:
     with open(PID_FILE, "w", encoding="utf-8") as f:
         f.write(str(os.getpid()))
     print("=" * 62)
-    print("  SNIPER CashFlow Analyzer — Web (EA V1.68 Simulation Model)")
+    print("  SNIPER CashFlow — Web (EA V1.68 Simulation Model)")
     print("  Core: core/ (single source of truth) — no formulas duplicated")
     print("=" * 62)
     print(f"  Open:  http://{host}:{port}")

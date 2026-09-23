@@ -1,4 +1,4 @@
-"""WSGI application for the SNIPER CashFlow Analyzer web version.
+"""WSGI application for the SNIPER CashFlow web version.
 
 Standard-library only (matches the project's zero-dependency policy).
 Routing + static file serving + error handling live here; the actual API

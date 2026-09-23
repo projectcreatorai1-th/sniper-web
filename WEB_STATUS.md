@@ -1,4 +1,4 @@
-# WEB STATUS — SNIPER CashFlow Analyzer (Web Version)
+# WEB STATUS — SNIPER CashFlow (Web Version)
 
 > อัปเดต: 2026-09-23 · สถานะ: **ใช้งานได้จริง (Working)** — ไม่มี mock/placeholder/fake result/TODO ค้างงาน
 > Core เดิม (`core/`) **ไม่ถูกแก้แม้แต่บรรทัดเดียว** — Desktop tests ผ่าน 157/157 เหมือนเดิม

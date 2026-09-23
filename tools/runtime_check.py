@@ -72,7 +72,7 @@ def main():
 
     # 2. frontend
     status, headers, data = http("GET", "/")
-    check("frontend / (index.html)", status == 200 and b"SNIPER CashFlow Analyzer" in data)
+    check("frontend / (index.html)", status == 200 and b"SNIPER CashFlow" in data)
     status, headers, data = http("GET", "/static/app.js")
     check("frontend /static/app.js", status == 200 and b"javascript" in headers.get("Content-Type", "").encode())
 

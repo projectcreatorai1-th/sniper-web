@@ -19,9 +19,9 @@ from create_desktop_shortcut import ICON_PATH, verify_shortcut, write_icon  # no
 
 SHORTCUTS = [
     ("SNIPER Web - Start", os.path.join(ROOT, "start_web.bat"),
-     "SNIPER CashFlow Analyzer Web — start server + open browser"),
+     "SNIPER CashFlow Web — start server + open browser"),
     ("SNIPER Web - Stop", os.path.join(ROOT, "stop_web.bat"),
-     "SNIPER CashFlow Analyzer Web — stop server"),
+     "SNIPER CashFlow Web — stop server"),
 ]
 
 

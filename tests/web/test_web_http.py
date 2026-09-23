@@ -65,7 +65,7 @@ class LiveServerTest(unittest.TestCase):
         status, headers, data = self.request("GET", "/")
         self.assertEqual(status, 200)
         self.assertIn("text/html", headers["content-type"])
-        self.assertIn("SNIPER CashFlow Analyzer", data.decode("utf-8"))
+        self.assertIn("SNIPER CashFlow", data.decode("utf-8"))
         self.assertIn("nosniff", headers["x-content-type-options"])
 
     def test_static_js_css(self):

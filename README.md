@@ -1,4 +1,4 @@
-# SNIPER CashFlow Analyzer — Web (EA V1.68 Simulation Model)
+# SNIPER CashFlow — Web (EA V1.68 Simulation Model)
 
 เครื่องมือคำนวณ/จำลอง EA SNIPER CashFlow V1.68 แบบเว็บ — Grid Calculator, Worst Case
 Simulator, Risk Dashboard, Set Builder, Backtest Analyzer และรายงาน JSON/CSV/HTML
