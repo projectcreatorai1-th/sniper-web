@@ -216,8 +216,10 @@ const NAV = [
 ];
 function buildNav() {
   const nav = $("#nav");
-  nav.replaceChildren(...NAV.map(([href, label]) =>
-    el("a", { href, "data-route": href.slice(1) }, label)));
+  nav.replaceChildren(
+    ...NAV.map(([href, label]) =>
+      el("a", { href, "data-route": href.slice(1) }, label)),
+    el("a", { href: "/static/manual.html", target: "_blank" }, "คู่มือ 📘"));
 }
 function setActiveNav(route) {
   document.querySelectorAll("#nav a").forEach(a =>
@@ -254,7 +256,12 @@ function pageHome(page) {
         "ทุกตัวเลขแนบ Assumption IDs พร้อมสถานะ Verified / Observed / Model assumption / Unknown",
       ].map(t => el("li", { style: "margin:4px 0" }, t))),
       el("p", { class: "sub" },
-        "ข้อมูลที่ขาดแสดงเป็น N/A เสมอ — โปรแกรมไม่เดาค่า ไม่จัดอันดับว่าค่าไหน \"ดีที่สุด\" และไม่รับประกันกำไร")));
+        "ข้อมูลที่ขาดแสดงเป็น N/A เสมอ — โปรแกรมไม่เดาค่า ไม่จัดอันดับว่าค่าไหน \"ดีที่สุด\" และไม่รับประกันกำไร"),
+      el("p", null,
+        "📗 ยังใหม่กับโปรแกรม? เปิด ",
+        el("a", { href: "/static/manual.html", target: "_blank", style: "color:#16213e;font-weight:700" },
+          "คู่มือการใช้งานฉบับเต็ม"),
+        " ได้ตลอดเวลา (หรือกดเมนู \"คู่มือ\" ด้านบน)")));
 }
 
 /* ---------- EA Settings ---------- */

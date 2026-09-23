@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>คู่มือการใช้งาน — SNIPER CashFlow Analyzer Web</title>
+<style>
+:root{--navy:#16213e;--navy2:#1a1a2e;--gold:#c9a227;--bg:#f5f5f7;--line:#dcdce4;--muted:#6a6f7d;--warn:#a33333;--ok:#1a7a2e}
+*{box-sizing:border-box}
+body{font-family:"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:#1f2430;margin:0;line-height:1.65;font-size:15.5px}
+.wrap{max-width:900px;margin:0 auto;padding:24px 18px 60px}
+header{background:var(--navy2);border-bottom:3px solid var(--gold);color:#fff;padding:26px 18px;text-align:center}
+header h1{margin:0 0 4px;font-size:26px}
+header p{margin:4px 0;color:#cfd3e0;font-size:13.5px}
+.banner{background:#fff3cd;border:1px solid #e0c46c;color:#6b5313;padding:12px 16px;border-radius:8px;margin:18px 0;font-size:14.5px}
+h2{color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:6px;margin-top:38px;font-size:21px}
+h3{color:var(--navy);margin:22px 0 6px;font-size:17px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:#fff;margin:10px 0}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--navy);color:#fff}
+tr:nth-child(even){background:#f6f6fa}
+code,.k{background:#eef0f5;border-radius:4px;padding:1px 6px;font-size:13.5px}
+.step{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:12px 16px;margin:10px 0}
+.note{background:#e8eaf1;border-left:4px solid #4a5064;border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;margin:10px 0}
+.danger{background:#fbe3e3;border-left:4px solid var(--warn);border-radius:0 8px 8px 0;padding:10px 14px;font-size:14px;margin:10px 0}
+ul{margin:8px 0}
+a{color:var(--navy)}
+.badge{display:inline-block;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
+.b-g{background:#e2f4e6;color:var(--ok)}.b-a{background:#fdf0d5;color:#b8860b}.b-u{background:#ececf1;color:#565b69}.b-b{background:#e3ecfd;color:#2563eb}
+footer{margin-top:44px;color:var(--muted);font-size:13px;text-align:center;border-top:1px solid var(--line);padding-top:14px}
+@media print{body{background:#fff}.wrap{max-width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <h1>📘 คู่มือการใช้งาน SNIPER CashFlow Analyzer (Web)</h1>
+  <p>EA SNIPER CashFlow V1.68 · Simulation Model · ใช้ Calculation Core ชุดเดียวกับโปรแกรม Desktop</p>
+</header>
+<div class="wrap">
+
+<div class="banner"><b>Simulation Model — not verified internal EA formula</b><br>
+ตัวเลขทั้งหมดเป็นผล "โมเดลจำลอง" ของโปรแกรมวิเคราะห์ ไม่ใช่สูตรภายในที่ยืนยันจากไฟล์ EA ตัวจริง (.ex5)
+เครื่องมือนี้เป็นเครื่องคิดเลข/จำลองเท่านั้น — <b>ไม่มีการเชื่อมต่อ MT5 ไม่มีคำสั่งซื้อขาย และไม่รับประกันกำไร</b></div>
+
+<h2>1. โปรแกรมนี้คืออะไร (และไม่ใช่อะไร)</h2>
+<p>เป็นเครื่องมือ<b>คำนวณและจำลอง</b>พฤติกรรมของ EA SNIPER CashFlow V1.68: ใส่ค่าพารามิเตอร์ 27 ตัวของ EA แล้วดูว่ากริดจะออกไม้แบบไหน
+ใช้ทุน/มาร์จิ้นเท่าไร ถ้าราคาวิ่งสวนทางจะเสียจุดไหน และธงเตือนความเสี่ยงมีอะไรบ้าง</p>
+<div class="danger">ไม่ใช่: โปรแกรมเทรด · ตัว EA · การรับประกันกำไร · การบอกว่าค่าไหน "ดีที่สุด/ปลอดภัยที่สุด"
+โปรแกรมไม่จัดอันดับและไม่ให้คะแนน — แสดงแต่ตัวเลขจริงจากการคำนวณ ตัดสินใจเป็นของผู้ใช้ทุกครั้ง</div>
+
+<h2>2. เปิดใช้งาน 2 วิธี</h2>
+<table>
+<tr><th>วิธี</th><th>ลิงก์ / วิธีเปิด</th><th>หมายเหตุ</th></tr>
+<tr><td><b>ออนไลน์</b> (แนะนำ ส่งต่อได้)</td><td><code>https://sniper-web.onrender.com</code></td><td>เปิดได้ทุกที่ ทุกเครื่อง ไม่ต้องติดตั้ง · โหมดฟรี: ไม่มีคนใช้ ~15 นาที เว็บหลับ คนเข้าคนแรกรอ ~30–60 วิ</td></tr>
+<tr><td><b>ในเครื่อง</b></td><td>Desktop → <b>SNIPER Web - Start</b> → เปิด <code>http://127.0.0.1:8765</code></td><td>ใช้ได้แม้ไม่มีเน็ต · ปิดด้วยไอคอน <b>SNIPER Web - Stop</b></td></tr>
+</table>
+<div class="note">เช็คว่าเว็บในเครื่องรันอยู่หรือไม่: เปิด <code>http://127.0.0.1:8765/api/health</code> ถ้าขึ้น <code>"status": "ok"</code> = รันอยู่
+· ค่าที่กรอกทั้งสองแบบถูกจำไว้ใน browser ของเครื่องนั้น ๆ (ออนไลน์กับในเครื่องไม่รวมกัน)</div>
+
+<h2>3. เริ่มต้นใน 6 ขั้น (ทดลองแรก)</h2>
+<div class="step"><b>ขั้น 1</b> — หน้าแรก → กด <b>เริ่มใช้ Calculator</b></div>
+<div class="step"><b>ขั้น 2</b> — หน้า EA Settings → กดปุ่ม preset <b>"Seller preset - Capital $500"</b> (ค่าจะเปลี่ยนให้เอง)</div>
+<div class="step"><b>ขั้น 3</b> — ช่อง Capital ใส่ <code>500</code> → กด <b>บันทึกและตรวจสอบ</b> → ดูผลตรวจ (ถ้าไม่มี ERROR จะมีลิงก์ "ถัดไป" ขึ้นมา)</div>
+<div class="step"><b>ขั้น 4</b> — Grid Calculator → กด <b>Calculate</b> → ดูตารางไม้แต่ละชั้น + แผง Basket ด้านล่าง</div>
+<div class="step"><b>ขั้น 5</b> — Worst Case → กด <b>Simulate</b> → ดูสถานการณ์ราคาวิ่งสวน 10–100 ดอลลาร์</div>
+<div class="step"><b>ขั้น 6</b> — Risk Dashboard → กด <b>Calculate</b> → ดูสรุปความเสี่ยง + ธงเตือน</div>
+
+<h2>4. ทีละหน้า</h2>
+
+<h3>4.1 EA Settings — ตั้งค่า EA และทุน</h3>
+<ul>
+<li><b>Preset 3 แบบ</b>: Default (คู่มือ PDF) / ทุน $500 / ทุน $3000 — ค่าจริงจากเอกสารผู้ขาย (ปุ่มจะเขียนทับค่าปัจจุบันทันที)</li>
+<li><b>Capital</b>: เงินทุนที่ใช้จำลอง (USD)</li>
+<li><b>Symbol</b>: XAUUSD (default), BTCUSD, EURUSD — กด "ตั้งค่า Symbol Profile ละเอียด" เพื่อแก้ contract size / ราคาอ้างอิง / lot min-max-step ตามโบรกเกอร์จริง</li>
+<li><b>พารามิเตอร์ 27 ตัว</b>: กลุ่มพื้นฐาน (Grid, Lot) แสดงเสมอ · กลุ่มขั้นสูง (Trailing/Partial/Emergency/เวลา) ซ่อนอยู่ใน "พารามิเตอร์ขั้นสูง"</li>
+<li><b>บันทึกและตรวจสอบ</b>: ตรวจค่ากับข้อจำกัดโบรกเกอร์จริง (เช่น BaseLot 0.005 ต่ำกว่าขั้นต่ำ 0.01, leverage 0, เวลาผิดรูปแบบ) — <span class="badge b-a">ERROR</span> ต้องแก้ก่อนคำนวณได้ · <span class="badge b-u">WARNING/INFO</span> เป็นข้อควรรู้</li>
+<li><b>รีเซ็ต</b>: ล้างค่าทั้งหมดกลับ default</li>
+</ul>
+
+<h3>4.2 Grid Calculator — ตารางไม้รอบรอบ</h3>
+<p>เลือกฝั่ง (BUY/SELL), จำนวนชั้น (หรือ custom 1–500), แก้ค่าด่วน GridStep/BaseLot/Multiplier ได้เลยในหน้าเดียว แล้วกด Calculate</p>
+<table>
+<tr><th>คอลัมน์</th><th>ความหมาย</th></tr>
+<tr><td>Level</td><td>ลำดับไม้ที่ 1, 2, 3, … (ไม้ที่ 1 = ราคาเริ่มรอบ)</td></tr>
+<tr><td>ระยะราคา ($)</td><td>ระยะห่างจากราคาเริ่มต้น (= (ลำดับ−1) × GridStepUSD)</td></tr>
+<tr><td>Entry Price</td><td>ราคาที่ไม้นั้นจะถูกเปิด (BUY grid วิ่งลง / SELL grid วิ่งขึ้น)</td></tr>
+<tr><td>Lot / Lot สะสม</td><td>ขนาดไม้ (โตตาม Multiplier) และผลรวมสะสมถึงชั้นนั้น</td></tr>
+<tr><td>Exposure ($)</td><td>มูลค่าพอร์ตที่ถือ (ราคา × ขนาด × contract size)</td></tr>
+<tr><td>Floating P/L ($)</td><td>กำไร/ขาดทุนลอยตัว <b>ณ วินาทีที่ไม้ชั้นนั้นถูกเปิด</b> — ยิ่งชั้นลึกยิ่งติดลบมาก (ค่าประมาณ ไม่รวม spread/commission/swap)</td></tr>
+<tr><td>Margin ($)</td><td>มาร์จิ้นที่ถูกล็อกถึงชั้นนั้น (คิดจาก leverage ที่ตั้ง)</td></tr>
+<tr><td>Avg Entry</td><td>ราคาเฉลี่ยถ่วงน้ำหนักของไม้ที่ถืออยู่</td></tr>
+</table>
+<p><b>แผง Basket / Partial Close</b> (ล่างสุด): สรุปว่าถ้าราคาแช่อยู่จุดลึกสุดของ basket — ต้องเด้งกลับอีกกี่ดอลลาร์ถึงจะถึงจุด partial close / จุดปิดทั้งชุด (BasketCloseAllUSD) และหลัง partial แล้วเหลือ lot เท่าไร</p>
+
+<h3>4.3 Worst Case Simulator — ราคาวิ่งสวนทาง</h3>
+<ul>
+<li>เลือก "ระยะ movement" ได้หลายค่าพร้อมกัน (10/20/30/50/75/100 ดอลลาร์ หรือกำหนดเอง)</li>
+<li>3 สถานการณ์: <b>BUY_ADVERSE</b> (ราคาลง — กริด BUY ต่อไม้), <b>SELL_ADVERSE</b> (ราคาขึ้น), <b>BOTH_SIDES</b> (เปิดสองฝั่งพร้อมกันตามโมเดล)</li>
+<li>ดู: จำนวนชั้นที่เปิด · lot รวม · Floating P/L · Equity คงเหลือ · DD% · <b>Margin Level %</b> (ต่ำ = เข้าใกล้โดน stop-out ตามกฎโบรกเกอร์)</li>
+<li>คอลัมน์ Emergency: ถ้าติด ⚠ = ระยะเกิน EmergencyDistanceFromCycleUSD ที่ตั้งไว้ (รายละเอียดอยู่ในหมายเหตุใต้ตาราง)</li>
+</ul>
+
+<h3>4.4 Risk Dashboard — สรุปความเสี่ยง</h3>
+<p>รวมตัวเลขจากสถานการณ์อ้างอิง (movement + ความลึกกริด ตาม threshold ที่คุณตั้ง) เป็นการ์ดสรุป + <b>Risk Flags</b> เช่น
+HIGH ESTIMATED DD / LOW CAPITAL BUFFER / HIGH MARGIN USAGE / EMERGENCY STOP DISABLED
+— ธงทั้งหมดเทียบกับ threshold ของคุณเอง แก้ได้ทุกช่องในหน้านั้น (กด "ใช้ threshold ค่าเริ่มต้น" เพื่อกลับค่าเดิม)
+ธง 2 ตัวแรกที่ขึ้นเสมอ: MODEL ASSUMPTION และ EA BEHAVIOR NOT VERIFIED — เป็นการย้ำความซื่อสัตย์ของโมเดล ไม่ใช่สัญญาณอันตรายเฉพาะ</p>
+
+<h3>4.5 Set Builder — สร้างชุดค่าผสม</h3>
+<ul>
+<li>กรอกรายการค่าคั่นด้วยจุลภาค เช่น GridStep <code>5.0, 8.0</code> × Multiplier <code>1.08, 1.10, 1.20</code> × BaseLot <code>0.1</code> → ได้ทุก combination (2×3×1 = 6 ชุด) พร้อมผลคำนวณจริงทุกชุด</li>
+<li>ตัวกรองไม่บังคับ: DD ≤ x%, Margin ≤ x%, ชั้น ≤ x, ไม้เดี่ยว ≤ x lot — แถวไหนไม่ผ่านจะบอกเหตุผล</li>
+<li><b>ผลลัพธ์เรียงตามลำดับที่สร้าง ไม่มีการจัดอันดับ/คะแนน/ผู้ชนะ</b> — คลิกแถวเพื่อดูคำเตือน validation ของชุดนั้น</li>
+<li>จำกัด 300 ชุดต่อครั้ง (กันเครื่องทำงานหนัก)</li>
+</ul>
+
+<h3>4.6 Backtest Analyzer — นำเข้าผลทดสอบจริง</h3>
+<ul>
+<li>อัปโหลดไฟล์จาก MT5 Strategy Tester: <b>CSV</b> (deals export), <b>HTML</b> (report), <b>TXT</b> — ไม่เกิน 8MB</li>
+<li>แสดง Net Profit, Profit Factor, Max DD, equity curve, ความลึกกริดสูงสุด, lot สูงสุด, ช่วงขาดทุนแรงสุด</li>
+<li><b>ค่าไหนไม่มีในไฟล์จริง แสดง N/A</b> — โปรแกรมไม่เดาค่า ไม่ประมาณเพิ่ม</li>
+<li>ไฟล์ถูกอ่านเป็นข้อความเท่านั้น ไม่มีการรันโค้ดใด ๆ จากไฟล์ที่อัปโหลด</li>
+</ul>
+
+<h3>4.7 รายงาน (Reports)</h3>
+<p>เลือกส่วนที่จะรวม (Grid / Worst Case / Risk / Basket / แนบผล Backtest ล่าสุด) + รูปแบบ:
+<b>JSON** (ข้อมูลดิบ) · <b>CSV</b> (ตาราง) · <b>HTML</b> — ไฟล์ HTML เปิดใน browser ได้และกด Ctrl+P พิมพ์เป็น PDF ได้ทันที
+ทุกรายงานมี assumption IDs + disclaimer ครบในตัว</p>
+
+<h3>4.8 Assumptions — ทะเบียนสมมติฐาน</h3>
+<p>ทุกตัวเลขในเว็บยึดสมมติฐานที่ระบุชัดเจน 4 สถานะ:</p>
+<table>
+<tr><th>สถานะ</th><th>ความหมาย</th></tr>
+<tr><td><span class="badge b-g">Verified / From-document</span></td><td>ระบุไว้ในคู่มือ/เอกสารผู้ขาย</td></tr>
+<tr><td><span class="badge b-b">Observed</span></td><td>ยืนยันจากการบันทึกพฤติกรรม MT5 จริง</td></tr>
+<tr><td><span class="badge b-a">Model assumption</span></td><td>สมมติฐานของโมเดลจำลอง (ยังไม่ยืนยัน)</td></tr>
+<tr><td><span class="badge b-u">Unknown</span></td><td>ไม่มีข้อมูล — แสดงเป็น Unknown/N/A เสมอ ไม่เดา</td></tr>
+</table>
+<p>ทุกหน้าผลการคำนวณมี "assumption chips" ให้คลิกดูรายละเอียดว่าตัวเลขชุดนั้นอิงอะไรบ้าง</p>
+
+<h2>5. ศัพท์ที่ควรรู้</h2>
+<table>
+<tr><th>คำ</th><th>ความหมายสั้น ๆ</th></tr>
+<tr><td>Grid / ชั้น (Level)</td><td>การเปิดไม้เพิ่มเป็นขั้น ๆ เมื่อราคาวิ่งสวนทิศ (averaging)</td></tr>
+<tr><td>GridStepUSD</td><td>ระยะห่างราคาระหว่างไม้ (ดอลลาร์ของราคาสินทรัพย์)</td></tr>
+<tr><td>BaseLot / LotMultiplier</td><td>ขนาดไม้แรก / ตัวคูณโตของไม้ถัดไป (โมเดล: lot = BaseLot × Multiplier^(ชั้น−1))</td></tr>
+<tr><td>Basket Close</td><td>ปิดทั้งชุดเมื่อกำไรรวมสุทธิถึง BasketCloseAllUSD</td></tr>
+<tr><td>Partial Close</td><td>ปิดบางส่วน (ตาม %) เมื่อกำไรรวมถึงจุด trigger</td></tr>
+<tr><td>Floating P/L</td><td>กำไร/ขาดทุนลอยตัวของไม้ที่ยังถือ</td></tr>
+<tr><td>Equity</td><td>ทุน + กำไร/ขาดทุนลอยตัว</td></tr>
+<tr><td>DD (Drawdown)</td><td>% ที่ equity ต่ำกว่าจุดสูงสุด — ยิ่งสูงยิ่งเสี่ยง</td></tr>
+<tr><td>Margin / Margin Level %</td><td>เงินค้ำที่ถูกล็อก / (Equity ÷ Margin × 100) — ต่ำกว่าระดับโบรกเกอร์ = เสี่ยง stop-out ถูกปิดเอง</td></tr>
+<tr><td>Exposure</td><td>มูลค่าพอร์ตที่เปิดค้าง (ยังไม่ใช่ความเสี่ยงโดยตัวมันเอง)</td></tr>
+<tr><td>Emergency Stop</td><td>กลไกฉุกเฉินของ EA เมื่อราคาวิ่งเกินระยะที่ตั้ง (ปิดอยู่โดย default)</td></tr>
+</table>
+
+<h2>6. คำถามที่พบบ่อย</h2>
+<h3>เว็บออนไลน์เปิดช้า / ขึ้นรอเปิดครั้งแรก?</h3>
+<p>ปกติของโหมดฟรี (หลับหลังไม่มีคนใช้ 15 นาที) รอสัก 30–60 วินาทีแล้วรีเฟรช — ถ้าเข้าไม่ได้เลยให้ลอง: <code>https://sniper-web.onrender.com/api/health</code></p>
+<h3>เว็บในเครื่องเปิดไม่ได้?</h3>
+<p>กดไอคอน <b>SNIPER Web - Start</b> บน Desktop ก่อน แล้วรีเฟรชหน้าเว็บ (F5) · ยังไม่ได้ → กด SNIPER Web - Stop แล้ว Start ใหม่</p>
+<h3>ค่าที่กรอกหาย?</h3>
+<p>ค่าถูกจำใน browser ที่ใช้ (เคลียร์ประวัติ/ใช้โหมดไม่ระบุตัวตน = หาย) — หน้า EA Settings มีปุ่ม "รีเซ็ตเป็นค่าเริ่มต้น" เมื่อไหร่ก็ได้</p>
+<h3>ทำไม lot ไม้ถัดไปไม่ตรงกับ EA จริงที่เห็นใน MT5?</h3>
+<p>สูตร lot progression เป็น MODEL ASSUMPTION (ดูหน้า Assumptions) — ถ้ามีข้อมูลจริงจาก MT5 ให้เทียบผ่านหน้า Behavior Verification ของโปรแกรม Desktop เพื่อปรับสถานะสมมติฐาน</p>
+<h3>เอาผลไปให้คนอื่นดูยังไง?</h3>
+<p>หน้ารายงาน → HTML → "เปิด HTML ในแท็บใหม่" → Ctrl+P พิมพ์/บันทึก PDF ส่งต่อได้ หรือส่งลิงก์เว็บให้เขาลองเอง</p>
+<h3>ข้อมูลปลอดภัยไหม?</h3>
+<p>เว็บคำนวณล้วน ๆ: ไม่มี login ไม่มีการเก็บข้อมูลส่วนตัวบน server (ค่าพารามิเตอร์อยู่แค่ใน browser คุณ) ไม่มีคำสั่งซื้อขาย · ไฟล์ที่อัปโหลดถูกอ่านเป็นข้อความแล้วลบทันที จำกัดชนิด/ขนาด</p>
+
+<h2>7. ข้อจำกัดที่ควรทราบ</h2>
+<ul>
+<li>การคำนวณ <b>ไม่รวม spread / commission / swap</b> ของโบรกเกอร์จริง (ระบุไว้ใน PL_CONVERSION_ASSUMPTION_001)</li>
+<li>จำนวนชั้นกริดสูงสุดข้างใน EA จริงไม่มีใครรู้ (Unknown) — เว็บให้คุณเลือกความลึกที่จะวิเคราะห์เอง</li>
+<li>พฤติกรรมข้างใน .ex5 ยืนยันไม่ได้ (ห้าม decompile) — ทุกผลคือโมเดลจำลอง ควรตรวจกับ Strategy Tester จริงเสมอ</li>
+<li>เว็บออนไลน์โหมดฟร่ีมีขีดจำกัดทรัพยากร (ตารางเกิน 300 ชุด/ครั้ง ฯลฯ)</li>
+</ul>
+
+<footer>
+คู่มือฉบับนี้อยู่ในเว็บที่เมนู "คู่มือ" · วันที่ปรับปรุง 2026-09-23 ·
+SNIPER CashFlow Analyzer Web — Calculator/Simulator เท่านั้น ไม่ใช่คำแนะนำการลงทุน
+</footer>
+</div>
+</body>
+</html>
