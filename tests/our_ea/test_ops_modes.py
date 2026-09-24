@@ -148,7 +148,7 @@ class TestDataPipeline(unittest.TestCase):
                 "requested_lot": 0.2, "filled_lot": 0.1,
                 "slippage": 0.3}])
         q = dp.execution_quality(ev)
-        self.assertEqual(q["order_latency_ms"]["n"], 3)
+        self.assertEqual(q["order_latency_ms"]["n"], 2)  # consecutive submit->result pairs
         self.assertGreaterEqual(q["order_latency_ms"]["p95"],
                                 q["order_latency_ms"]["p50"])
         self.assertEqual(q["rejections"], 1)
