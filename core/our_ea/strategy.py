@@ -127,6 +127,15 @@ class StrategyCore:
         # flat -> open a new cycle (R-BOTH-SIDES: initial BUY+SELL pair)
         if self.basket is None or self.basket.is_flat():
             if self.basket is not None:
+                # flat while state still active = every entry was rejected
+                self._emit("CYCLE_END", cycle_id=self.basket.cycle_id,
+                           basket_id=self.basket.basket_id,
+                           reason="all entries rejected — cycle abandoned",
+                           trace_id=trace)
+                if self.sm.can("ALL_ENTRIES_FAILED"):
+                    self.sm.transition("ALL_ENTRIES_FAILED",
+                                       reason="entries not filled",
+                                       trace_id=trace)
                 self._finish_cycle(prices, trace)
             self._open_cycle(prices, spread_usd, trace)
             return self._diag("cycle_opened")
@@ -151,8 +160,8 @@ class StrategyCore:
                 self.partial_engine.decide_trigger(floating,
                                                    self.basket.total_lots())
             except PartialDecisionUnavailable as ex:
-                self._uncertainty(RULE_PARTIAL_EXISTS, state=self.sm.state,
-                                  reason=str(ex), trace_id=trace)
+                self._uncertainty(RULE_PARTIAL_EXISTS, self.sm.state,
+                                  str(ex), trace)
         return self._diag("tick")
 
     # ------------------------------------------------------------- actions
@@ -288,6 +297,7 @@ class StrategyCore:
             pl = self.accounting.position_pl(closed.side, closed.entry_price,
                                              res.price, closed.lot)
             closed_pl.append(pl)
+            self.realized_gross = round(self.realized_gross + pl, 8)
             self._emit("BASKET_CLOSE", side=closed.side, lot=closed.lot,
                        price=res.price, position_id=closed.position_id,
                        cycle_id=self.basket.cycle_id,
@@ -295,7 +305,6 @@ class StrategyCore:
                        rule_id="R-BASKET-TRIGGER", hypothesis_id=hypothesis_id,
                        execution_mode=self.adapter.mode, trace_id=trace,
                        reason=f"pl {pl:+.2f}")
-        self.realized_gross += sum(closed_pl)
         self.sm.transition("CLOSED_ALL", trace_id=trace)
         self._emit("CYCLE_END", state_before=before, state_after=self.sm.state,
                    cycle_id=self.basket.cycle_id,
