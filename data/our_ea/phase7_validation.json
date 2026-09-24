@@ -1,0 +1,129 @@
+{
+ "schema": "PHASE7_REAL_DATA_VALIDATION_V1",
+ "generated": "2026-09-25T03:26:45",
+ "principle": "No Evidence = No Promotion; OUR EA behaviour never claimed as V1.68",
+ "dataset_lineage": {
+  "dataset": "replay_dataset_v1.json",
+  "dataset_hash": "994955EA1889409A3B71C15C799B2802E0D9CF5E42DB277D420FA0835B3C0705",
+  "split": "chronological per account 60/20/20",
+  "sizes": {
+   "DEVELOPMENT": 486,
+   "VALIDATION": 163,
+   "OOS": 163
+  },
+  "tuned_on_oos": false
+ },
+ "results": {
+  "DEVELOPMENT": {
+   "cycles": 486,
+   "lot_floor": {
+    "checked": 2664,
+    "errors": 0,
+    "pct": 0.0
+   },
+   "direction": {
+    "checked": 1692,
+    "errors": 2,
+    "pct": 0.118
+   },
+   "basket_violation_pct": {
+    "H_GROSS_1_00": 3.29,
+    "H_PER_LOT_0_50": 0.21,
+    "H_PER_LOT_0_85": 1.03,
+    "H_GROSS_1_68": 94.03
+   }
+  },
+  "VALIDATION": {
+   "cycles": 163,
+   "lot_floor": {
+    "checked": 878,
+    "errors": 0,
+    "pct": 0.0
+   },
+   "direction": {
+    "checked": 552,
+    "errors": 1,
+    "pct": 0.181
+   },
+   "basket_violation_pct": {
+    "H_GROSS_1_00": 2.45,
+    "H_PER_LOT_0_50": 0.0,
+    "H_PER_LOT_0_85": 0.61,
+    "H_GROSS_1_68": 96.93
+   }
+  },
+  "OOS": {
+   "cycles": 163,
+   "lot_floor": {
+    "checked": 909,
+    "errors": 0,
+    "pct": 0.0
+   },
+   "direction": {
+    "checked": 583,
+    "errors": 0,
+    "pct": 0.0
+   },
+   "basket_violation_pct": {
+    "H_GROSS_1_00": 1.23,
+    "H_PER_LOT_0_50": 0.0,
+    "H_PER_LOT_0_85": 0.61,
+    "H_GROSS_1_68": 96.32
+   }
+  }
+ },
+ "evidence_review": [
+  {
+   "rule": "R-LOT-FLOOR",
+   "decision": "STAY_VERIFIED",
+   "reason": "OOS errors 0/909"
+  },
+  {
+   "rule": "R-GRID-DIRECTION",
+   "decision": "STAY_VERIFIED",
+   "reason": "OOS exception rate 0.0% within documented 0.18%"
+  },
+  {
+   "rule": "R-BASKET-TRIGGER",
+   "decision": "STAY_PARTIAL",
+   "reason": "OOS-compatible set ['H_GROSS_1_00', 'H_PER_LOT_0_50', 'H_PER_LOT_0_85'] — no single winner; promotion impossible without evaluation-instant data"
+  },
+  {
+   "rule": "R-ACCUM-1-68",
+   "decision": "STAY_REJECTED",
+   "reason": "OOS violations 96.32%"
+  },
+  {
+   "rule": "R-PARTIAL-TRIGGER",
+   "decision": "STAY_UNKNOWN",
+   "reason": "no new evidence class in existing close-side dataset"
+  },
+  {
+   "rule": "R-PARTIAL-VOLUME",
+   "decision": "STAY_UNKNOWN",
+   "reason": "no new evidence class in existing close-side dataset"
+  },
+  {
+   "rule": "R-EMERGENCY",
+   "decision": "STAY_UNKNOWN",
+   "reason": "no new evidence class in existing close-side dataset"
+  },
+  {
+   "rule": "R-RESTART-RECOVERY",
+   "decision": "STAY_UNKNOWN",
+   "reason": "no new evidence class in existing close-side dataset"
+  },
+  {
+   "rule": "R-GRID-TRIGGER",
+   "decision": "STAY_PARTIAL",
+   "reason": "anchor/level ambiguity unchanged"
+  },
+  {
+   "rule": "R-PARTIAL-LEVEL",
+   "decision": "STAY_PARTIAL",
+   "reason": "anchor/level ambiguity unchanged"
+  }
+ ],
+ "promotion_count": 0,
+ "status": "PASS-WITH-UNKNOWN (no promotions; consistency confirmed on OOS; 4 UNKNOWN + 3 PARTIAL preserved)"
+}
