@@ -95,6 +95,8 @@ class RiskGuard:
             v.append(f"max_spread {self.limits.max_spread_usd}")
         if self.state.kill_switch:
             v.append("manual kill switch engaged")
+        if self.state.consecutive_failures >= self.limits.max_consecutive_failures:
+            v.append(f"consecutive_failures {self.state.consecutive_failures}")
         return RiskDecision(allowed=not v, violations=v)
 
     def check_margin(self, margin_used: float, equity: float) -> RiskDecision:

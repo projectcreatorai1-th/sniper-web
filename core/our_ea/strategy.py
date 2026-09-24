@@ -138,6 +138,13 @@ class StrategyCore:
             self._emit("ERROR", reason="invalid price (<=0) — tick skipped",
                        trace_id=self._trace())
             return self._diag("invalid_price_skipped")
+        # per-tick volatility guard (OUR_EA_POLICY RK-1.1)
+        vol = self.risk.check_tick_volatility(buy_price)
+        if not vol.allowed:
+            self.tick_no += 1
+            self._emit("RISK_BLOCK", reason=";".join(vol.violations),
+                       trace_id=self._trace())
+            return self._diag("volatility_block")
         # stale / out-of-order guard (only when timestamps are supplied)
         if ts:
             if self._last_ts and ts < self._last_ts:
@@ -310,9 +317,11 @@ class StrategyCore:
                                    trace_id=trace)
             return
         if res.status != "FILLED":
+            self.risk.record_order_failure()
             self._emit("ORDER_REJECTED", side=side, level=level, lot=vol.normalized,
                        reason=res.reason, trace_id=trace)
             return
+        self.risk.record_order_success()
         self.basket.add(PositionRef(
             position_id=res.position_id, side=side, lot=res.filled_lot,
             entry_price=res.price, level=level, opened_at=self.clock()))

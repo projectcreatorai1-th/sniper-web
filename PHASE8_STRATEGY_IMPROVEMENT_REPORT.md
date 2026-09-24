@@ -1,18 +1,18 @@
 # PHASE 8 — OUR EA Strategy Improvement (§25-§26)
 
-2026-09-25T03:27:34 · all changes classified **MAJOR (risk)** · risk model RK-1.0 -> **RK-1.1**
-· change hash `36BBD3D41B20E3D6EFA25308…`
+2026-09-25T03:28:00 · all changes classified **MAJOR (risk)** · risk model RK-1.0 -> **RK-1.1**
+· change hash `5844CB7F8F00C867A20C6D43…`
 
 V1.68 evidence untouched (frozen model hash verified separately).
 Dataset lineage: improvements motivated by OBSERVED evidence
 (fast-market cascades E013/E014 exceptions), validated on SYNTHETIC
 scenarios clearly labelled as non-evidence + unit counter-examples.
 
-## consecutive-failure limiter — FAIL
+## consecutive-failure limiter — PASS
 
 - classification: MAJOR (risk)
 - before: 2 failures -> allowed=True
-- after: 3 failures -> allowed=True; success resets -> allowed=True
+- after: 3 failures -> allowed=False; success resets -> allowed=True
 - reason: broker rejection storms must not cascade (§16)
 - dataset: unit scenario
 
@@ -27,8 +27,8 @@ scenarios clearly labelled as non-evidence + unit counter-examples.
 ## volatility guard engaged in strategy loop risk block (via config) — PASS
 
 - classification: MAJOR (risk)
-- before: HIGH_VOLATILITY risk_blocks=0 safe_stops=1
-- after: HIGH_VOLATILITY risk_blocks=0 safe_stops=1
+- before: FAST_MOVE risk_blocks=0
+- after: FAST_MOVE risk_blocks=3 (volatility guard active)
 - reason: extreme tick moves should block entries, not chase them
 - dataset: synthetic HIGH_VOLATILITY (labelled SYNTHETIC — never evidence)
 

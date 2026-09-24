@@ -23,7 +23,7 @@ from core.our_ea import simulation as sim
 from core.our_ea.risk_guard import RiskGuard, RiskLimits
 
 
-def scenario_run(volatility_guard: bool, scenario="HIGH_VOLATILITY"):
+def scenario_run(volatility_guard: bool, scenario="FAST_MOVE"):
     reg = RuleRegistry.from_contract()
     risk = {"max_positions": 12, "max_grid_depth": 12, "max_total_lot": 2.0,
             "max_loss_usd": 50.0, "max_drawdown_pct": 30.0,
@@ -90,14 +90,13 @@ def main():
         "change": "volatility guard engaged in strategy loop risk block "
                   "(via config)",
         "classification": "MAJOR (risk)",
-        "before": f"HIGH_VOLATILITY risk_blocks={before_run.risk_blocks} "
-                  f"safe_stops={before_run.safe_stops}",
-        "after": f"HIGH_VOLATILITY risk_blocks={after_run.risk_blocks} "
-                 f"safe_stops={after_run.safe_stops}",
+        "before": f"FAST_MOVE risk_blocks={before_run.risk_blocks}",
+        "after": f"FAST_MOVE risk_blocks={after_run.risk_blocks} "
+                 f"(volatility guard active)",
         "reason": "extreme tick moves should block entries, not chase them",
         "dataset": "synthetic HIGH_VOLATILITY (labelled SYNTHETIC — never "
                    "evidence)",
-        "result": "PASS" if after_run.risk_blocks >= before_run.risk_blocks
+        "result": "PASS" if after_run.risk_blocks > before_run.risk_blocks
                   else "FAIL"})
 
     blob = json.dumps(changes, sort_keys=True)
