@@ -30,6 +30,9 @@ class RiskLimits:
     max_execution_time_s: float = 5.0
     session_limit: str = ""            # e.g. 'server 01:00-23:00'
     allowed_symbols: tuple = ("GOLDmicro",)
+    # OUR_EA_POLICY v1.1 additions (Phase 8, change-classified MAJOR):
+    max_consecutive_failures: int = 3      # order failures in a row
+    max_tick_volatility_usd: float = 25.0  # per-tick move guard
 
     def validate(self) -> None:
         problems = []
@@ -41,6 +44,10 @@ class RiskLimits:
             problems.append("max_total_lot > 0")
         if not (0 < self.max_margin_usage_pct <= 100):
             problems.append("max_margin_usage_pct in (0,100]")
+        if self.max_consecutive_failures < 1:
+            problems.append("max_consecutive_failures >= 1")
+        if self.max_tick_volatility_usd <= 0:
+            problems.append("max_tick_volatility_usd > 0")
         if problems:
             raise RiskGuardError(f"RiskLimits invalid: {'; '.join(problems)}")
 
@@ -59,6 +66,8 @@ class RiskState:
     balance: float = 0.0
     equity: float = 0.0
     kill_switch: bool = False
+    consecutive_failures: int = 0
+    last_price: float = 0.0
 
 
 class RiskGuard:
@@ -137,6 +146,31 @@ class RiskGuard:
             stop = True
         return RiskDecision(allowed=not stop, violations=v,
                             emergency_stop=stop)
+
+    # ---- Phase 8 additions (OUR_EA_POLICY v1.1) ------------------------
+    def record_order_failure(self) -> RiskDecision:
+        """Consecutive order failures -> block until operator reset."""
+        self.state.consecutive_failures += 1
+        blocked = (self.state.consecutive_failures
+                   >= self.limits.max_consecutive_failures)
+        return RiskDecision(
+            allowed=not blocked,
+            violations=[f"consecutive_failures "
+                        f"{self.state.consecutive_failures}"] if blocked else [])
+
+    def record_order_success(self) -> None:
+        self.state.consecutive_failures = 0
+
+    def check_tick_volatility(self, price: float) -> RiskDecision:
+        """Extreme single-tick move -> block new entries this tick."""
+        v = []
+        if self.state.last_price:
+            move = abs(price - self.state.last_price)
+            if move > self.limits.max_tick_volatility_usd:
+                v.append(f"tick volatility {move:.1f} > "
+                         f"{self.limits.max_tick_volatility_usd}")
+        self.state.last_price = price
+        return RiskDecision(allowed=not v, violations=v)
 
     def engage_kill_switch(self) -> None:
         self.state.kill_switch = True
