@@ -36,6 +36,12 @@ class Assumption:
     detail: str
     source: str = ""
     evidence: str = ""
+    # Phase 1 metadata (optional; empty = not set on legacy entries)
+    category: str = ""
+    confidence: str = ""            # LOW / MEDIUM / HIGH
+    affected_modules: List[str] = field(default_factory=list)
+    created_at: str = ""
+    updated_at: str = ""
 
 
 # ---------------------------------------------------------------------------
@@ -190,6 +196,97 @@ def _baseline() -> Dict[str, Assumption]:
         "Trading frame modeled as the price range from cycle start price to the last grid order",
         "The manual does not define the exact frame boundaries used by the EX5.",
     )
+
+    # --- Phase 1 completion: unknowns made explicit (no evidence -> UNKNOWN) ---
+    def add2(aid: str, status: str, title: str, detail: str, category: str,
+             confidence: str, modules=None, source: str = ""):
+        a[aid] = Assumption(aid, status, title, detail, source,
+                            category=category, confidence=confidence,
+                            affected_modules=list(modules or []),
+                            created_at="2026-09-24", updated_at="2026-09-24")
+
+    add2("TICK_VALUE_ASSUMPTION_001", UNKNOWN,
+         "Tick value (money per tick per lot) is not captured",
+         "P/L model converts via contract size instead; per-broker tick value is "
+         "unknown and not stored anywhere yet.",
+         "Symbol specification", "LOW", ["core/symbol_profile.py"])
+    add2("TICK_SIZE_ASSUMPTION_001", UNKNOWN,
+         "Real broker tick size per symbol is not captured",
+         "A default tick size exists in SymbolProfile as an editable value; the "
+         "actual broker's tick size for the observed environment is unknown.",
+         "Symbol specification", "LOW", ["core/symbol_profile.py"])
+    add2("CONTRACT_SIZE_ASSUMPTION_001", MODEL_ASSUMPTION,
+         "Contract size is configurable per symbol (XAUUSD=100 modeled)",
+         "General form of XAUUSD_CONTRACT_ASSUMPTION_001: contract size comes "
+         "from SymbolProfile/EnvironmentProfile, never assumed universal.",
+         "Symbol specification", "MEDIUM", ["core/symbol_profile.py"],
+         "See XAUUSD_CONTRACT_ASSUMPTION_001.")
+    add2("VOLUME_STEP_ASSUMPTION_001", UNKNOWN,
+         "Volume step / lot rounding semantics of the EX5 are unknown",
+         "The model rounds to broker lot step (LOT_NORMALIZATION_ASSUMPTION_001) "
+         "and reports out-of-bound lots (LOT_STEP_BOUNDARY_ASSUMPTION_001); how "
+         "the EX5 itself rounds volume is unknown.",
+         "Lot sizing", "LOW", ["core/calculations.py"])
+    add2("PRICE_GAP_ASSUMPTION_001", UNKNOWN,
+         "Behavior when price gaps over multiple grid levels is unknown",
+         "When a single tick jumps past several GridStepUSD levels, whether the "
+         "EA opens one order, several, or none is not documented or observed.",
+         "Grid behavior", "LOW", ["core/grid.py", "core/worst_case.py"])
+    add2("SLIPPAGE_ASSUMPTION_001", UNKNOWN,
+         "Slippage is not modeled and its magnitude is unknown",
+         "All simulation entries assume exact fills; real slippage is broker- "
+         "and volatility-dependent.",
+         "Cost model", "LOW", ["core/calculations.py"])
+    add2("SPREAD_ASSUMPTION_001", UNKNOWN,
+         "Spread magnitude is unknown (model excludes spread entirely)",
+         "PL_CONVERSION_ASSUMPTION_001 excludes spread from P/L; the actual "
+         "spread of the observed environment is not captured.",
+         "Cost model", "LOW", ["core/calculations.py"])
+    add2("COMMISSION_ASSUMPTION_001", UNKNOWN,
+         "Commission model/value is unknown (model excludes commission)",
+         "The P/L model excludes commission; the observed broker's commission "
+         "structure is not captured anywhere yet.",
+         "Cost model", "LOW", ["core/calculations.py"])
+    add2("SWAP_ASSUMPTION_001", UNKNOWN,
+         "Swap model/value is unknown (model excludes swap)",
+         "The P/L model excludes swap; the observed broker's swap rates are not "
+         "captured anywhere yet.",
+         "Cost model", "LOW", ["core/calculations.py"])
+    add2("MAGIC_NUMBER_ASSUMPTION_001", UNKNOWN,
+         "The EA's magic number / order identification scheme is unknown",
+         "No documentation or observation exists; nothing in the model relies "
+         "on a magic number.",
+         "Execution", "LOW", [])
+    add2("ORDER_EXECUTION_ASSUMPTION_001", UNKNOWN,
+         "Order execution model (market/limit, partial fills) is unknown",
+         "The simulator assumes immediate full fills at computed prices.",
+         "Execution", "LOW", ["core/worst_case.py"])
+    add2("BID_ASK_ASSUMPTION_001", UNKNOWN,
+         "The EA's use of bid/ask prices is unknown",
+         "The model uses a single price series; which side of the spread the "
+         "EA uses for triggers/entries is not documented.",
+         "Execution", "LOW", ["core/calculations.py"])
+    add2("TICK_BAR_TIMER_ASSUMPTION_001", UNKNOWN,
+         "The EA's trigger basis (tick / bar open / timer) is unknown",
+         "Grid trigger timing affects real behavior; the model is price-level "
+         "based only.",
+         "Execution", "LOW", ["core/grid.py"])
+    add2("BROKER_MARGIN_ASSUMPTION_001", UNKNOWN,
+         "Real broker margin rules (hedged/tiered) are unknown",
+         "MARGIN_ASSUMPTION_001 gives the modeled formula; actual broker margin "
+         "modes for the observed environment are not captured.",
+         "Accounting", "LOW", ["core/calculations.py"],
+         "See MARGIN_ASSUMPTION_001.")
+    add2("CYCLE_START_RULE_ASSUMPTION_001", MODEL_ASSUMPTION,
+         "Cycle begins at the first position/open event of a burst",
+         "MODEL - NOT VERIFIED INTERNAL EA BEHAVIOR. Segmenting rule used by "
+         "core/cycle.py for observed records and model snapshots.",
+         "Lifecycle", "MEDIUM", ["core/cycle.py"])
+    add2("CYCLE_END_RULE_ASSUMPTION_001", MODEL_ASSUMPTION,
+         "Cycle ends at the configured terminal event (basket/emergency/time stop)",
+         "MODEL - NOT VERIFIED INTERNAL EA BEHAVIOR. Terminal events close the "
+         "simulated cycle in core/cycle.py.",
+         "Lifecycle", "MEDIUM", ["core/cycle.py"])
     return a
 
 

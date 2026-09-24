@@ -10,7 +10,7 @@ XAUUSD_CONTRACT_ASSUMPTION_001).
 from __future__ import annotations
 
 from dataclasses import dataclass, field, asdict
-from typing import List, Optional
+from typing import List, Optional, Optional
 
 
 @dataclass
@@ -18,11 +18,17 @@ class SymbolProfile:
     name: str = "XAUUSD"
     contract_size: float = 100.0        # units of base asset per 1.0 lot
     tick_size: float = 0.01             # minimal price increment
-    lot_min: float = 0.01
-    lot_max: float = 100.0
-    lot_step: float = 0.01
+    lot_min: float = 0.01               # = volume_min (spec naming)
+    lot_max: float = 100.0              # = volume_max (spec naming)
+    lot_step: float = 0.01              # = volume_step (spec naming)
     digits: int = 2
     reference_price: float = 2000.0     # price used for margin/exposure estimates
+    # Phase 1 optional symbol specs - UNKNOWN (None) when not captured.
+    # The defaults above are EDITABLE STARTING POINTS, never universal rules.
+    tick_value: Optional[float] = None
+    currency: str = ""                  # account/presentation currency if known
+    quote_currency: str = ""
+    base_currency: str = ""
 
     def to_dict(self) -> dict:
         return asdict(self)

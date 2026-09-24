@@ -100,6 +100,22 @@ def _route_assumptions(environ, body):
     return api.get_assumptions()
 
 
+def _route_evidence(environ, body):
+    return api.get_evidence()
+
+
+def _route_environment(environ, body):
+    return api.get_environment()
+
+
+def _route_parameters(environ, body):
+    return api.get_parameters()
+
+
+def _route_ex5_integrity(environ, body):
+    return api.get_ex5_integrity()
+
+
 def _route_validate(environ, body):
     return api.validate(body)
 
@@ -137,6 +153,10 @@ ROUTES: Dict[str, Callable] = {
     "/api/health": _route_health,
     "/api/config": _route_config,
     "/api/assumptions": _route_assumptions,
+    "/api/evidence": _route_evidence,
+    "/api/environment": _route_environment,
+    "/api/parameters": _route_parameters,
+    "/api/ex5-integrity": _route_ex5_integrity,
     "/api/validate": _route_validate,
     "/api/grid/calculate": _route_grid,
     "/api/worst-case/simulate": _route_worst_case,
@@ -170,10 +190,14 @@ def application(environ, start_response):
             if method not in ("GET", "POST", "HEAD"):
                 raise HTTPError(405, f"Method {method} not allowed")
             if method == "POST" and path in (
-                    "/api/health", "/api/config", "/api/assumptions"):
+                    "/api/health", "/api/config", "/api/assumptions",
+                    "/api/evidence", "/api/environment", "/api/parameters",
+                    "/api/ex5-integrity"):
                 raise HTTPError(405, f"{path} accepts GET only")
             if method == "GET" and path not in (
-                    "/api/health", "/api/config", "/api/assumptions"):
+                    "/api/health", "/api/config", "/api/assumptions",
+                    "/api/evidence", "/api/environment", "/api/parameters",
+                    "/api/ex5-integrity"):
                 raise HTTPError(405, f"{path} accepts POST only")
             result = _dispatch_api(path, environ)
             if isinstance(result, api.FileResponse):

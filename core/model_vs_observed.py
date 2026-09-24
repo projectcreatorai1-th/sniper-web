@@ -26,7 +26,7 @@ from core.model_rules import SimulationModelRules
 from core.mt5_adapters import (
     BehaviorRecord, EVENT_ADD_GRID, EVENT_OPEN_POSITION, EVENT_BASKET_CLOSE,
     EVENT_PARTIAL_CLOSE, EVENT_EMERGENCY, EVENT_FRIDAY_STOP, EVENT_DAILY_TARGET,
-    EVENT_NEW_CYCLE,
+    EVENT_NEW_CYCLE, EVENT_RESUME,
 )
 from core.symbol_profile import SymbolProfile
 
@@ -255,6 +255,109 @@ def check_position_count_and_lots(records: List[BehaviorRecord], config: EAConfi
                        model=f"{model_total:.2f} lots", samples=max_count)
 
 
+# ---------------------------------------------------------------------------
+# Cycle lifecycle checks (Phase 1) - MODEL rules, never auto-correcting
+# ---------------------------------------------------------------------------
+def check_cycle_start(records: List[BehaviorRecord], config: EAConfig) -> CheckResult:
+    """MODEL rule CYCLE_START_RULE_ASSUMPTION_001: a cycle begins at the first
+    position/open event. Verified only when explicit NEW_CYCLE markers exist."""
+    from core.cycle import build_cycles_from_records
+
+    has_open = any(r.event in (EVENT_OPEN_POSITION, EVENT_ADD_GRID, EVENT_NEW_CYCLE)
+                   for r in records)
+    if not has_open:
+        return CheckResult("Cycle start", UNKNOWN,
+                           "no position/cycle events to locate a cycle start")
+    markers = [r for r in records if r.event == EVENT_NEW_CYCLE]
+    if not markers:
+        return CheckResult(
+            "Cycle start", UNKNOWN,
+            "no explicit NEW_CYCLE markers - the model's first-position rule "
+            "can neither be confirmed nor denied")
+    cycles = build_cycles_from_records(records)
+    aligned = 0
+    for m in markers:
+        if any(c.events and c.events[0].get("event") == EVENT_NEW_CYCLE
+               and c.events[0].get("timestamp") == m.timestamp
+               and c.grid_levels > 0 for c in cycles):
+            aligned += 1
+    res = MATCH if aligned == len(markers) else MISMATCH
+    detail = (f"{aligned}/{len(markers)} NEW_CYCLE markers sit at a cycle start "
+              f"({len(cycles)} cycle(s) detected)")
+    return CheckResult("Cycle start", res, detail, samples=len(markers))
+
+
+def check_cycle_end(records: List[BehaviorRecord], config: EAConfig) -> CheckResult:
+    """MODEL rule CYCLE_END_RULE_ASSUMPTION_001: every cycle except possibly
+    the last (observation window) must end with a terminal event."""
+    from core.cycle import (CLOSED, EMERGENCY_CLOSED, OPEN, UNKNOWN,
+                            build_cycles_from_records)
+
+    cycles = build_cycles_from_records(records)
+    closed = [c for c in cycles if c.status in (CLOSED, EMERGENCY_CLOSED)]
+    if not cycles or not closed:
+        return CheckResult(
+            "Cycle end", UNKNOWN,
+            "no completed cycle observed - terminal-event rule unconfirmed",
+            samples=len(cycles))
+    preceding = cycles[:-1]
+    violations = [c for c in preceding if c.status == UNKNOWN]
+    last_ok = cycles[-1].status in (CLOSED, EMERGENCY_CLOSED, OPEN)
+    if violations or not last_ok:
+        res = MISMATCH
+        detail = (f"{len(violations)} cycle(s) ended without a terminal event "
+                  f"while another cycle began")
+    else:
+        res = MATCH
+        detail = (f"{len(closed)}/{len(cycles)} cycle(s) closed with a terminal "
+                  f"event; last cycle status {cycles[-1].status}")
+    return CheckResult("Cycle end", res, detail, samples=len(cycles))
+
+
+def check_emergency_close(records: List[BehaviorRecord], config: EAConfig) -> CheckResult:
+    """Emergency events vs EnableEmergencyStop (presence-consistency only)."""
+    emergencies = [r for r in records if r.event == EVENT_EMERGENCY]
+    if not emergencies:
+        if config.EnableEmergencyStop:
+            return CheckResult("Emergency close", UNKNOWN,
+                               "emergency enabled but no EMERGENCY events observed "
+                               "(may simply not have triggered)")
+        return CheckResult("Emergency close", MATCH,
+                           "emergency disabled in config and none observed")
+    if not config.EnableEmergencyStop:
+        return CheckResult(
+            "Emergency close", MISMATCH,
+            f"{len(emergencies)} EMERGENCY event(s) observed while "
+            "EnableEmergencyStop=false", samples=len(emergencies))
+    return CheckResult(
+        "Emergency close", MATCH,
+        f"{len(emergencies)} EMERGENCY event(s) observed while enabled "
+        "(presence consistent with config)", samples=len(emergencies))
+
+
+def check_resume_new_cycle(records: List[BehaviorRecord], config: EAConfig) -> CheckResult:
+    """A new cycle should begin only after the previous one ended (or RESUME)."""
+    from core.cycle import UNKNOWN, build_cycles_from_records
+
+    cycles = build_cycles_from_records(records)
+    resumes = sum(1 for r in records if r.event == EVENT_RESUME)
+    if len(cycles) < 2:
+        return CheckResult(
+            "Resume / new cycle", UNKNOWN,
+            f"insufficient cycles to compare ({len(cycles)}); "
+            f"{resumes} RESUME event(s)", samples=len(cycles))
+    superseded = [c for c in cycles if c.status == UNKNOWN]
+    if superseded:
+        return CheckResult(
+            "Resume / new cycle", MISMATCH,
+            f"{len(superseded)} cycle(s) superseded without a terminal event "
+            "or RESUME before the next cycle began", samples=len(cycles))
+    return CheckResult(
+        "Resume / new cycle", MATCH,
+        f"{len(cycles)} cycles all ended (terminal event) before the next began; "
+        f"{resumes} RESUME event(s)", samples=len(cycles))
+
+
 def compare_behavior(records: List[BehaviorRecord], config: EAConfig,
                      profile: SymbolProfile, rules: SimulationModelRules) -> ComparisonReport:
     report = ComparisonReport()
@@ -265,6 +368,10 @@ def compare_behavior(records: List[BehaviorRecord], config: EAConfig,
         check_basket_close(records, config),
         check_partial_close(records, config),
         check_position_count_and_lots(records, config, rules, profile),
+        check_cycle_start(records, config),
+        check_cycle_end(records, config),
+        check_emergency_close(records, config),
+        check_resume_new_cycle(records, config),
     ]
     report.match_count = sum(1 for ch in report.checks if ch.result == MATCH)
     report.mismatch_count = sum(1 for ch in report.checks if ch.result == MISMATCH)

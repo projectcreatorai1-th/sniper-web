@@ -119,7 +119,8 @@ store.save(sess)
 loaded_sess = store.load(sess.session_id)
 records = [BehaviorRecord.from_dict(d) for d in loaded_sess.observed_events]
 report = compare_behavior(records, cfg, prof, rules)
-check("comparison produced 6 checks", len(report.checks) == 6)
+# Phase 1: comparator extended 6 -> 10 checks (+ cycle start/end, emergency, resume)
+check("comparison produced 10 checks", len(report.checks) == 10)
 spacing = next(c for c in report.checks if c.check == "Grid spacing")
 check("grid spacing measured near 4.8 (MATCH)",
       spacing.result == "MATCH", spacing.detail)

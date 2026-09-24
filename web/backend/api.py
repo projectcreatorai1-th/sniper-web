@@ -157,8 +157,63 @@ def get_assumptions() -> dict:
         "assumptions": [{
             "assumption_id": a.assumption_id, "status": a.status, "title": a.title,
             "detail": a.detail, "source": a.source, "evidence": a.evidence,
+            "category": a.category, "confidence": a.confidence,
+            "affected_modules": a.affected_modules,
+            "created_at": a.created_at, "updated_at": a.updated_at,
         } for a in reg.all()],
         "statuses": list(ALL_STATUSES),
+        "disclaimer": DISCLAIMER,
+    }
+
+
+def get_evidence() -> dict:
+    """Phase 1: structured evidence registry (reads core only)."""
+    from core.evidence import (EVIDENCE_STATUSES, SOURCE_TYPES,
+                               default_evidence_registry)
+    reg = default_evidence_registry()
+    return {
+        "records": [r.to_dict() for r in reg.all()],
+        "statuses": list(EVIDENCE_STATUSES),
+        "source_types": list(SOURCE_TYPES),
+        "count": len(reg.all()),
+        "disclaimer": DISCLAIMER,
+    }
+
+
+def get_environment() -> dict:
+    """Phase 1: observed test environment + broker profile (core only)."""
+    from core.environment import BrokerProfile, observed_test_environment
+    env = observed_test_environment()
+    return {
+        "observed": env.to_dict(),
+        "observed_fields": env.observed_fields(),
+        "broker_profile": BrokerProfile().to_dict(),
+        "notes": ("OBSERVED TEST ENVIRONMENT - not a universal rule. "
+                  "Account numbers are deliberately never stored."),
+        "disclaimer": DISCLAIMER,
+    }
+
+
+def get_parameters() -> dict:
+    """Phase 1: parameter facts (identity + separated value records)."""
+    from core.param_facts import parameter_facts
+    return {
+        "parameters": [f.to_dict() for f in parameter_facts()],
+        "count": len(parameter_facts()),
+        "notes": ("Parameter #21 identity is UNKNOWN; the code name "
+                  "AccumTargetUSD is an UNVERIFIED CANDIDATE only."),
+        "disclaimer": DISCLAIMER,
+    }
+
+
+def get_ex5_integrity() -> dict:
+    """Phase 1: EX5 integrity record (safe metadata + real hashes only)."""
+    from core.ex5_integrity import record_ex5_integrity
+    return {
+        "record": record_ex5_integrity().to_dict(),
+        "safety": ("No decompilation, no reverse engineering, no modification. "
+                   "Hashes are computed only from a real file when present; "
+                   "historical baselines are external records."),
         "disclaimer": DISCLAIMER,
     }
 

@@ -110,3 +110,27 @@ python smoke_gui.py          # ตรวจ GUI ทุกหน้าแบบ�
 - โปรแกรมนี้เป็น **Analyzer / Calculator / Simulator เท่านั้น** — ไม่มีคำสั่งซื้อขายจริง ไม่แก้บัญชี MT5 ไม่ควบคุม EA
 - ไม่อ้างว่า simulation = ผล backtest จริง / ไม่รับประกันกำไร / ไม่จัดอันดับ set ว่า "ดีที่สุด-ปลอดภัยที่สุด"
 - ไม่ decompile/แก้ไข `.ex5` และไม่เดาสูตรที่พิสูจน์ไม่ได้ — ทุกจุว่างระบุ UNKNOWN/ASSUMPTION พร้อมระบบรองรับการแก้ไข (Symbol Profile / Risk Thresholds / Model Rules / Assumption Registry แก้ได้ทั้งหมดโดยไม่แก้โค้ด)
+
+---
+
+## 16. PHASE 1 IMPLEMENTATION (2026-09-24) — Evidence / Environment / Cycle Foundation
+
+เพิ่มบน baseline เดิมโดย **ไม่แตะสูตร/preset/พารามิเตอร์เดิมใด ๆ** (ตัวเลข Calculator ทุกตัวเหมือนเดิม — พิสูจน์ด้วย regression pins)
+
+**สิ่งที่เพิ่ม:**
+
+| ของ | ไฟล์ | สรุป |
+|---|---|---|
+| Evidence Registry | `core/evidence.py` | ระเบียนหลักฐาน E001–E010 (สถานะ DOCUMENTED/OBSERVED/MODEL/UNKNOWN) + `ExternalEvidence` interface (Myfxbook = INTERFACE READY ห้าม fake data) |
+| Environment Profile | `core/environment.py` | `EnvironmentProfile` + `BrokerProfile` + OBSERVED TEST ENVIRONMENT (MT5/XM Global/Hedge/GOLDmicro/M15) — ไม่มี field account number โดยเจตนา |
+| Parameter Facts | `core/param_facts.py` | แยก EA DEFAULT / RECOMMENDED PRESET / OBSERVED VALUE / USER VALUE — **Emergency 90.0 (observed) แยกจาก 50.0 (preset)** + PARAM_21 = UNKNOWN, `AccumTargetUSD` = UNVERIFIED CANDIDATE |
+| EX5 Integrity | `core/ex5_integrity.py` | สถานะปัจจุบัน `SOURCE_FILE_NOT_PRESENT` + historical SHA-256/MD5 เก็บเป็น `RECORDED_EXTERNAL_BASELINE` — hash คำนวณจากไฟล์จริงเท่านั้น ไม่ decompile/modify |
+| Cycle Lifecycle | `core/cycle.py` | `Cycle` (OPEN/CLOSED/EMERGENCY_CLOSED/UNKNOWN) + builder จาก observed records + model snapshot จาก core.calculations — ติด label MODEL |
+| Assumption completion | `core/assumptions.py` | +16 entries (tick value/size, contract size, volume step, gap, slippage, spread, commission, swap, magic number, order execution, bid/ask, tick-bar-timer, broker margin, cycle start/end rules) — ทั้งหมด UNKNOWN/MODEL ไม่มี VERIFIED ปลอม + ฟิลด์ใหม่ category/confidence/affected_modules/created/updated |
+| Cycle verification | `core/model_vs_observed.py` | comparator 6 → **10 checks** (+ cycle start, cycle end, emergency close, resume/new cycle) — ยังไม่ auto-correct และไม่เปลี่ยนสูตรจาก observation |
+| Symbol spec | `core/symbol_profile.py` | ฟิลด์ optional ใหม่ (tick_value/currency/quote/base) ค่าที่ไม่รู้ = None (UNKNOWN) |
+| Web/API | `web/backend` | GET `/api/evidence` `/api/environment` `/api/parameters` `/api/ex5-integrity` + `/api/assumptions` แสดงฟิลด์ใหม่ — ทุก endpoint เรียก core ล้วน |
+| เอกสารจาก source เดียว | `tools/generate_registry_docs.py` | สร้าง `ASSUMPTION_REGISTRY.md` `EVIDENCE_REGISTRY.md` `ENVIRONMENT_PROFILE.md` จาก core เสมอ (ห้ามแก้มือ) |
+
+**ผล tests:** Desktop/Core **228/228** (157 เดิม + 71 ใหม่) · Web **99/99** (93 เดิม + 6 ใหม่) · Integration 18/18 · GUI smoke 11/11 · ไม่มี skipped/errors
+รายละเอียดเต็ม: `IMPLEMENTATION_REPORT_PHASE1.md` · ผลตรวจก่อนหน้า: `AUDIT_REPORT.md`

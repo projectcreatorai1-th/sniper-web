@@ -80,7 +80,14 @@ class TestChecks(unittest.TestCase):
         self.assertEqual(report.mismatch_count, 0)
         d = report.to_dict()
         self.assertIn("overall", d)
-        self.assertEqual(len(d["checks"]), 6)
+        # Phase 1: comparator extended from 6 to 10 checks
+        # (+ cycle start, cycle end, emergency close, resume/new cycle)
+        self.assertEqual(len(d["checks"]), 10)
+        names = [c["check"] for c in d["checks"]]
+        self.assertIn("Cycle start", names)
+        self.assertIn("Cycle end", names)
+        self.assertIn("Emergency close", names)
+        self.assertIn("Resume / new cycle", names)
 
 
 class TestRuleFitting(unittest.TestCase):
