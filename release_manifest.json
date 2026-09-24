@@ -1,0 +1,114 @@
+{
+  "build_version": "OUR-EA-RC-v1.0",
+  "git_commit": "e5159fc27fe9992640d75f56e7af6a93cb5142f4",
+  "generated_at": "2026-09-25T01:49:30",
+  "model_version": "V1.68-EVIDENCE-MODEL-v1.0",
+  "model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+  "dataset_hashes": {
+    "replay_dataset_v1": "994955EA1889409A3B71C15C799B2802E0D9CF5E42DB277D420FA0835B3C0705"
+  },
+  "config_hash": "default OUR_EA_CONFIG_V1 (validated)",
+  "test_summary": {
+    "total": 575,
+    "all_ok": true,
+    "core": 391,
+    "our_ea": 59,
+    "web": 125
+  },
+  "replay_summary": {
+    "MATCH": 13177,
+    "MISMATCH": 27,
+    "UNKNOWN": 812,
+    "NOT_COMPARABLE": 2976,
+    "total": 16992,
+    "match_pct": 77.55
+  },
+  "risk_status": "OUR_EA_POLICY active (guard + kill switch)",
+  "live_lock": "LOCKED (LIVE_DISABLED=True; attempts -> SAFE_STOP)",
+  "gates": [
+    {
+      "gate": "GATE-6.1",
+      "name": "BASELINE",
+      "result": "PASS",
+      "evidence": "core 391 tests, web 125"
+    },
+    {
+      "gate": "GATE-6.2",
+      "name": "MODEL",
+      "result": "PASS",
+      "evidence": "frozen contract hash verified at load; ModelVersion immutable"
+    },
+    {
+      "gate": "GATE-6.3",
+      "name": "TRACEABILITY",
+      "result": "PASS_WITH_UNKNOWN",
+      "evidence": "matrix appended with implementation/test refs; 4 UNKNOWN rules carried as MODEL_UNCERTAINTY"
+    },
+    {
+      "gate": "GATE-6.4",
+      "name": "STATE MACHINE",
+      "result": "PASS",
+      "evidence": "explicit transitions only; failure-injection recovery tested"
+    },
+    {
+      "gate": "GATE-6.5",
+      "name": "REPLAY",
+      "result": "PASS_WITH_UNKNOWN",
+      "evidence": "match 77.55% | mismatches within documented exception rates | resume 99.75%"
+    },
+    {
+      "gate": "GATE-6.6",
+      "name": "SIMULATION",
+      "result": "PASS",
+      "evidence": "22 scenarios; synthetic never mixed with evidence"
+    },
+    {
+      "gate": "GATE-6.7",
+      "name": "FAILURE INJECTION",
+      "result": "PASS",
+      "evidence": "rejection/timeout/duplicate/restart handled safely"
+    },
+    {
+      "gate": "GATE-6.8",
+      "name": "PERSISTENCE/RECOVERY",
+      "result": "PASS_WITH_UNKNOWN",
+      "evidence": "state save/restore verified; restart behaviour labeled OUR_EA_POLICY (V1.68 restart UNKNOWN)"
+    },
+    {
+      "gate": "GATE-6.9",
+      "name": "RISK",
+      "result": "PASS",
+      "evidence": "risk guard OUR_EA_POLICY; emergency policy separated"
+    },
+    {
+      "gate": "GATE-6.10",
+      "name": "PAPER",
+      "result": "PASS",
+      "evidence": "end-to-end paper run: 170 events, 18 cycles"
+    },
+    {
+      "gate": "GATE-6.11",
+      "name": "DEMO",
+      "result": "PASS_WITH_UNKNOWN",
+      "evidence": "DemoAdapter ready; demo execution retains safety guard"
+    },
+    {
+      "gate": "GATE-6.12",
+      "name": "RELEASE",
+      "result": "PASS_WITH_UNKNOWN",
+      "evidence": "all prior gates PASS/PASS_WITH_UNKNOWN; LIVE locked"
+    }
+  ],
+  "artifact_hashes": {
+    "PHASE6_ARCHITECTURE.md": "8B4E47163EE471CDE5F625B328DECFF0964E0953B02FBF5929B6D3BAB1775D82",
+    "PHASE6_BEHAVIOR_MODEL.md": "1566D8619DF93BBE4C36FFB0E6D43D6DCAF1616CA7E6959F02DF7113B2484047",
+    "PHASE6_STATE_MACHINE.md": "24D83D3CA49D39BEA7131A8AA5DC3C42A73CB669732FC0F8ED739B3035F93578",
+    "PHASE6_REPLAY.md": "A4B0641170E57EF47A75DED9D42A4F4455F095376B8A9B37EAC4AC3847853308",
+    "PHASE6_SIMULATION.md": "00E49919568F6B6F2E544EE4AADE2AA2F9FD553E6899E9636434045A3AA638EA",
+    "PHASE6_FAILURE_INJECTION.md": "65CA2A9B93A8D747795806BA4A4E73619FA2548D1361328CC7DBB61AC9DBDBF5",
+    "PHASE6_RISK_POLICY.md": "8FB960D5B1EA6A08CCB0E9762950BA277D31B9D7F1C31CB386A2CCB5A8F4D21F",
+    "PHASE6_UNKNOWN_RULES.md": "E3613B53F7845C37849109A80AEB374DC5C7D30BA3FFED697FFA26E8C5453BEE",
+    "PHASE6_TEST_REPORT.md": "A95141F104A001D6D85E1C80D7E382D3C014835F45863500DE8C6D95EF92F4B4",
+    "RELEASE_CANDIDATE.md": "E423FD888DDC6762BE348A94515EB5EFDD16D5F3307343AFCE05C1BAF7AA7AFB"
+  }
+}

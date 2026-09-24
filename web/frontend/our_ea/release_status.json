@@ -1,0 +1,197 @@
+{
+ "build_version": "OUR-EA-RC-v1.0",
+ "generated_at": "2026-09-25T01:49:30",
+ "model_version": "V1.68-EVIDENCE-MODEL-v1.0",
+ "model_hash": "124F08984284E880F268C37E…",
+ "rules": [
+  {
+   "rule_id": "R-ACCUM-1-68",
+   "name": "AccumulatorTargetUSD = 1.68 (per basket)",
+   "status": "REJECTED"
+  },
+  {
+   "rule_id": "R-BASE-LOT",
+   "name": "Base Lot = 0.10",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-BASKET-TRIGGER",
+   "name": "Basket Trigger Semantics",
+   "status": "PARTIAL"
+  },
+  {
+   "rule_id": "R-BOTH-SIDES",
+   "name": "Both-Sides Initial Exposure",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-CONTRACT-SIZE",
+   "name": "Contract Size GOLDmicro = 1.0",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-EMERGENCY",
+   "name": "Emergency Mechanism",
+   "status": "UNKNOWN"
+  },
+  {
+   "rule_id": "R-GRID-DIRECTION",
+   "name": "Grid Direction (BUY down / SELL up)",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-GRID-SPACING",
+   "name": "Grid Spacing ~= 5 USD",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-GRID-TRIGGER",
+   "name": "Grid Trigger Semantics",
+   "status": "PARTIAL"
+  },
+  {
+   "rule_id": "R-LOT-FLOOR",
+   "name": "Lot Formula (floor ladder)",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-NORMAL-RESUME",
+   "name": "Normal Resume (<=2s)",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-PARTIAL-EXISTS",
+   "name": "Partial Close EXISTS (deal-level)",
+   "status": "VERIFIED"
+  },
+  {
+   "rule_id": "R-PARTIAL-LEVEL",
+   "name": "Partial Level Rule",
+   "status": "PARTIAL"
+  },
+  {
+   "rule_id": "R-PARTIAL-TRIGGER",
+   "name": "Partial Trigger",
+   "status": "UNKNOWN"
+  },
+  {
+   "rule_id": "R-PARTIAL-VOLUME",
+   "name": "Partial Volume Rule",
+   "status": "UNKNOWN"
+  },
+  {
+   "rule_id": "R-RESTART-RECOVERY",
+   "name": "Restart Recovery",
+   "status": "UNKNOWN"
+  }
+ ],
+ "replay": {
+  "MATCH": 13177,
+  "MISMATCH": 27,
+  "UNKNOWN": 812,
+  "NOT_COMPARABLE": 2976,
+  "total": 16992,
+  "match_pct": 77.55
+ },
+ "resume": {
+  "checks": 812,
+  "mismatches": 2
+ },
+ "paper": {
+  "scenario": "PAPER_RANGE_400",
+  "source_type": "SYNTHETIC",
+  "ticks": 400,
+  "events": {
+   "CYCLE_OPEN": 18,
+   "ENTRY": 36,
+   "GRID_ADD": 25,
+   "BASKET_CLOSE": 57,
+   "CYCLE_END": 34
+  },
+  "cycles": 18,
+  "safe_stops": 0,
+  "risk_blocks": 0,
+  "uncertainties": 0,
+  "final_state": "GRID_ACTIVE",
+  "notes": []
+ },
+ "tests": {
+  "total": 575,
+  "all_ok": true
+ },
+ "gates": [
+  {
+   "gate": "GATE-6.1",
+   "name": "BASELINE",
+   "result": "PASS",
+   "evidence": "core 391 tests, web 125"
+  },
+  {
+   "gate": "GATE-6.2",
+   "name": "MODEL",
+   "result": "PASS",
+   "evidence": "frozen contract hash verified at load; ModelVersion immutable"
+  },
+  {
+   "gate": "GATE-6.3",
+   "name": "TRACEABILITY",
+   "result": "PASS_WITH_UNKNOWN",
+   "evidence": "matrix appended with implementation/test refs; 4 UNKNOWN rules carried as MODEL_UNCERTAINTY"
+  },
+  {
+   "gate": "GATE-6.4",
+   "name": "STATE MACHINE",
+   "result": "PASS",
+   "evidence": "explicit transitions only; failure-injection recovery tested"
+  },
+  {
+   "gate": "GATE-6.5",
+   "name": "REPLAY",
+   "result": "PASS_WITH_UNKNOWN",
+   "evidence": "match 77.55% | mismatches within documented exception rates | resume 99.75%"
+  },
+  {
+   "gate": "GATE-6.6",
+   "name": "SIMULATION",
+   "result": "PASS",
+   "evidence": "22 scenarios; synthetic never mixed with evidence"
+  },
+  {
+   "gate": "GATE-6.7",
+   "name": "FAILURE INJECTION",
+   "result": "PASS",
+   "evidence": "rejection/timeout/duplicate/restart handled safely"
+  },
+  {
+   "gate": "GATE-6.8",
+   "name": "PERSISTENCE/RECOVERY",
+   "result": "PASS_WITH_UNKNOWN",
+   "evidence": "state save/restore verified; restart behaviour labeled OUR_EA_POLICY (V1.68 restart UNKNOWN)"
+  },
+  {
+   "gate": "GATE-6.9",
+   "name": "RISK",
+   "result": "PASS",
+   "evidence": "risk guard OUR_EA_POLICY; emergency policy separated"
+  },
+  {
+   "gate": "GATE-6.10",
+   "name": "PAPER",
+   "result": "PASS",
+   "evidence": "end-to-end paper run: 170 events, 18 cycles"
+  },
+  {
+   "gate": "GATE-6.11",
+   "name": "DEMO",
+   "result": "PASS_WITH_UNKNOWN",
+   "evidence": "DemoAdapter ready; demo execution retains safety guard"
+  },
+  {
+   "gate": "GATE-6.12",
+   "name": "RELEASE",
+   "result": "PASS_WITH_UNKNOWN",
+   "evidence": "all prior gates PASS/PASS_WITH_UNKNOWN; LIVE locked"
+  }
+ ],
+ "live_lock": "LOCKED (LIVE_DISABLED=True; attempts -> SAFE_STOP)"
+}

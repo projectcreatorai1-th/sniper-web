@@ -15,3 +15,54 @@ Normal Resume (<=2s),VERIFIED,MC-007,E018,335504856;391629843;411173797;44019294
 Emergency Mechanism,UNKNOWN,-(rule),E021,335504856;391629843;411173797;440192945,ReportHistory-{acct}.xlsx (4),B2BD8004E670;C8888D7BAC1E;417F73981035;DA61F581A51C,-,PENDING-PHASE-6
 Restart Recovery,UNKNOWN,-(rule),E022,335504856;391629843;411173797;440192945,ReportHistory-{acct}.xlsx (4),B2BD8004E670;C8888D7BAC1E;417F73981035;DA61F581A51C,-,PENDING-PHASE-6
 AccumulatorTargetUSD = 1.68 (per basket),REJECTED,MC-006,E027,335504856;391629843;411173797;440192945,ReportHistory-{acct}.xlsx (4),B2BD8004E670;C8888D7BAC1E;417F73981035;DA61F581A51C,PROJECT_OWNER 2026-09-24,PENDING-PHASE-6
+# PHASE 6 APPEND,2026-09-25T01:47:21,e5159fc27f
+R-LOT-FLOOR,phase6-implementation,core/our_ea/lot_engine.py | tests/our_ea/test_our_ea.py,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BASE-LOT,phase6-implementation,core/our_ea/lot_engine.py::LotConfig.base_lot,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-SPACING,phase6-implementation,core/our_ea/grid_engine.py | replay spacing checks,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-DIRECTION,phase6-implementation,core/our_ea/grid_engine.py::next_add_price,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BOTH-SIDES,phase6-implementation,core/our_ea/strategy.py::_open_cycle,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-CONTRACT-SIZE,phase6-implementation,core/our_ea/config.py broker.contract_size,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-EXISTS,phase6-implementation,core/our_ea/partial_engine.py (decisions refused),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-NORMAL-RESUME,phase6-implementation,core/our_ea/strategy.py RESUME_NEW_CYCLE,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-TRIGGER,phase6-implementation,grid_engine hypothesis_id (configurable),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BASKET-TRIGGER,phase6-implementation,partial_engine BasketCloseEngine hypotheses,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-TRIGGER,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-VOLUME,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-LEVEL,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-EMERGENCY,phase6-implementation,OUR_EA_EMERGENCY_POLICY only (risk_guard.py),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-RESTART-RECOVERY,phase6-implementation,persistence.RecoveryPolicy (OUR_EA_POLICY),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-ACCUM-1-68,phase6-implementation,excluded — config validation refuses hypothesis,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+# PHASE 6 APPEND,2026-09-25T01:47:41,e5159fc27f
+R-LOT-FLOOR,phase6-implementation,core/our_ea/lot_engine.py | tests/our_ea/test_our_ea.py,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BASE-LOT,phase6-implementation,core/our_ea/lot_engine.py::LotConfig.base_lot,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-SPACING,phase6-implementation,core/our_ea/grid_engine.py | replay spacing checks,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-DIRECTION,phase6-implementation,core/our_ea/grid_engine.py::next_add_price,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BOTH-SIDES,phase6-implementation,core/our_ea/strategy.py::_open_cycle,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-CONTRACT-SIZE,phase6-implementation,core/our_ea/config.py broker.contract_size,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-EXISTS,phase6-implementation,core/our_ea/partial_engine.py (decisions refused),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-NORMAL-RESUME,phase6-implementation,core/our_ea/strategy.py RESUME_NEW_CYCLE,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-TRIGGER,phase6-implementation,grid_engine hypothesis_id (configurable),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BASKET-TRIGGER,phase6-implementation,partial_engine BasketCloseEngine hypotheses,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-TRIGGER,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-VOLUME,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-LEVEL,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-EMERGENCY,phase6-implementation,OUR_EA_EMERGENCY_POLICY only (risk_guard.py),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-RESTART-RECOVERY,phase6-implementation,persistence.RecoveryPolicy (OUR_EA_POLICY),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-ACCUM-1-68,phase6-implementation,excluded — config validation refuses hypothesis,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+# PHASE 6 APPEND,2026-09-25T01:49:30,e5159fc27f
+R-LOT-FLOOR,phase6-implementation,core/our_ea/lot_engine.py | tests/our_ea/test_our_ea.py,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BASE-LOT,phase6-implementation,core/our_ea/lot_engine.py::LotConfig.base_lot,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-SPACING,phase6-implementation,core/our_ea/grid_engine.py | replay spacing checks,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-DIRECTION,phase6-implementation,core/our_ea/grid_engine.py::next_add_price,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BOTH-SIDES,phase6-implementation,core/our_ea/strategy.py::_open_cycle,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-CONTRACT-SIZE,phase6-implementation,core/our_ea/config.py broker.contract_size,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-EXISTS,phase6-implementation,core/our_ea/partial_engine.py (decisions refused),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-NORMAL-RESUME,phase6-implementation,core/our_ea/strategy.py RESUME_NEW_CYCLE,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-GRID-TRIGGER,phase6-implementation,grid_engine hypothesis_id (configurable),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-BASKET-TRIGGER,phase6-implementation,partial_engine BasketCloseEngine hypotheses,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-TRIGGER,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-VOLUME,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-PARTIAL-LEVEL,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-EMERGENCY,phase6-implementation,OUR_EA_EMERGENCY_POLICY only (risk_guard.py),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-RESTART-RECOVERY,phase6-implementation,persistence.RecoveryPolicy (OUR_EA_POLICY),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+R-ACCUM-1-68,phase6-implementation,excluded — config validation refuses hypothesis,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6

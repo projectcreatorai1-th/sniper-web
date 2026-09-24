@@ -239,6 +239,7 @@ const NAV = [
   ["#/observation", "Observation"],
   ["#/evidence", "Evidence"],
   ["#/timeline", "Timeline"],
+  ["#/our-ea", "OUR EA"],
 ];
 function buildNav() {
   const nav = $("#nav");
@@ -1818,6 +1819,7 @@ const ROUTES = {
   "/observation": pageObservation,
   "/evidence": pageEvidence,
   "/timeline": pageTimeline,
+  "/our-ea": pageOurEa,
 };
 
 async function init() {
