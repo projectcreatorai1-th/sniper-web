@@ -1,0 +1,33 @@
+{
+ "commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+ "branch": "main",
+ "tree_state": "clean",
+ "frozen_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+ "test_counts": {
+  "core_incl_forensics_ssot": 391,
+  "our_ea": 78,
+  "web": 125,
+  "total": 594
+ },
+ "release_status": "DEMO_CANDIDATE (release_manifest 0FBBE408CAF29CAEE135…)",
+ "known_UNKNOWN": [
+  "Partial Trigger",
+  "Partial Volume Rule",
+  "Emergency Mechanism",
+  "V1.68 Restart Recovery"
+ ],
+ "known_PARTIAL": [
+  "Basket Trigger (MC-006)",
+  "Grid Trigger Semantics",
+  "Partial Level Rule"
+ ],
+ "rejected_hypotheses": [
+  "AccumulatorTargetUSD=1.68 per basket (E027 90.70% violations)"
+ ],
+ "known_limitations": [
+  "tick data absent -> PARTIAL hypotheses DATA-BLOCKED",
+  "demo broker bridge simulated (controlled env)",
+  "OOS/walk-forward not yet split"
+ ],
+ "generated": "2026-09-25T03:24:08"
+}

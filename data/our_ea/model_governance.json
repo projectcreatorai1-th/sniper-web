@@ -1,0 +1,71 @@
+{
+ "schema": "OUR_EA_MODEL_GOVERNANCE_V1",
+ "models": {
+  "evidence_model": {
+   "version": "V1.68-EVIDENCE-MODEL-v1.0",
+   "hash": "124F08984284E880F268C37E…",
+   "frozen": true
+  },
+  "strategy_model": {
+   "version": "S-1.0",
+   "hash": null,
+   "source_commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+   "created": "2026-09-25T03:25:20",
+   "reason": "initial evidence-bound strategy",
+   "parent": null,
+   "test_dataset": "replay_dataset_v1 (812 cycles)",
+   "validation_dataset": "chronological split (Phase 7)",
+   "oos_dataset": "chronological last 20% (Phase 7)",
+   "validation_result": "pending-phase7",
+   "approval_state": "PENDING"
+  },
+  "risk_model": {
+   "version": "RK-1.0",
+   "hash": null,
+   "source_commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+   "created": "2026-09-25T03:25:20",
+   "reason": "OUR_EA_POLICY limits v1",
+   "parent": null,
+   "test_dataset": "replay_dataset_v1 (812 cycles)",
+   "validation_dataset": "chronological split (Phase 7)",
+   "oos_dataset": "chronological last 20% (Phase 7)",
+   "validation_result": "pending-phase7",
+   "approval_state": "PENDING"
+  },
+  "execution_model": {
+   "version": "E-1.0",
+   "hash": null,
+   "source_commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+   "created": "2026-09-25T03:25:20",
+   "reason": "adapter abstraction + live lock",
+   "parent": null,
+   "test_dataset": "replay_dataset_v1 (812 cycles)",
+   "validation_dataset": "chronological split (Phase 7)",
+   "oos_dataset": "chronological last 20% (Phase 7)",
+   "validation_result": "pending-phase7",
+   "approval_state": "PENDING"
+  },
+  "recovery_model": {
+   "version": "R-1.0",
+   "hash": null,
+   "source_commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+   "created": "2026-09-25T03:25:20",
+   "reason": "checksum state + safe-stop policy",
+   "parent": null,
+   "test_dataset": "replay_dataset_v1 (812 cycles)",
+   "validation_dataset": "chronological split (Phase 7)",
+   "oos_dataset": "chronological last 20% (Phase 7)",
+   "validation_result": "pending-phase7",
+   "approval_state": "PENDING"
+  },
+  "configuration_model": {
+   "version": "OUR_EA_CONFIG_V1",
+   "hash": null,
+   "source_commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+   "created": "2026-09-25T03:25:20",
+   "reason": "validated schema",
+   "parent": null,
+   "approval_state": "PENDING"
+  }
+ }
+}

@@ -1,0 +1,31 @@
+{
+ "schema": "OUR_EA_ALGORITHM_REGISTRY_V1",
+ "algorithms": [
+  {
+   "algorithm_name": "SNIPER CashFlow evidence-based grid (OUR EA)",
+   "algorithm_id": "OUR-EA-GRID-001",
+   "strategy_version": "S-1.0",
+   "strategy_owner": "PROJECT_OWNER",
+   "authorized_operator": "PROJECT_OWNER",
+   "risk_owner": "PROJECT_OWNER",
+   "code_commit": "235ae09213610d943def11dc0d7a12b6695c8e10",
+   "config_version": "OUR_EA_CONFIG_V1",
+   "evidence_version": "V1.68-EVIDENCE-MODEL-v1.0 (124F08984284E880F268C3…)",
+   "execution_version": "E-1.0",
+   "recovery_version": "R-1.0",
+   "status": "DEMO_CANDIDATE",
+   "approved_modes": [
+    "OBSERVATION",
+    "SHADOW",
+    "DEMO"
+   ],
+   "current_deployment": "repository-only (no live deployment)",
+   "known_limitations": [
+    "partial hypotheses DATA-BLOCKED (tick data)",
+    "4 UNKNOWN rules preserved",
+    "demo broker bridge simulated"
+   ]
+  }
+ ],
+ "rule": "no deployment without a registry entry"
+}
