@@ -1,114 +1,127 @@
 {
-  "build_version": "OUR-EA-RC-v1.0",
-  "git_commit": "e5159fc27fe9992640d75f56e7af6a93cb5142f4",
-  "generated_at": "2026-09-25T01:49:30",
+  "project_version": "OUR-EA-FINAL-DEMO-CANDIDATE-v1.0",
+  "release_status": "DEMO_CANDIDATE",
+  "git_commit": "d9832dbbb42518bc4bf8d5a71f69a8f8667e3604",
+  "generated_at": "2026-09-25T03:04:08",
   "model_version": "V1.68-EVIDENCE-MODEL-v1.0",
-  "model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+  "frozen_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
   "dataset_hashes": {
     "replay_dataset_v1": "994955EA1889409A3B71C15C799B2802E0D9CF5E42DB277D420FA0835B3C0705"
   },
-  "config_hash": "default OUR_EA_CONFIG_V1 (validated)",
-  "test_summary": {
-    "total": 575,
-    "all_ok": true,
+  "config_hash": "3FF73A63262FC290B65E4A1DD27C7F081F2ADF55D0DAB1FD1AE0CEB0C0012C02",
+  "test_manifest": {
+    "our_ea": 78,
+    "web": 125,
     "core": 391,
-    "our_ea": 59,
-    "web": 125
+    "total": 594,
+    "all_ok": true
   },
-  "replay_summary": {
-    "MATCH": 13177,
-    "MISMATCH": 27,
-    "UNKNOWN": 812,
-    "NOT_COMPARABLE": 2976,
-    "total": 16992,
-    "match_pct": 77.55
+  "replay": {
+    "comparisons": 16992,
+    "counts": {
+      "MATCH": 13177,
+      "MISMATCH": 27,
+      "UNKNOWN": 812,
+      "NOT_COMPARABLE": 2976
+    },
+    "result_hash": "9AECCE74198E6EF545CC2E7BD78989CBEC59F445245EAD585871A224302CB823",
+    "resume_checks": 812,
+    "resume_mismatches": 2
   },
-  "risk_status": "OUR_EA_POLICY active (guard + kill switch)",
-  "live_lock": "LOCKED (LIVE_DISABLED=True; attempts -> SAFE_STOP)",
-  "gates": [
-    {
-      "gate": "GATE-6.1",
-      "name": "BASELINE",
+  "gates": {
+    "A frozen_model_unchanged": {
       "result": "PASS",
-      "evidence": "core 391 tests, web 125"
+      "evidence": "124F08984284E880F268…"
     },
-    {
-      "gate": "GATE-6.2",
-      "name": "MODEL",
+    "B analyzer_read_only": {
       "result": "PASS",
-      "evidence": "frozen contract hash verified at load; ModelVersion immutable"
+      "evidence": "git diff e5159fc..HEAD on analyzer paths empty"
     },
-    {
-      "gate": "GATE-6.3",
-      "name": "TRACEABILITY",
-      "result": "PASS_WITH_UNKNOWN",
-      "evidence": "matrix appended with implementation/test refs; 4 UNKNOWN rules carried as MODEL_UNCERTAINTY"
-    },
-    {
-      "gate": "GATE-6.4",
-      "name": "STATE MACHINE",
+    "C no_forbidden_imports": {
       "result": "PASS",
-      "evidence": "explicit transitions only; failure-injection recovery tested"
+      "evidence": "test_hardening_boundary scan + analyzer diff"
     },
-    {
-      "gate": "GATE-6.5",
-      "name": "REPLAY",
-      "result": "PASS_WITH_UNKNOWN",
-      "evidence": "match 77.55% | mismatches within documented exception rates | resume 99.75%"
-    },
-    {
-      "gate": "GATE-6.6",
-      "name": "SIMULATION",
+    "D verified_rules_implemented": {
       "result": "PASS",
-      "evidence": "22 scenarios; synthetic never mixed with evidence"
+      "evidence": "16 impl refs"
     },
-    {
-      "gate": "GATE-6.7",
-      "name": "FAILURE INJECTION",
+    "E partial_rules_remain_partial": {
       "result": "PASS",
-      "evidence": "rejection/timeout/duplicate/restart handled safely"
+      "evidence": "grid/basket trigger PARTIAL; 1.68 unselectable"
     },
-    {
-      "gate": "GATE-6.8",
-      "name": "PERSISTENCE/RECOVERY",
-      "result": "PASS_WITH_UNKNOWN",
-      "evidence": "state save/restore verified; restart behaviour labeled OUR_EA_POLICY (V1.68 restart UNKNOWN)"
-    },
-    {
-      "gate": "GATE-6.9",
-      "name": "RISK",
+    "F unknown_rules_remain_unknown": {
       "result": "PASS",
-      "evidence": "risk guard OUR_EA_POLICY; emergency policy separated"
+      "evidence": "4 UNKNOWN via MODEL_UNCERTAINTY"
     },
-    {
-      "gate": "GATE-6.10",
-      "name": "PAPER",
+    "G rejected_1_68_stays_rejected": {
       "result": "PASS",
-      "evidence": "end-to-end paper run: 170 events, 18 cycles"
+      "evidence": "config validation refuses H_GROSS_1_68"
     },
-    {
-      "gate": "GATE-6.11",
-      "name": "DEMO",
-      "result": "PASS_WITH_UNKNOWN",
-      "evidence": "DemoAdapter ready; demo execution retains safety guard"
+    "H replay_deterministic": {
+      "result": "PASS",
+      "evidence": "9AECCE74198E6EF545CC…"
     },
-    {
-      "gate": "GATE-6.12",
-      "name": "RELEASE",
-      "result": "PASS_WITH_UNKNOWN",
-      "evidence": "all prior gates PASS/PASS_WITH_UNKNOWN; LIVE locked"
+    "I mismatch_classification_100pct": {
+      "result": "PASS",
+      "evidence": "0 unclassified / 0 defects (replay audit)"
+    },
+    "J restart_recovery_executed": {
+      "result": "PASS",
+      "evidence": "8/8 real subprocess scenarios"
+    },
+    "K corrupt_state_safe_stop": {
+      "result": "PASS",
+      "evidence": "checksum -> StateCorruptionError -> SAFE_STOP"
+    },
+    "L duplicate_event_idempotent": {
+      "result": "PASS",
+      "evidence": "restart scenario 4 + duplicate-tick tests"
+    },
+    "M paper_e2e": {
+      "result": "PASS",
+      "evidence": "183 events, full lineage"
+    },
+    "N demo_e2e": {
+      "result": "PASS",
+      "evidence": "14/14 steps, controlled environment"
+    },
+    "O failure_injection": {
+      "result": "PASS",
+      "evidence": "12+ failure classes incl. expansion"
+    },
+    "P risk_guard": {
+      "result": "PASS",
+      "evidence": "OUR_EA_POLICY suite green"
+    },
+    "Q traceability_complete": {
+      "result": "PASS",
+      "evidence": "matrix covers all 16 rules"
+    },
+    "R security_integrity": {
+      "result": "PASS",
+      "evidence": "hash chain + tamper detection"
+    },
+    "S historical_regression": {
+      "result": "PASS",
+      "evidence": "594 tests"
+    },
+    "T live_lock": {
+      "result": "PASS",
+      "evidence": "bypass suite: instantiation/config/env/persisted all REFUSED"
+    },
+    "U manifest_hash_consistent": {
+      "result": "PASS",
+      "evidence": "refreshed below with real hashes"
     }
-  ],
+  },
+  "live_lock": "LOCKED",
+  "partial_hypotheses": "DATA-BLOCKED (tick requirements filed)",
   "artifact_hashes": {
-    "PHASE6_ARCHITECTURE.md": "8B4E47163EE471CDE5F625B328DECFF0964E0953B02FBF5929B6D3BAB1775D82",
-    "PHASE6_BEHAVIOR_MODEL.md": "1566D8619DF93BBE4C36FFB0E6D43D6DCAF1616CA7E6959F02DF7113B2484047",
-    "PHASE6_STATE_MACHINE.md": "24D83D3CA49D39BEA7131A8AA5DC3C42A73CB669732FC0F8ED739B3035F93578",
-    "PHASE6_REPLAY.md": "A4B0641170E57EF47A75DED9D42A4F4455F095376B8A9B37EAC4AC3847853308",
-    "PHASE6_SIMULATION.md": "00E49919568F6B6F2E544EE4AADE2AA2F9FD553E6899E9636434045A3AA638EA",
-    "PHASE6_FAILURE_INJECTION.md": "65CA2A9B93A8D747795806BA4A4E73619FA2548D1361328CC7DBB61AC9DBDBF5",
-    "PHASE6_RISK_POLICY.md": "8FB960D5B1EA6A08CCB0E9762950BA277D31B9D7F1C31CB386A2CCB5A8F4D21F",
-    "PHASE6_UNKNOWN_RULES.md": "E3613B53F7845C37849109A80AEB374DC5C7D30BA3FFED697FFA26E8C5453BEE",
-    "PHASE6_TEST_REPORT.md": "A95141F104A001D6D85E1C80D7E382D3C014835F45863500DE8C6D95EF92F4B4",
-    "RELEASE_CANDIDATE.md": "E423FD888DDC6762BE348A94515EB5EFDD16D5F3307343AFCE05C1BAF7AA7AFB"
+    "PHASE6_1_GAP_ANALYSIS.md": "06DA00E5EA788C6A07514FEDFCBC732FE654996896A871864A32CED52D4A8EFB",
+    "PHASE6_1_REPLAY_AUDIT.md": "3D3711B7157073AF99A6DAC734AAE4E8A486C18089EFD24905DBAB4C1CA260DD",
+    "PHASE6_1_RESTART_RECOVERY_REPORT.md": "EB76F30F0D2CB1FD1752F8954C8B50D80E78E92587827D940C649C7698C0B243",
+    "PHASE6_1_DEMO_E2E_REPORT.md": "D61EB6B7F8982FA3FA1BDFCDA6AD1D80FCE3BB4468D1977FD3C91D3B6015D321",
+    "PHASE6_1_PAPER_E2E_REPORT.md": "33FB2D07AAF9A3BFB0DCA54FF051CB013EAE8575FD0C649D31457E253DFD0C24",
+    "PHASE6_1_TICK_DATA_READINESS.md": "9563CEB1EDED6D475A5246A42080A40DA367BD9FEC67F3BBF56E009B8387AC27"
   }
 }

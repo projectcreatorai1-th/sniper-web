@@ -66,3 +66,20 @@ R-PARTIAL-LEVEL,phase6-implementation,MODEL_UNCERTAINTY (not implemented),tests/
 R-EMERGENCY,phase6-implementation,OUR_EA_EMERGENCY_POLICY only (risk_guard.py),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
 R-RESTART-RECOVERY,phase6-implementation,persistence.RecoveryPolicy (OUR_EA_POLICY),tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
 R-ACCUM-1-68,phase6-implementation,excluded — config validation refuses hypothesis,tests/our_ea/,,,bound to V1.68-EVIDENCE-MODEL-v1.0,PHASE6
+# PHASE 6.1 APPEND,2026-09-25T03:04:08,d9832dbbb4
+R-ACCUM-1-68,phase6.1-audit,excluded — config validation refuses hypothesis,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-BASE-LOT,phase6.1-audit,core/our_ea/lot_engine.py::LotConfig.base_lot,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-BASKET-TRIGGER,phase6.1-audit,partial_engine BasketCloseEngine hypotheses,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-BOTH-SIDES,phase6.1-audit,core/our_ea/strategy.py::_open_cycle,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-CONTRACT-SIZE,phase6.1-audit,core/our_ea/config.py broker.contract_size,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-EMERGENCY,phase6.1-audit,OUR_EA_EMERGENCY_POLICY only (risk_guard.py),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-GRID-DIRECTION,phase6.1-audit,core/our_ea/grid_engine.py::next_add_price,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-GRID-SPACING,phase6.1-audit,core/our_ea/grid_engine.py | replay spacing checks,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-GRID-TRIGGER,phase6.1-audit,grid_engine hypothesis_id (configurable),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-LOT-FLOOR,phase6.1-audit,core/our_ea/lot_engine.py | tests/our_ea/test_our_ea.py,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-NORMAL-RESUME,phase6.1-audit,core/our_ea/strategy.py RESUME_NEW_CYCLE,tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-PARTIAL-EXISTS,phase6.1-audit,core/our_ea/partial_engine.py (decisions refused),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-PARTIAL-LEVEL,phase6.1-audit,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-PARTIAL-TRIGGER,phase6.1-audit,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-PARTIAL-VOLUME,phase6.1-audit,MODEL_UNCERTAINTY (not implemented),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
+R-RESTART-RECOVERY,phase6.1-audit,persistence.RecoveryPolicy (OUR_EA_POLICY),tests/our_ea/,replay engine / restart suite / demo e2e,,,PHASE6.1
