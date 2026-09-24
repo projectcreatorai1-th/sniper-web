@@ -1,0 +1,30 @@
+{
+ "stats": {
+  "uptime_s": 60.0,
+  "ticks": 10866,
+  "heartbeats": 10866,
+  "errors": 0,
+  "cycles": 522,
+  "events": 4993,
+  "session_hash": "0505AB50395CD707FFD96EA144D33313E376B58E6CB34941697CB31CEE9C01C9",
+  "mode": "OBSERVATION",
+  "ticks_per_sec": 181.1
+ },
+ "surveillance": {
+  "order_burst": false,
+  "entries": 1716,
+  "closes": 1713,
+  "repeated_rejections": false,
+  "unexpected_exposure_lot": 0.31,
+  "max_single_lot_seen": 0.13,
+  "position_accumulation_flag": false,
+  "strategy_drift": false,
+  "notes": "model_version uniform: True"
+ },
+ "environment": {
+  "target_duration": "extended forward demo on a real MT5 DEMO account (days)",
+  "blocked_reason": "no broker connection/credentials in this environment",
+  "status": "ENVIRONMENT-LIMITED (soak-smoke executed, extended run NOT claimed as completed)",
+  "harness_ready": "tools/phase9_forward_demo.py::forward_demo_loop + ModeController + monitoring collection"
+ }
+}
