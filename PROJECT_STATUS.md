@@ -155,3 +155,20 @@ python smoke_gui.py          # ตรวจ GUI ทุกหน้าแบบ�
 **ผล tests:** Desktop/Core **286/286** (228→+58) · Web **105/105** (99→+6) · Integration 18/18 · GUI smoke 11/11 · regression pins ไม่เปลี่ยน
 หลักคงไว้: ไม่ใช้ performance ยืนยันสูตร · ไม่ auto-correct model (ยืนยันคนเท่านั้น + version ใหม่เสมอ) · ไม่มี fake MT5 data · ไม่มี trading
 รายละเอียด: `IMPLEMENTATION_REPORT_PHASE2.md`
+
+---
+
+## 18. PHASE 3 IMPLEMENTATION (2026-09-24) — External Evidence + Myfxbook Verification
+
+| ของ | ไฟล์ | สรุป |
+|---|---|---|
+| External Evidence v2 | `core/external_evidence.py` | model ครบทุกฟิลด์ตามสเปก + EvidenceSnapshot (content/metrics hash, append-only) + EvidenceLink (supports/contradicts/context_for + human confirm) + conflict detection + SUPERSEDED + quality DIRECT/INDIRECT/CONTEXTUAL/UNKNOWN + **INDIRECT gate: ห้าม myfxbook "supports" สูตร** |
+| Myfxbook Importer | `core/myfxbook.py` | URL→fetch/parse/validate→canonical→registry+snapshot · URL normalization (เก็บ original ครบ) · duplicate=เพิ่ม snapshot · เนื้อหาเปลี่ยน=SUPERSEDED+record ใหม่ · IMPORT_FAILED พร้อมเหตุผลจริง (ไม่มี fake fallback) · environment comparison (MATCH/PARTIAL/MISMATCH/UNKNOWN รายฟิลด์) |
+| Model Candidates | `core/model_candidates.py` | CANDIDATE/ACCEPTED/REJECTED/SUPERSEDED · accept ต้องมี reviewer + **conflict-free** · accept→ModelVersion ใหม่ (based_on_evidence + confirmed_by) ผ่าน gate เดิม |
+| Report | `core/external_report.py` | EXTERNAL_EVIDENCE_REPORT 11 sections + disclaimer "External performance data does not prove internal EA formulas." |
+| Web/API | `web/backend/evidence_api.py` + `app.py` | 10 endpoints (external/myfxbook import/{id}/snapshots/link/confirm/unlink/conflicts/report + model-candidates CRUD+confirm/reject) |
+| GUI | `web/frontend/app.js` | หน้า "Evidence": import URL → รายการ → รายละเอียด (metrics/snapshots/env-match/links) → confirm → Model Candidates (Accept/Reject มี confirmation) — ทดสอบในเบราว์เซอร์จริง |
+
+**Myfxbook Access Result (จริง):** `IMPORT BLOCKED` — myfxbook.com ตอบ HTTP 403 แก่ probe และยังไม่มี source URL จริงใน Evidence Registry (importer พร้อมใช้ ทดสอบด้วย fixtures 30 กรณี — ไม่มีข้อมูลปลอมใน production)
+**ผล tests:** Desktop/Core **333/333** (286→+47) · Web **115/115** (105→+10) · Integration 18/18 · GUI smoke 11/11
+รายละเอียด: `IMPLEMENTATION_REPORT_PHASE3.md`

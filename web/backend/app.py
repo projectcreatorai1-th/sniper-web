@@ -16,7 +16,7 @@ import sys
 import traceback
 from typing import Callable, Dict, List, Tuple
 
-from web.backend import api, observation_api
+from web.backend import api, evidence_api, observation_api
 from web.backend.parsers import RequestError, read_json_body
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -206,9 +206,68 @@ def _dispatch_observation(path: str, environ: dict) -> object:
     raise HTTPError(404, "Not found")
 
 
+def _dispatch_evidence(path: str, environ: dict) -> object:
+    method = environ["REQUEST_METHOD"].upper()
+    parts = [p for p in path.split("/") if p]   # api/evidence/...
+    sub = parts[2] if len(parts) > 2 else ""
+
+    if sub == "external" and method == "GET":
+        return evidence_api.list_external_evidence()
+    if sub == "unlink" and method == "POST":
+        return evidence_api.unlink(read_json_body(environ, MAX_JSON_BODY))
+    if sub == "myfxbook" and len(parts) > 3 and parts[3] == "import"             and method == "POST":
+        return evidence_api.import_myfxbook(
+            read_json_body(environ, MAX_JSON_BODY))
+    if sub == "conflicts" and method == "GET":
+        return evidence_api.conflicts()
+    if sub and sub not in ("external", "myfxbook", "conflicts", "report",
+                           "unlink"):
+        # /api/evidence/{id}[/snapshots|/link|/confirm|/unlink]
+        eid = sub
+        tail = parts[3] if len(parts) > 3 else ""
+        if tail == "" and method == "GET":
+            return evidence_api.get_evidence_detail(eid)
+        if tail == "snapshots" and method == "GET":
+            return evidence_api.get_snapshots(eid)
+        if tail == "link" and method == "POST":
+            return evidence_api.link_evidence(
+                eid, read_json_body(environ, MAX_JSON_BODY))
+        if tail == "confirm" and method == "POST":
+            return evidence_api.confirm_link(
+                eid, read_json_body(environ, MAX_JSON_BODY))
+        if tail == "unlink" and method == "POST":
+            return evidence_api.unlink(read_json_body(environ, MAX_JSON_BODY))
+        raise HTTPError(405, f"unsupported method/sub-path for evidence")
+    if sub == "report" and method == "GET":
+        return evidence_api.external_report()
+    raise HTTPError(405, "unsupported evidence path")
+
+
+def _dispatch_candidates(path: str, environ: dict) -> object:
+    method = environ["REQUEST_METHOD"].upper()
+    parts = [p for p in path.split("/") if p]   # api/model-candidates[/{id}/{action}]
+    if len(parts) == 2:
+        if method == "GET":
+            return evidence_api.list_candidates()
+        if method == "POST":
+            return evidence_api.create_candidate(
+                read_json_body(environ, MAX_JSON_BODY))
+        raise HTTPError(405, "GET/POST only")
+    if len(parts) == 4 and method == "POST":
+        cid, action = parts[2], parts[3]
+        if action in ("confirm", "reject", "supersede"):
+            return evidence_api._review_action(
+                cid, read_json_body(environ, MAX_JSON_BODY), action)
+    raise HTTPError(405, "unsupported candidate path")
+
+
 def _dispatch_api(path: str, environ: dict):
     if path.startswith("/api/observation-sessions"):
         return _dispatch_observation(path, environ)
+    if path.startswith("/api/evidence/"):
+        return _dispatch_evidence(path, environ)
+    if path.startswith("/api/model-candidates"):
+        return _dispatch_candidates(path, environ)
     if path == "/api/test-plans":
         if environ["REQUEST_METHOD"].upper() != "GET":
             raise HTTPError(405, "GET only")
@@ -230,6 +289,8 @@ def application(environ, start_response):
         # ---- API -----------------------------------------------------------
         if path.startswith("/api/"):
             _param_route = (path.startswith("/api/observation-sessions")
+                            or path.startswith("/api/evidence/")
+                            or path.startswith("/api/model-candidates")
                             or path == "/api/test-plans")
             _get_only = path in (
                 "/api/health", "/api/config", "/api/assumptions",
