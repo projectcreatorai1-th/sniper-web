@@ -16,7 +16,7 @@ FIELDS = ("event_id", "timestamp", "account", "symbol", "cycle_id",
           "basket_id", "position_id", "event_type", "state_before",
           "state_after", "side", "lot", "price", "level", "reason",
           "rule_id", "model_version", "evidence_ref", "execution_mode",
-          "trace_id", "hypothesis_id")
+          "trace_id", "hypothesis_id", "config_version")
 
 EVENT_TYPES = (
     "CYCLE_OPEN", "ENTRY", "GRID_ADD", "PARTIAL_CLOSE_INTENT",
@@ -50,6 +50,7 @@ class Event:
     execution_mode: str = ""
     trace_id: str = ""
     hypothesis_id: str = ""
+    config_version: str = ""
 
     def validate(self) -> None:
         if not self.event_id:

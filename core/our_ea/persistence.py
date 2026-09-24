@@ -8,6 +8,7 @@ recovery (R-RESTART-RECOVERY = UNKNOWN).
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from dataclasses import dataclass, field, asdict
@@ -40,10 +41,18 @@ class PersistedState:
     last_event_id: str = ""
     last_event_ts: str = ""
     risk_state: dict = field(default_factory=dict)
+    tick_no: int = 0
+    idem_keys: List[list] = field(default_factory=list)
+    realized_gross: float = 0.0
+    uncertainties: int = 0
     schema: str = STATE_SCHEMA
 
     def to_json(self) -> str:
-        return json.dumps(asdict(self), ensure_ascii=False, indent=1)
+        return json.dumps(asdict(self), ensure_ascii=False,
+                          sort_keys=True, indent=1)
+
+    def checksum(self) -> str:
+        return hashlib.sha256(self.to_json().encode("utf-8")).hexdigest()
 
 
 def snapshot(model_version: str, model_hash: str, config_version: str,
@@ -51,7 +60,9 @@ def snapshot(model_version: str, model_hash: str, config_version: str,
              cycle_sequence: int, last_event_id: str = "",
              last_event_ts: str = "", risk_state: Optional[dict] = None,
              pending_actions: Optional[List[dict]] = None,
-             account: str = "SIM", symbol: str = "GOLDmicro") -> PersistedState:
+             account: str = "SIM", symbol: str = "GOLDmicro",
+             tick_no: int = 0, idem_keys: Optional[List[list]] = None,
+             realized_gross: float = 0.0, uncertainties: int = 0) -> PersistedState:
     return PersistedState(
         model_version=model_version, model_hash=model_hash,
         config_version=config_version, execution_mode=execution_mode,
@@ -62,11 +73,23 @@ def snapshot(model_version: str, model_hash: str, config_version: str,
         closed_positions=[asdict(p) for p in basket.closed_positions],
         pending_actions=list(pending_actions or []),
         last_event_id=last_event_id, last_event_ts=last_event_ts,
-        risk_state=dict(risk_state or {}))
+        risk_state=dict(risk_state or {}), tick_no=tick_no,
+        idem_keys=[list(k) for k in (idem_keys or [])],
+        realized_gross=realized_gross, uncertainties=uncertainties)
+
+
+class StateCorruptionError(PersistenceError):
+    """Checksum/schema mismatch — partial state must NOT be accepted."""
 
 
 class StateStore:
-    """Atomic JSON persistence (write-temp-then-replace)."""
+    """Atomic JSON persistence with checksum integrity.
+
+    save(): temp file + fsync + checksum envelope + atomic replace.
+    load(): verifies envelope checksum and schema; any mismatch raises
+    StateCorruptionError -> caller must SAFE STOP (never best-effort
+    recovery). This is OUR EA safety behavior, not verified V1.68
+    behavior."""
 
     def __init__(self, path: str):
         self.path = path
@@ -74,26 +97,44 @@ class StateStore:
     def save(self, st: PersistedState) -> None:
         os.makedirs(os.path.dirname(self.path) or ".", exist_ok=True)
         tmp = self.path + ".tmp"
+        envelope = {"state": json.loads(st.to_json()),
+                    "checksum": st.checksum()}
         with open(tmp, "w", encoding="utf-8") as f:
-            f.write(st.to_json())
+            json.dump(envelope, f, ensure_ascii=False, indent=1)
+            f.flush()
+            os.fsync(f.fileno())
         os.replace(tmp, self.path)
 
     def load(self, expected_model: Optional[tuple] = None) -> PersistedState:
         if not os.path.exists(self.path):
             raise PersistenceError(f"no persisted state at {self.path}")
-        with open(self.path, "r", encoding="utf-8") as f:
-            doc = json.load(f)
-        if doc.get("schema") != STATE_SCHEMA:
-            raise PersistenceError(f"unknown schema: {doc.get('schema')}")
-        st = PersistedState(**doc)
+        try:
+            with open(self.path, "r", encoding="utf-8") as f:
+                envelope = json.load(f)
+        except json.JSONDecodeError as ex:
+            raise StateCorruptionError(f"unparseable state: {ex}") from ex
+        state_doc = envelope.get("state") if isinstance(envelope, dict) else None
+        checksum = envelope.get("checksum") if isinstance(envelope, dict) else None
+        if not isinstance(state_doc, dict) or not checksum:
+            raise StateCorruptionError("missing state envelope/checksum")
+        try:
+            probe = PersistedState(**{k: v for k, v in state_doc.items()
+                                      if k in PersistedState.__dataclass_fields__})
+        except TypeError as ex:
+            raise StateCorruptionError(
+                f"missing/invalid required fields: {ex}") from ex
+        if probe.schema != STATE_SCHEMA:
+            raise StateCorruptionError(f"unknown schema: {probe.schema}")
+        if hashlib.sha256(probe.to_json().encode("utf-8")).hexdigest() != checksum:
+            raise StateCorruptionError("state checksum mismatch (corrupted)")
         if expected_model is not None:
             exp_id, exp_hash = expected_model
-            if (st.model_version, st.model_hash) != (exp_id, exp_hash):
+            if (probe.model_version, probe.model_hash) != (exp_id, exp_hash):
                 raise PersistenceError(
                     f"MODEL_VERSION_MISMATCH on restore: state has "
-                    f"{st.model_version}@{st.model_hash[:10]}… expected "
+                    f"{probe.model_version}@{probe.model_hash[:10]}… expected "
                     f"{exp_id}@{exp_hash[:10]}…")
-        return st
+        return probe
 
     def restore_basket(self, st: PersistedState) -> Basket:
         b = Basket(st.cycle_id, st.opened_at)
@@ -128,6 +169,16 @@ class RecoveryPolicy:
         return {"action": "SAFE_STOP",
                 "source": self.SOURCE,
                 "reason": "persisted state unreadable/corrupt -> stop safely"}
+
+    STALE_STATE_THRESHOLD_S = 24 * 3600
+
+    def on_stale_state(self, age_s: float) -> dict:
+        if age_s > self.STALE_STATE_THRESHOLD_S:
+            return {"action": "SAFE_STOP", "source": self.SOURCE,
+                    "reason": "state older than threshold — market gap "
+                              "unknowable, state cannot be trusted"}
+        return {"action": "ADOPT_STATE", "source": self.SOURCE,
+                "reason": "state fresh enough to adopt"}
 
     def on_missing_state_with_positions(self) -> dict:
         return {"action": "PAUSE_FOR_OPERATOR",

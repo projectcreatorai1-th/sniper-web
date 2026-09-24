@@ -74,6 +74,7 @@ class StrategyCore:
         self.realized_gross = 0.0
         self.tick_no = 0
         self.uncertainties: List[ModelUncertainty] = []
+        self._last_ts = ""
         self.sm.transition("INIT", condition="startup",
                            reason="strategy core constructed",
                            trace_id=self._trace())
@@ -81,6 +82,40 @@ class StrategyCore:
                            reason=f"model {self.model_version.model_hash[:12]}…",
                            trace_id=self._trace())
         self._persist()
+
+    # ------------------------------------------------------------ restore
+    @classmethod
+    def restore(cls, config: OurEaConfig, adapter, event_log, registry,
+                state_store, persisted) -> "StrategyCore":
+        """Rebuild a StrategyCore from a verified PersistedState (checksum
+        checked by StateStore.load). Idempotency ledger, tick counter,
+        basket identity, realized accounting and risk state (incl. kill
+        switch) all continue — a restart never mints a new cycle.
+        Safety behaviour here is OUR_EA_POLICY, not verified V1.68
+        restart behaviour."""
+        core = cls(config, adapter, event_log, registry, state_store)
+        from core.our_ea.state_machine import StateMachine
+        core.sm = StateMachine(core.model_version.model_id,
+                               initial=persisted.state)
+        core.cycle_sequence = persisted.cycle_sequence
+        core.basket = state_store.restore_basket(persisted)
+        core.realized_gross = persisted.realized_gross
+        core.tick_no = persisted.tick_no
+        core.uncertainties = [ModelUncertainty(
+            timestamp=persisted.last_event_ts,
+            model_version=persisted.model_version,
+            rule_id="(restored-count)", state=persisted.state,
+            reason="restored from persisted state",
+            required_evidence="n/a", execution_mode=adapter.mode,
+            trace_id="restore")] * 0 or core.uncertainties
+        for k in persisted.idem_keys:
+            core.idem._seen.add(tuple(k))
+        rs = persisted.risk_state or {}
+        core.risk.state.equity_peak = rs.get("equity_peak", 0.0)
+        core.risk.state.balance = rs.get("balance", 0.0)
+        core.risk.state.equity = rs.get("equity", 0.0)
+        core.risk.state.kill_switch = bool(rs.get("kill_switch", False))
+        return core
 
     # ------------------------------------------------------------------ ids
     def _trace(self) -> str:
@@ -93,9 +128,25 @@ class StrategyCore:
 
     # ------------------------------------------------------------------ tick
     def on_tick(self, buy_price: float, sell_price: float,
-                spread_usd: float = 0.0) -> Dict:
+                spread_usd: float = 0.0, ts: str = "") -> Dict:
         """Process one market tick. Prices are the executable prices per
-        side (BUY fills at buy_price, SELL fills at sell_price)."""
+        side (BUY fills at buy_price, SELL fills at sell_price).
+        `ts` (optional, ISO) enables stale/out-of-order tick guards."""
+        # invalid price guard — never act on garbage market data
+        if buy_price <= 0 or sell_price <= 0:
+            self.tick_no += 1
+            self._emit("ERROR", reason="invalid price (<=0) — tick skipped",
+                       trace_id=self._trace())
+            return self._diag("invalid_price_skipped")
+        # stale / out-of-order guard (only when timestamps are supplied)
+        if ts:
+            if self._last_ts and ts < self._last_ts:
+                self.tick_no += 1
+                self._emit("RISK_BLOCK",
+                           reason="stale/out-of-order tick — skipped",
+                           trace_id=self._trace())
+                return self._diag("stale_tick_skipped")
+            self._last_ts = ts
         self.tick_no += 1
         prices = {"BUY": buy_price, "SELL": sell_price}
         trace = self._trace()
@@ -249,7 +300,15 @@ class StrategyCore:
                    f"(trigger {trigger_price})" if trigger_price else
                    f"level {level}",
             trace_id=trace)
-        res = self.adapter.submit(intent, market_price=price)
+        try:
+            res = self.adapter.submit(intent, market_price=price)
+        except Exception as ex:                      # adapter failure
+            self._emit("ERROR", side=side, level=level,
+                       reason=f"adapter failure: {ex}", trace_id=trace)
+            if self.sm.can("SAFE_STOP"):
+                self.sm.transition("SAFE_STOP", reason="adapter failure",
+                                   trace_id=trace)
+            return
         if res.status != "FILLED":
             self._emit("ORDER_REJECTED", side=side, level=level, lot=vol.normalized,
                        reason=res.reason, trace_id=trace)
@@ -343,6 +402,7 @@ class StrategyCore:
         kw.setdefault("state_before", self.sm.state)
         kw.setdefault("state_after", self.sm.state)
         kw.setdefault("execution_mode", self.adapter.mode)
+        kw.setdefault("config_version", self.config.schema)
         self.log.emit(event_type=event_type, **kw)
 
     def _persist(self) -> None:
@@ -361,7 +421,11 @@ class StrategyCore:
             last_event_id=last.event_id if last else "",
             last_event_ts=last.timestamp if last else "",
             risk_state=self.risk.snapshot()["state"],
-            account=self.config.account, symbol=self.config.symbol))
+            account=self.config.account, symbol=self.config.symbol,
+            tick_no=self.tick_no,
+            idem_keys=[list(k) for k in self.idem._seen],
+            realized_gross=self.realized_gross,
+            uncertainties=len(self.uncertainties)))
 
     def _diag(self, phase: str) -> Dict:
         d = {"phase": phase, "tick": self.tick_no, "state": self.sm.state,
