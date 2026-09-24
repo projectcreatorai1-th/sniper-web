@@ -387,7 +387,10 @@ class BehaviorPage(ttk.Frame):
         try:
             self.state.model_store.apply_new_version(
                 rules, source="observed-applied", changes=changes,
-                notes=f"fitted from {self._suggestion['points']} observations")
+                notes=f"fitted from {self._suggestion['points']} observations",
+                based_on_evidence=[self._suggestion.get("evidence_ref", "")] if
+                    self._suggestion.get("evidence_ref") else [],
+                confirmed_by="desktop user (confirmation dialog)")
         except ValueError as exc:
             messagebox.showerror("Apply failed", str(exc))
             return

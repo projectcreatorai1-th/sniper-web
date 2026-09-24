@@ -81,6 +81,10 @@ class ModelVersionEntry:
     changes: List[str]
     rules: dict
     notes: str = ""
+    # Phase 2 provenance (defaults keep historical entries loadable)
+    based_on_evidence: List[str] = field(default_factory=list)
+    previous_version: str = ""
+    confirmed_by: str = ""           # human confirmation is REQUIRED to apply
 
 
 class ModelVersionStore:
@@ -131,7 +135,12 @@ class ModelVersionStore:
         return list(self.history)
 
     def apply_new_version(self, rules: SimulationModelRules, source: str,
-                          changes: List[str], notes: str = "") -> SimulationModelRules:
+                          changes: List[str], notes: str = "",
+                          based_on_evidence: Optional[List[str]] = None,
+                          confirmed_by: str = "") -> SimulationModelRules:
+        if not confirmed_by:
+            raise ValueError("model changes require explicit human confirmation "
+                             "(confirmed_by)")
         """Append a new version. NEVER called automatically from observations -
         the UI only calls this after explicit user confirmation."""
         errs = rules.validate()
@@ -155,6 +164,9 @@ class ModelVersionStore:
             changes=changes,
             rules=rules.to_dict(),
             notes=notes,
+            based_on_evidence=list(based_on_evidence or []),
+            previous_version=self.history[-1].model_version if self.history else "",
+            confirmed_by=confirmed_by,
         ))
         self._save()
         return rules

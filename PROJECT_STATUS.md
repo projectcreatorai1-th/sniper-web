@@ -134,3 +134,24 @@ python smoke_gui.py          # ตรวจ GUI ทุกหน้าแบบ�
 
 **ผล tests:** Desktop/Core **228/228** (157 เดิม + 71 ใหม่) · Web **99/99** (93 เดิม + 6 ใหม่) · Integration 18/18 · GUI smoke 11/11 · ไม่มี skipped/errors
 รายละเอียดเต็ม: `IMPLEMENTATION_REPORT_PHASE1.md` · ผลตรวจก่อนหน้า: `AUDIT_REPORT.md`
+
+---
+
+## 17. PHASE 2 IMPLEMENTATION (2026-09-24) — MT5 Behavior Verification + Cycle Timeline
+
+เปลี่ยนจาก Cycle Snapshot → ระบบนำเข้าข้อมูล MT5 จริงและตรวจพฤติกรรม EA เทียบ Simulation Model อย่างเป็นระบบ (ยังไม่มี trading ทุกรูปแบบ)
+
+| ของ | ไฟล์ | สรุป |
+|---|---|---|
+| ObservationSession | `core/observation.py` | session นำเข้าข้อมูลจริง (แยกจาก simulation state) + `ObservationSessionStore` (JSON/versioned) + **ImportResult** (rows_read/imported/rejected/unknown_columns/mapping_used/warnings) + mapping layer ทับ adapter เดิม (alias table เดียว ไม่ normalize ซ้ำ) + Controlled Test Plans A–F |
+| Canonical Event | `core/mt5_adapters.py` | BehaviorRecord +commission/swap/spread (None=UNKNOWN ไม่ใช่ 0) +confidence/evidence_ids + LogAdapter ขยาย (EA init/removal/error → UNKNOWN พร้อม note ไม่เดา event) |
+| Comparators | `core/behavior_comparators.py` | **6 ตัว**: Grid (8 ด้าน) / Lot (per-level + rounding + volume step) / Buy-Sell / Basket (แยก price/commission/swap/net) / Partial (scope ไม่เดา) / Emergency (แสดง 90.0 E007 และ 50.0 E008 แยกเสมอ) — สถานะ MATCH/PARTIAL_MATCH/MISMATCH/UNKNOWN/INSUFFICIENT_DATA + observed/model/difference/evidence/assumption ครบ |
+| Cycle Timeline | `core/cycle.py` | timeline ต่อ cycle (event_sequence/timestamp/positions/lots/pl/equity/margin/dd) + COMPLETE/**INCOMPLETE** (ไม่เติม event ที่ไม่มีหลักฐาน) |
+| Report | `core/behavior_report.py` | BEHAVIOR_VERIFICATION_REPORT 15 sections + traceability (evidence/assumption ids) + test plans |
+| Model versioning | `core/model_rules.py` | entry +based_on_evidence/previous_version/confirmed_by — **apply โดยไม่มี human confirmation = ถูกปฏิเสธ** (GUI ส่ง confirmation จาก dialog จริง) |
+| Web/API | `web/backend/observation_api.py` + `app.py` | POST `/api/observation-sessions` · POST `/{id}/import` · GET `/{id}` `/events` `/comparison` `/timeline` `/report` + GET `/api/test-plans` (import 0 events = ปฏิเสธ) |
+| Web GUI | `web/frontend/app.js` | หน้า "Observation": สร้าง session → import → Events/Comparison/Timeline → ดาวน์โหลดรายงาน JSON (ทดสอบในเบราว์เซอร์จริง) |
+
+**ผล tests:** Desktop/Core **286/286** (228→+58) · Web **105/105** (99→+6) · Integration 18/18 · GUI smoke 11/11 · regression pins ไม่เปลี่ยน
+หลักคงไว้: ไม่ใช้ performance ยืนยันสูตร · ไม่ auto-correct model (ยืนยันคนเท่านั้น + version ใหม่เสมอ) · ไม่มี fake MT5 data · ไม่มี trading
+รายละเอียด: `IMPLEMENTATION_REPORT_PHASE2.md`

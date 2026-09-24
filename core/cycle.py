@@ -31,6 +31,9 @@ from core.mt5_adapters import (
 )
 
 SCHEMA = "SNIPER_CYCLE_V1"
+TIMELINE_SCHEMA = "SNIPER_CYCLE_TIMELINE_V1"
+TIMELINE_COMPLETE = "COMPLETE"
+TIMELINE_INCOMPLETE = "INCOMPLETE"
 
 # cycle statuses
 OPEN = "OPEN"
@@ -246,3 +249,59 @@ def model_cycle(config, profile, rules, side: str, levels: int,
                  "side": side, "level": i + 1, "lot": lots[i], "price": entries[i]}
                 for i in range(len(lots))],
     )
+
+
+def build_cycle_timeline(cycle: Cycle) -> dict:
+    """Timeline rows for one cycle from its recorded events.
+
+    Never fills events that do not exist: a missing start entry, a missing
+    terminal event, or missing timestamps mark the timeline INCOMPLETE.
+    Every row carries whatever fields the source actually recorded
+    (None = UNKNOWN).
+    """
+    rows = []
+    for seq, e in enumerate(cycle.events, start=1):
+        rows.append({
+            "seq": seq,
+            "timestamp": e.get("timestamp") or None,
+            "event": e.get("event"),
+            "position_count": e.get("position_count"),
+            "total_lots": e.get("total_lots"),
+            "floating_pl": e.get("floating_pl"),
+            "realized_pl": e.get("basket_pl"),
+            "equity": e.get("equity"),
+            "margin": e.get("margin"),
+            "drawdown": e.get("drawdown"),
+        })
+    has_start = bool(cycle.events) and cycle.events[0].get("event") in (
+        EVENT_NEW_CYCLE, EVENT_OPEN_POSITION, EVENT_ADD_GRID)
+    has_entry = any(e.get("event") in (EVENT_OPEN_POSITION, EVENT_ADD_GRID)
+                    for e in cycle.events)
+    has_terminal = cycle.status in (CLOSED, EMERGENCY_CLOSED)
+    has_timestamps = all(r["timestamp"] for r in rows)
+    status = TIMELINE_COMPLETE if (has_start and has_entry and has_terminal
+                                   and has_timestamps) else TIMELINE_INCOMPLETE
+    missing = []
+    if not has_start:
+        missing.append("start event")
+    if not has_entry:
+        missing.append("entry event")
+    if not has_terminal:
+        missing.append("terminal event")
+    if not has_timestamps:
+        missing.append("timestamps")
+    return {
+        "schema": TIMELINE_SCHEMA,
+        "cycle_id": cycle.cycle_id,
+        "status": status,
+        "missing": missing,
+        "cycle_status": cycle.status,
+        "close_reason": cycle.close_reason or None,
+        "direction": cycle.direction,
+        "grid_levels": cycle.grid_levels,
+        "rows": rows,
+    }
+
+
+def build_cycle_timelines(records: List[BehaviorRecord]) -> List[dict]:
+    return [build_cycle_timeline(c) for c in build_cycles_from_records(records)]

@@ -45,6 +45,7 @@ _SCHEMA_FIELDS = (
     "timestamp", "symbol", "event", "side", "ticket", "grid_level", "lot",
     "price", "balance", "equity", "margin", "free_margin", "floating_pl",
     "basket_pl", "position_count", "total_lots", "drawdown",
+    "commission", "swap", "spread",
 )
 
 
@@ -67,7 +68,14 @@ class BehaviorRecord:
     position_count: Optional[int] = None
     total_lots: Optional[float] = None
     drawdown: Optional[float] = None
-    source: str = ""                  # adapter name
+    # cost fields - None means UNKNOWN/no data (never 0-by-default: 0 has a
+    # different meaning than "not recorded")
+    commission: Optional[float] = None
+    swap: Optional[float] = None
+    spread: Optional[float] = None
+    source: str = ""                  # adapter name = event_source
+    confidence: str = "UNKNOWN"       # HIGH / MEDIUM / LOW / UNKNOWN
+    evidence_ids: List[str] = field(default_factory=list)
     note: str = ""
 
     def to_dict(self) -> dict:
@@ -76,7 +84,7 @@ class BehaviorRecord:
     @classmethod
     def from_dict(cls, d: dict) -> "BehaviorRecord":
         r = cls()
-        for k in _SCHEMA_FIELDS + ("source", "note"):
+        for k in _SCHEMA_FIELDS + ("source", "confidence", "evidence_ids", "note"):
             if k in d and d[k] is not None:
                 cur = getattr(r, k)
                 v = d[k]
@@ -122,6 +130,9 @@ _CSV_ALIASES = {
     "position_count": {"position_count", "positions", "count"},
     "total_lots": {"total_lots", "total volume"},
     "drawdown": {"drawdown", "dd"},
+    "spread": {"spread", "spread pts"},
+    "commission": {"commission", "comm"},
+    "swap": {"swap", "storage"},
 }
 
 _EVENT_ALIASES = {
@@ -211,7 +222,11 @@ class CSVAdapter:
                 position_count=int(_num(g("position_count"))) if _num(g("position_count")) is not None else None,
                 total_lots=_num(g("total_lots")),
                 drawdown=_num(g("drawdown")),
+                commission=_num(g("commission")),
+                swap=_num(g("swap")),
+                spread=_num(g("spread")),
                 source=self.name,
+                confidence="MEDIUM" if "event" in colmap else "LOW",
             ))
         return records
 
@@ -288,6 +303,16 @@ _LOG_RULES = [
     (_re.compile(r"add(?:ed)?|grid|level\s*#?\s*\d+"), EVENT_ADD_GRID),
     (_re.compile(r"open(?:ed)?|first\s+order"), EVENT_OPEN_POSITION),
 ]
+
+# recognized-but-unclassifiable lines: kept as EVENT_UNKNOWN with a note so
+# they stay traceable without guessing an event type (never auto-typed)
+_LOG_UNKNOWN_RULES = [
+    (_re.compile(r"init(ializ)?"), "EA initialization message"),
+    (_re.compile(r"deinit|remov(e|al)|uninitializ"), "EA removal message"),
+    (_re.compile(r"error|failed|fail"), "error message"),
+    (_re.compile(r"close"), "position/order close (cannot tell basket vs "
+                            "single - not classified)"),
+]
 _LOT_RE = _re.compile(r"(?:lot|volume|lots)\s*[:=]?\s*(-?\d+(?:\.\d+)?)")
 _PRICE_RE = _re.compile(r"(?:price|at)\s*[:=]?\s*(-?\d+(?:\.\d+)?)")
 _LEVEL_RE = _re.compile(r"level\s*#?\s*(\d+)")
@@ -310,8 +335,13 @@ class LogAdapter:
                 continue
             low = line.lower()
             event = next((ev for rx, ev in _LOG_RULES if rx.search(low)), None)
+            unknown_note = ""
             if event is None:
-                continue
+                unk = next((n for rx, n in _LOG_UNKNOWN_RULES if rx.search(low)), None)
+                if unk is None:
+                    continue
+                event = EVENT_UNKNOWN
+                unknown_note = unk
             matched_lines += 1
             m = _LOT_RE.search(low)
             m_lot = float(m.group(1)) if m else None
@@ -328,7 +358,9 @@ class LogAdapter:
             records.append(BehaviorRecord(
                 timestamp=ts, event=event, side=side, grid_level=m_level,
                 lot=m_lot, price=m_price,
-                source=self.name, note=line[:200],
+                source=self.name,
+                confidence="MEDIUM" if unknown_note == "" else "LOW",
+                note=(unknown_note + " | " if unknown_note else "") + line[:200],
             ))
         if matched_lines == 0:
             raise ValueError("no recognizable event lines in log "

@@ -66,13 +66,27 @@ class TestModelVersionStore(TempDirTestMixin, unittest.TestCase):
         rules.arithmetic_step_lots = 0.02
         new = store.apply_new_version(rules, source="observed-applied",
                                       changes=["lot formula -> ARITHMETIC"],
-                                      notes="user confirmed")
+                                      notes="user confirmed",
+                                      based_on_evidence=["E007"],
+                                      confirmed_by="test-user")
         self.assertEqual(new.model_version, "SM-002")
         self.assertEqual(len(store.all_versions()), 2)
         # reload from disk keeps history
         store2 = ModelVersionStore(path)
         self.assertEqual(len(store2.all_versions()), 2)
         self.assertEqual(store2.active_rules().lot_formula, LOT_ARITHMETIC_STEP)
+        entry = store2.all_versions()[-1]
+        self.assertEqual(entry.confirmed_by, "test-user")
+        self.assertEqual(entry.previous_version, "SM-001")
+        self.assertEqual(entry.based_on_evidence, ["E007"])
+
+    def test_apply_requires_explicit_confirmation(self):
+        # Phase 2: model changes without human confirmation are rejected
+        store = ModelVersionStore(os.path.join(self.tmpdir, "mv2.json"))
+        rules = store.active_rules()
+        with self.assertRaises(ValueError):
+            store.apply_new_version(rules, source="manual-edit",
+                                    changes=["no confirm"])
 
     def test_invalid_rules_rejected(self):
         store = ModelVersionStore(os.path.join(self.tmpdir, "mv.json"))

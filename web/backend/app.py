@@ -16,8 +16,8 @@ import sys
 import traceback
 from typing import Callable, Dict, List, Tuple
 
-from web.backend import api
-from web.backend.parsers import RequestError
+from web.backend import api, observation_api
+from web.backend.parsers import RequestError, read_json_body
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
@@ -168,7 +168,51 @@ ROUTES: Dict[str, Callable] = {
 }
 
 
+def _dispatch_observation(path: str, environ: dict) -> object:
+    method = environ["REQUEST_METHOD"].upper()
+    parts = [p for p in path.split("/") if p]      # api/observation-sessions[/id[/sub]]
+    if len(parts) == 2:
+        if method != "POST":
+            raise HTTPError(405, "use POST to create an observation session")
+        return observation_api.create_session(read_json_body(environ, MAX_JSON_BODY))
+    if len(parts) >= 3:
+        sid, sub = parts[2], (parts[3] if len(parts) > 3 else "")
+        if sub == "" and method == "GET":
+            return observation_api.get_session(sid)
+        if sub == "events" and method == "GET":
+            return observation_api.get_events(sid)
+        if sub == "comparison" and method == "GET":
+            return observation_api.get_comparison(sid)
+        if sub == "timeline" and method == "GET":
+            return observation_api.get_timeline(sid)
+        if sub == "report" and method == "GET":
+            return observation_api.get_report(sid)
+        if sub == "import" and method == "POST":
+            ctype = environ.get("CONTENT_TYPE", "")
+            try:
+                length = int(environ.get("CONTENT_LENGTH") or 0)
+            except ValueError:
+                length = 0
+            max_upload = int(os.environ.get("WEB_MAX_UPLOAD_MB", "8")) * 1024 * 1024
+            if length > max_upload:
+                raise RequestError(f"Upload too large (> {max_upload} bytes)",
+                                   "PAYLOAD_TOO_LARGE")
+            raw = environ["wsgi.input"].read(length) if length else b""
+            from web.backend.parsers import read_bounded
+            if len(raw) < length:                    # drain remainder if any
+                raw += read_bounded(environ, 0)
+            return observation_api.import_into_session(sid, raw, ctype, max_upload)
+        raise HTTPError(405, f"unsupported method/sub-path for observation session")
+    raise HTTPError(404, "Not found")
+
+
 def _dispatch_api(path: str, environ: dict):
+    if path.startswith("/api/observation-sessions"):
+        return _dispatch_observation(path, environ)
+    if path == "/api/test-plans":
+        if environ["REQUEST_METHOD"].upper() != "GET":
+            raise HTTPError(405, "GET only")
+        return observation_api.get_test_plans()
     handler = ROUTES[path]
     body = {}
     if environ["REQUEST_METHOD"] == "POST" and path != "/api/backtest/analyze":
@@ -185,20 +229,23 @@ def application(environ, start_response):
     try:
         # ---- API -----------------------------------------------------------
         if path.startswith("/api/"):
-            if path not in ROUTES:
-                raise HTTPError(404, f"Unknown API endpoint: {path}")
+            _param_route = (path.startswith("/api/observation-sessions")
+                            or path == "/api/test-plans")
+            _get_only = path in (
+                "/api/health", "/api/config", "/api/assumptions",
+                "/api/evidence", "/api/environment", "/api/parameters",
+                "/api/ex5-integrity")
+            _post_only = path in ROUTES and not _get_only
+            # param-based observation routes enforce their own methods in
+            # _dispatch_observation (create/import=POST, rest=GET)
             if method not in ("GET", "POST", "HEAD"):
                 raise HTTPError(405, f"Method {method} not allowed")
-            if method == "POST" and path in (
-                    "/api/health", "/api/config", "/api/assumptions",
-                    "/api/evidence", "/api/environment", "/api/parameters",
-                    "/api/ex5-integrity"):
+            if method == "POST" and _get_only:
                 raise HTTPError(405, f"{path} accepts GET only")
-            if method == "GET" and path not in (
-                    "/api/health", "/api/config", "/api/assumptions",
-                    "/api/evidence", "/api/environment", "/api/parameters",
-                    "/api/ex5-integrity"):
+            if method == "GET" and _post_only and path != "/api/observation-sessions":
                 raise HTTPError(405, f"{path} accepts POST only")
+            if not _param_route and path not in ROUTES:
+                raise HTTPError(404, f"Unknown API endpoint: {path}")
             result = _dispatch_api(path, environ)
             if isinstance(result, api.FileResponse):
                 headers = [
