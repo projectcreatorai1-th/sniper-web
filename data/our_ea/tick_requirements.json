@@ -1,0 +1,28 @@
+{
+ "schema": "OUR_EA_TICK_REQUIREMENTS_V1",
+ "purpose": "Discriminate PARTIAL/UNKNOWN hypotheses (grid trigger anchor, basket trigger instant, partial close trigger/volume, emergency)",
+ "status": "BLOCKED_BY_DATA",
+ "symbol": "GOLDmicro",
+ "timeframe": "tick (bid/ask, millisecond timestamps)",
+ "required_date_range": {
+  "335504856": "2026.09.10 12:40 - 2026.09.24 16:01",
+  "391629843": "2026.08.10 15:02 - 2026.09.24 (full trade window)",
+  "411173797": "2026.09.07 03:40 - 2026.09.24 (full trade window)",
+  "440192945": "2026.09.10 12:34 - 2026.09.24 (full trade window)"
+ },
+ "required_fields": [
+  "timestamp_ms",
+  "bid",
+  "ask",
+  "volume (if available)"
+ ],
+ "deal_linkage": "deal execution timestamps + filled prices to align ticks with the 10,593 existing deals",
+ "expected_resolution": [
+  "grid trigger anchor: separate H_PREV_ENTRY vs H_EXTREME (PARTIAL -> resolvable)",
+  "basket trigger: observe evaluation instant + spread at close (PARTIAL -> resolvable)",
+  "partial close trigger/volume: watch the watched quantity at fire time (UNKNOWN -> resolvable)",
+  "emergency: floating P/L series bounds the trigger (UNKNOWN -> bounded)"
+ ],
+ "prohibited": "synthetic tick data must NEVER be registered as V1.68 evidence",
+ "source_hint": "XM Global tick history export / MT5 tick database for the above windows on GOLDmicro"
+}

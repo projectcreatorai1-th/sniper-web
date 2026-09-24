@@ -1,0 +1,7 @@
+{
+ "replay_16992_comparisons_s": 0.047,
+ "replay_rerun_s": 0.047,
+ "paper_2000_ticks_s": 0.018,
+ "paper_2000_events": 333,
+ "restart_phase1_200ticks_s": 0.146
+}
