@@ -172,3 +172,21 @@ python smoke_gui.py          # ตรวจ GUI ทุกหน้าแบบ�
 **Myfxbook Access Result (จริง):** `IMPORT BLOCKED` — myfxbook.com ตอบ HTTP 403 แก่ probe และยังไม่มี source URL จริงใน Evidence Registry (importer พร้อมใช้ ทดสอบด้วย fixtures 30 กรณี — ไม่มีข้อมูลปลอมใน production)
 **ผล tests:** Desktop/Core **333/333** (286→+47) · Web **115/115** (105→+10) · Integration 18/18 · GUI smoke 11/11
 รายละเอียด: `IMPLEMENTATION_REPORT_PHASE3.md`
+
+---
+
+## 19. PHASE 4 IMPLEMENTATION (2026-09-24) — Timeline Simulator + Desktop Evidence
+
+| ของ | ไฟล์ | สรุป |
+|---|---|---|
+| Timeline Simulator | `core/timeline_simulation.py` | TimelineSimulation + PriceBar (bid/ask/spread = UNKNOWN ถ้าไม่มี) + 9 scenario presets (SYNTHETIC) + TimelineEventEngine (เรียก core.calculations เท่านั้น) + worst_case_timeline (SSOT view) + compare_model_simulation (MODEL_ONLY status) + SimulationTrace + immutability |
+| Web API | `web/backend/timeline_api.py` + `app.py` | POST simulate · worst-case · export JSON/CSV/HTML · GET scenarios · observation-picker + validate (REJECT ถ้าไม่มีจริง) |
+| Frontend | `web/frontend/app.js` | หน้า "Timeline" (Scenario Builder + event timeline + trace + export) + ปุ่ม "ดู Timeline" ในหน้า Worst Case |
+| Desktop GUI | `desktop/pages/evidence.py` | หน้า Evidence จริง (12 หน้าแล้ว): Import/View/Link/Confirm/Unlink + Observation picker + Conflicts + Candidates Reject — ใช้ core registries เดียวกับ Web |
+| Performance | tests | 1,000 events (<5s) · 10,000 (<30s) · 100,000 (<120s) ผ่านหมด |
+
+**ผล tests:** Desktop **365/365** (333→+32) · Web **125/125** (115→+10) · Integration 18/18 · GUI smoke **12/12** หน้า
+**Regression pins:** 0.15 / 1.85 / 11 / 1.95 / −3255 / 651% — **ไม่เปลี่ยน** (test ยืนยันผ่าน worst-case timeline)
+
+**EVIDENCE_SUFFICIENCY_REVIEW:** `EVIDENCE_SUFFICIENCY_REVIEW.md` — สรุปว่า 3 VERIFIED · 1 PARTIAL · 10 MODEL · 1 UNKNOWN → **ยังไม่พอสำหรับ OUR EA** (ขาด MT5 observation จริง)
+รายละเอียด: `IMPLEMENTATION_REPORT_PHASE4.md`
