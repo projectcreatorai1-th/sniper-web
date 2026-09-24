@@ -29,7 +29,10 @@
   </div>
 </footer>
 
-<script src="/static/app.js"></script>
+<!-- our_ea_page.js MUST load before app.js: app.js's ROUTES map
+     references pageOurEa at parse time (a reversed order throws
+     ReferenceError and blanks the whole SPA). -->
 <script src="/static/our_ea/our_ea_page.js"></script>
+<script src="/static/app.js"></script>
 </body>
 </html>
