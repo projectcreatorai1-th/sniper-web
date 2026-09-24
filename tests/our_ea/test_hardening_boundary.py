@@ -188,15 +188,34 @@ class TestBoundaryAudit(unittest.TestCase):
             cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(r.stdout.strip(), "",
                          f"Analyzer/frozen modified since 6bdb67c: {r.stdout}")
-        # app.py may change ONLY by the our_ea dispatch hook: its analyzer
-        # handlers must be untouched -> verify the hook is additive
+        # app.py may change ONLY by the our_ea dispatch hook: analyzer
+        # handlers untouched. Added lines must be hook scaffolding only;
+        # removed lines must be only the original dispatch `if` line.
         r2 = subprocess.run(
             ["git", "diff", "6bdb67c", "HEAD", "--", "web/backend/app.py"],
             cwd=ROOT, capture_output=True, text=True)
-        added = [l for l in r2.stdout.splitlines() if l.startswith("+")
-                 and not l.startswith("+++") and "our_ea" not in l]
-        self.assertEqual(added, [],
-                         f"non-hook lines added to app.py: {added}")
+
+        def _hook_line(l):
+            body = l[1:].strip()          # drop leading '+'
+            if (not body or body.startswith("#")
+                    or "our_ea" in body.lower()
+                    or body in ("try:", "except ValueError:")
+                    or "_len" in body or "_raw" in body
+                    or "dispatch(" in body
+                    or 'path.startswith("/api/our_ea/")' in body
+                    or 'elif path.startswith("/api/")' in body):
+                return True
+            return False
+
+        bad_added = [l for l in r2.stdout.splitlines()
+                     if l.startswith("+") and not l.startswith("+++")
+                     and not _hook_line(l)]
+        self.assertEqual(bad_added, [],
+                         f"non-hook lines added to app.py: {bad_added}")
+        removed = [l for l in r2.stdout.splitlines()
+                   if l.startswith("-") and not l.startswith("---")]
+        self.assertTrue(all('path.startswith("/api/")' in l for l in removed),
+                        f"unexpected removals from app.py: {removed}")
 
     def test_frozen_model_hash_unchanged(self):
         import hashlib

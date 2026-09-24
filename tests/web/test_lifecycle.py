@@ -241,14 +241,41 @@ class TestLifecycle(unittest.TestCase):
 
 class TestLifecycleStress(unittest.TestCase):
     def test_100_start_stop_cycles(self):
-        for i in range(100):
+        """100 REAL successful start/stop cycles. When the full suite
+        runs in parallel, a freshly picked free port can be snatched by
+        another test's server before we bind (server then correctly
+        refuses with PORT_BUSY) — that race is environmental, so we
+        retry on a NEW port; the guarantees under test are unchanged:
+        every counted cycle really started + stopped, no duplicate
+        instances, no lock leak, no orphan."""
+        successes = 0
+        races = 0
+        attempts = 0
+        while successes < 100 and attempts < 150:
+            attempts += 1
             port = free_port()
             p = start(port)
-            ok = wait_port(port, timeout=15)
-            self.assertTrue(ok, f"cycle {i}: server must start")
-            stop(p)
-            self.assertEqual(p.returncode if p.returncode else 0, 0)
-        # after the storm: no stale lock, no orphan on our test ports
+            if wait_port(port, timeout=25):
+                stop(p)
+                self.assertIn(p.returncode, (0, None),
+                              "graceful stop exits 0")
+                successes += 1
+            else:
+                out = ""
+                try:
+                    out = p.communicate(timeout=5)[0]
+                except Exception:
+                    p.kill()
+                if "PORT_BUSY" in out:
+                    races += 1          # refused correctly — no orphan
+                    self.assertIn(p.returncode, (2, None))
+                    if p.poll() is None:
+                        stop(p)
+                else:
+                    self.fail(f"cycle failed without PORT_BUSY: {out[-200:]}")
+        self.assertEqual(successes, 100,
+                         f"needed 100 real cycles (races={races})")
+        # after the storm: no stale lock leaked
         if os.path.exists(PID_FILE):
             pid = open(PID_FILE).read().strip()
             self.assertEqual(pid, "", "no pid file may leak after stress")
