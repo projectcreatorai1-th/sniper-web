@@ -16,7 +16,8 @@ FIELDS = ("event_id", "timestamp", "account", "symbol", "cycle_id",
           "basket_id", "position_id", "event_type", "state_before",
           "state_after", "side", "lot", "price", "level", "reason",
           "rule_id", "model_version", "evidence_ref", "execution_mode",
-          "trace_id", "hypothesis_id", "config_version")
+          "trace_id", "hypothesis_id", "config_version",
+          "session_id", "correlation_id")
 
 EVENT_TYPES = (
     "CYCLE_OPEN", "ENTRY", "GRID_ADD", "PARTIAL_CLOSE_INTENT",
@@ -51,6 +52,11 @@ class Event:
     trace_id: str = ""
     hypothesis_id: str = ""
     config_version: str = ""
+    # P0-P3 §11: explicit session/correlation identity. correlation_id
+    # aliases the decision trace (trace_id) unless set otherwise; both are
+    # OPTIONAL so historical ledger lines (without them) stay valid.
+    session_id: str = ""
+    correlation_id: str = ""
 
     def validate(self) -> None:
         if not self.event_id:

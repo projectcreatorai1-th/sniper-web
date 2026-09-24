@@ -310,7 +310,18 @@ def application(environ, start_response):
 
     try:
         # ---- API -----------------------------------------------------------
-        if path.startswith("/api/"):
+        if path.startswith("/api/our_ea/"):
+            # OUR EA runtime service (P2/P3): read-only snapshots +
+            # explicit operator commands; no trading endpoints.
+            from web.backend import our_ea_api
+            try:
+                _len = int(environ.get("CONTENT_LENGTH") or 0)
+            except ValueError:
+                _len = 0
+            _raw = environ["wsgi.input"].read(_len) if _len else b""
+            status, headers, payload_body = our_ea_api.dispatch(
+                method, path, _raw)
+        elif path.startswith("/api/"):
             _param_route = (path.startswith("/api/observation-sessions")
                             or path.startswith("/api/evidence/")
                             or path.startswith("/api/model-candidates")

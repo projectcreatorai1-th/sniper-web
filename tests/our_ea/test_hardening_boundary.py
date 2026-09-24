@@ -175,14 +175,28 @@ class TestBoundaryAudit(unittest.TestCase):
         self.assertEqual(violations, [],
                          f"forbidden Analyzer/broker runtime imports: {violations}")
 
-    def test_analyzer_untouched_since_phase6_baseline(self):
+    def test_analyzer_untouched_since_p0_baseline(self):
+        """P0-P3 authorizes ONLY server-lifecycle files (run_server.py,
+        our_ea_api.py) + the dispatch hook inside app.py. Analyzer logic
+        must be byte-identical since the P0 baseline commit (6bdb67c)."""
         r = subprocess.run(
-            ["git", "diff", "--name-only", "e5159fc", "HEAD", "--",
+            ["git", "diff", "--name-only", "6bdb67c", "HEAD", "--",
              "core/calculations.py", "core/evidence.py", "core/cycle.py",
-             "core/basket.py", "core/forensics", "web/backend", "desktop"],
+             "core/basket.py", "core/forensics", "desktop",
+             "data/evidence.json", "data/model_candidates.json",
+             "data/evidence_model"],
             cwd=ROOT, capture_output=True, text=True)
         self.assertEqual(r.stdout.strip(), "",
-                         f"Analyzer runtime modified since e5159fc: {r.stdout}")
+                         f"Analyzer/frozen modified since 6bdb67c: {r.stdout}")
+        # app.py may change ONLY by the our_ea dispatch hook: its analyzer
+        # handlers must be untouched -> verify the hook is additive
+        r2 = subprocess.run(
+            ["git", "diff", "6bdb67c", "HEAD", "--", "web/backend/app.py"],
+            cwd=ROOT, capture_output=True, text=True)
+        added = [l for l in r2.stdout.splitlines() if l.startswith("+")
+                 and not l.startswith("+++") and "our_ea" not in l]
+        self.assertEqual(added, [],
+                         f"non-hook lines added to app.py: {added}")
 
     def test_frozen_model_hash_unchanged(self):
         import hashlib
