@@ -16,7 +16,7 @@ import sys
 import traceback
 from typing import Callable, Dict, List, Tuple
 
-from web.backend import api, evidence_api, observation_api
+from web.backend import api, evidence_api, observation_api, timeline_api
 from web.backend.parsers import RequestError, read_json_body
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -268,6 +268,30 @@ def _dispatch_api(path: str, environ: dict):
         return _dispatch_evidence(path, environ)
     if path.startswith("/api/model-candidates"):
         return _dispatch_candidates(path, environ)
+    if path == "/api/timeline/scenarios":
+        if environ["REQUEST_METHOD"].upper() != "GET":
+            raise HTTPError(405, "GET only")
+        return timeline_api.list_scenarios()
+    if path == "/api/timeline/simulate":
+        if environ["REQUEST_METHOD"].upper() != "POST":
+            raise HTTPError(405, "POST only")
+        return timeline_api.run_simulation(read_json_body(environ, MAX_JSON_BODY))
+    if path == "/api/timeline/worst-case":
+        if environ["REQUEST_METHOD"].upper() != "POST":
+            raise HTTPError(405, "POST only")
+        return timeline_api.worst_case(read_json_body(environ, MAX_JSON_BODY))
+    if path == "/api/timeline/export":
+        if environ["REQUEST_METHOD"].upper() != "POST":
+            raise HTTPError(405, "POST only")
+        return timeline_api.export_simulation(read_json_body(environ, MAX_JSON_BODY))
+    if path == "/api/observation-picker":
+        if environ["REQUEST_METHOD"].upper() != "POST":
+            raise HTTPError(405, "POST only")
+        return timeline_api.observation_picker(read_json_body(environ, MAX_JSON_BODY))
+    if path == "/api/observation-picker/validate":
+        if environ["REQUEST_METHOD"].upper() != "POST":
+            raise HTTPError(405, "POST only")
+        return timeline_api.validate_observation_link(read_json_body(environ, MAX_JSON_BODY))
     if path == "/api/test-plans":
         if environ["REQUEST_METHOD"].upper() != "GET":
             raise HTTPError(405, "GET only")
@@ -276,7 +300,6 @@ def _dispatch_api(path: str, environ: dict):
     body = {}
     if environ["REQUEST_METHOD"] == "POST" and path != "/api/backtest/analyze":
         # the backtest endpoint reads its multipart body itself
-        from web.backend.parsers import read_json_body
         body = read_json_body(environ, MAX_JSON_BODY)
     return handler(environ, body)
 
@@ -291,6 +314,8 @@ def application(environ, start_response):
             _param_route = (path.startswith("/api/observation-sessions")
                             or path.startswith("/api/evidence/")
                             or path.startswith("/api/model-candidates")
+                            or path.startswith("/api/timeline/")
+                            or path.startswith("/api/observation-picker")
                             or path == "/api/test-plans")
             _get_only = path in (
                 "/api/health", "/api/config", "/api/assumptions",

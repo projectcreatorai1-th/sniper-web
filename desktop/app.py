@@ -18,6 +18,7 @@ from desktop.pages.compare import ComparePage
 from desktop.pages.behavior import BehaviorPage
 from desktop.pages.reports import ReportsPage
 from desktop.pages.settings import SettingsPage
+from desktop.pages.evidence import EvidencePage
 
 APP_TITLE = "SNIPER CashFlow Analyzer — V1.68 (Analyzer / Calculator / Simulator)"
 
@@ -58,6 +59,7 @@ class MainWindow:
         ("Behavior Verification", BehaviorPage),
         ("Reports", ReportsPage),
         ("Settings", SettingsPage),
+        ("Evidence", EvidencePage),
     ]
 
     def __init__(self, root: tk.Tk, state: AppState):
