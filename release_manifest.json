@@ -1,127 +1,59 @@
 {
-  "project_version": "OUR-EA-FINAL-DEMO-CANDIDATE-v1.0",
-  "release_status": "DEMO_CANDIDATE",
-  "git_commit": "d9832dbbb42518bc4bf8d5a71f69a8f8667e3604",
-  "generated_at": "2026-09-25T03:04:08",
-  "model_version": "V1.68-EVIDENCE-MODEL-v1.0",
-  "frozen_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
-  "dataset_hashes": {
-    "replay_dataset_v1": "994955EA1889409A3B71C15C799B2802E0D9CF5E42DB277D420FA0835B3C0705"
+  "project_version": "OUR-EA-v1.0-final",
+  "release_status": "PRODUCTION_AUDIT_PASSED_WITH_ENVIRONMENT_LIMITS",
+  "final_gate": "LIVE_GATE_PENDING (human decision authority)",
+  "git_commit": "7eef4942babde6abd56f4d04f0459a87f8a5a74e",
+  "branch": "main",
+  "generated_at": "2026-09-25T03:32:31",
+  "frozen_evidence_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+  "config_hash": "68E198EC2FC2C224E6AEE69DBA63864A2D15E957AA7263F765F944C4A9DCD4E2",
+  "sbom_hash": "10AC6D488BE7E8CB5CAA709A13E32317B0810A806126DFF76D9E5F697F560DF2",
+  "artifact_hashes": {
+    "PHASE6_TO_PHASE10_BASELINE.json": "A67439D7CAFA869B3FD2A48334F5FFC50D3119A985BF994FF4A2FCE0AA4D758F",
+    "PHASE7_REAL_DATA_VALIDATION_REPORT.md": "B20A578A267FEAD787658A1FA480ECBB7B25E8D72D70EE2A9A80AD4F1395F22F",
+    "PHASE8_STRATEGY_IMPROVEMENT_REPORT.md": "0739166485BF32CC974E82AD15D0EE357EC8213BE29B05869E7B3A2C545E6642",
+    "PHASE9_FORWARD_DEMO_REPORT.md": "58A4CB4696F0C3D43658452B6F49933CC2552DD950F6B00CD4296B4E88B614EF",
+    "STRESS_CAPACITY_REPORT.md": "0402EA406A592D68968A0E26A60B20894C096A19ED511E069DEEC9D7DFD627C0",
+    "DISASTER_RECOVERY_REPORT.md": "77AE90D1BA5254D01159B64A7993E949A838C1F7F996AFE08874260A3FE70347",
+    "SECURITY_SUPPLY_CHAIN_REPORT.md": "10AC6D488BE7E8CB5CAA709A13E32317B0810A806126DFF76D9E5F697F560DF2",
+    "INDEPENDENT_VALIDATION_REPORT.md": "5EF73C55D0750830401D6CFFF8AB460264930C1D197AD9DC3EA77DB62EEBE411",
+    "INCIDENT_MANAGEMENT.md": "8CD6B7671B5DBEE5D34A7A8D171B2255F728C67E363D05871943A2CA46908391"
   },
-  "config_hash": "3FF73A63262FC290B65E4A1DD27C7F081F2ADF55D0DAB1FD1AE0CEB0C0012C02",
-  "test_manifest": {
-    "our_ea": 78,
-    "web": 125,
+  "test_counts": {
     "core": 391,
-    "total": 594,
+    "our_ea": 94,
+    "web": 125,
+    "total": 610,
     "all_ok": true
   },
   "replay": {
-    "comparisons": 16992,
-    "counts": {
-      "MATCH": 13177,
-      "MISMATCH": 27,
-      "UNKNOWN": 812,
-      "NOT_COMPARABLE": 2976
-    },
     "result_hash": "9AECCE74198E6EF545CC2E7BD78989CBEC59F445245EAD585871A224302CB823",
-    "resume_checks": 812,
-    "resume_mismatches": 2
+    "deterministic_3run": true
   },
-  "gates": {
-    "A frozen_model_unchanged": {
-      "result": "PASS",
-      "evidence": "124F08984284E880F268…"
-    },
-    "B analyzer_read_only": {
-      "result": "PASS",
-      "evidence": "git diff e5159fc..HEAD on analyzer paths empty"
-    },
-    "C no_forbidden_imports": {
-      "result": "PASS",
-      "evidence": "test_hardening_boundary scan + analyzer diff"
-    },
-    "D verified_rules_implemented": {
-      "result": "PASS",
-      "evidence": "16 impl refs"
-    },
-    "E partial_rules_remain_partial": {
-      "result": "PASS",
-      "evidence": "grid/basket trigger PARTIAL; 1.68 unselectable"
-    },
-    "F unknown_rules_remain_unknown": {
-      "result": "PASS",
-      "evidence": "4 UNKNOWN via MODEL_UNCERTAINTY"
-    },
-    "G rejected_1_68_stays_rejected": {
-      "result": "PASS",
-      "evidence": "config validation refuses H_GROSS_1_68"
-    },
-    "H replay_deterministic": {
-      "result": "PASS",
-      "evidence": "9AECCE74198E6EF545CC…"
-    },
-    "I mismatch_classification_100pct": {
-      "result": "PASS",
-      "evidence": "0 unclassified / 0 defects (replay audit)"
-    },
-    "J restart_recovery_executed": {
-      "result": "PASS",
-      "evidence": "8/8 real subprocess scenarios"
-    },
-    "K corrupt_state_safe_stop": {
-      "result": "PASS",
-      "evidence": "checksum -> StateCorruptionError -> SAFE_STOP"
-    },
-    "L duplicate_event_idempotent": {
-      "result": "PASS",
-      "evidence": "restart scenario 4 + duplicate-tick tests"
-    },
-    "M paper_e2e": {
-      "result": "PASS",
-      "evidence": "183 events, full lineage"
-    },
-    "N demo_e2e": {
-      "result": "PASS",
-      "evidence": "14/14 steps, controlled environment"
-    },
-    "O failure_injection": {
-      "result": "PASS",
-      "evidence": "12+ failure classes incl. expansion"
-    },
-    "P risk_guard": {
-      "result": "PASS",
-      "evidence": "OUR_EA_POLICY suite green"
-    },
-    "Q traceability_complete": {
-      "result": "PASS",
-      "evidence": "matrix covers all 16 rules"
-    },
-    "R security_integrity": {
-      "result": "PASS",
-      "evidence": "hash chain + tamper detection"
-    },
-    "S historical_regression": {
-      "result": "PASS",
-      "evidence": "594 tests"
-    },
-    "T live_lock": {
-      "result": "PASS",
-      "evidence": "bypass suite: instantiation/config/env/persisted all REFUSED"
-    },
-    "U manifest_hash_consistent": {
-      "result": "PASS",
-      "evidence": "refreshed below with real hashes"
-    }
+  "oos": {
+    "status": "PASS-WITH-UNKNOWN",
+    "promotions": 0
   },
-  "live_lock": "LOCKED",
-  "partial_hypotheses": "DATA-BLOCKED (tick requirements filed)",
-  "artifact_hashes": {
-    "PHASE6_1_GAP_ANALYSIS.md": "06DA00E5EA788C6A07514FEDFCBC732FE654996896A871864A32CED52D4A8EFB",
-    "PHASE6_1_REPLAY_AUDIT.md": "3D3711B7157073AF99A6DAC734AAE4E8A486C18089EFD24905DBAB4C1CA260DD",
-    "PHASE6_1_RESTART_RECOVERY_REPORT.md": "EB76F30F0D2CB1FD1752F8954C8B50D80E78E92587827D940C649C7698C0B243",
-    "PHASE6_1_DEMO_E2E_REPORT.md": "D61EB6B7F8982FA3FA1BDFCDA6AD1D80FCE3BB4468D1977FD3C91D3B6015D321",
-    "PHASE6_1_PAPER_E2E_REPORT.md": "33FB2D07AAF9A3BFB0DCA54FF051CB013EAE8575FD0C649D31457E253DFD0C24",
-    "PHASE6_1_TICK_DATA_READINESS.md": "9563CEB1EDED6D475A5246A42080A40DA367BD9FEC67F3BBF56E009B8387AC27"
-  }
+  "demo": {
+    "controlled_e2e": "PASS 14/14",
+    "extended_forward": "ENVIRONMENT-LIMITED"
+  },
+  "soak": "60s smoke PASS; multi-day ENVIRONMENT-LIMITED",
+  "recovery": "8/8 real restart scenarios PASS",
+  "security": "secrets clean; SBOM/provenance recorded",
+  "production_audit": {
+    "items": 39,
+    "fail": 0,
+    "environment_blocked": [
+      "G Broker",
+      "V Forward demo",
+      "W Soak"
+    ]
+  },
+  "known_limitations": [
+    "tick data absent -> grid/basket trigger discrimination + partial trigger/volume + emergency bounds DATA-BLOCKED",
+    "extended forward demo + multi-day soak + interactive broker audit ENVIRONMENT-BLOCKED",
+    "4 UNKNOWN rules preserved (never promoted)"
+  ],
+  "live": "LOCKED — LIVE_GATE_PENDING"
 }
