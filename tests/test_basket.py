@@ -12,20 +12,20 @@ class TestBasketSim(unittest.TestCase):
 
     def test_basket_at_depth_5(self):
         b = simulate_basket(self.cfg, self.prof, self.rules, "BUY", 5)
-        self.assertAlmostEqual(b.total_lots, 0.61)
+        self.assertAlmostEqual(b.total_lots, 0.60)
         self.assertAlmostEqual(b.current_basket_pl, -550.0)   # deepest point
         self.assertEqual(b.partial_trigger, 2.0)
         self.assertEqual(b.basket_target, 1.68)
-        self.assertAlmostEqual(b.partial_close_volume, 0.3)   # 50% of 0.61 -> 0.305 -> 0.3
+        self.assertAlmostEqual(b.partial_close_volume, 0.3)   # 50% of 0.60 -> 0.30
 
     def test_price_move_to_target(self):
         b = simulate_basket(self.cfg, self.prof, self.rules, "BUY", 5)
-        # (1.68 + 550) / (0.61 * 100) = 9.043934...
-        self.assertAlmostEqual(b.price_move_to_target, 9.04393443, places=6)
+        # (1.68 + 550) / (0.60 * 100) = 9.194666... (floor ladder, MC-001)
+        self.assertAlmostEqual(b.price_move_to_target, 9.19466667, places=6)
 
     def test_price_move_to_partial_trigger(self):
         b = simulate_basket(self.cfg, self.prof, self.rules, "BUY", 5)
-        self.assertAlmostEqual(b.price_move_to_partial, 9.04918033, places=6)
+        self.assertAlmostEqual(b.price_move_to_partial, 9.2, places=6)
 
     def test_partial_realized_pro_rata(self):
         b = simulate_basket(self.cfg, self.prof, self.rules, "BUY", 5)

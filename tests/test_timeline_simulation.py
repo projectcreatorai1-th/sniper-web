@@ -215,9 +215,9 @@ class TestWorstCaseTimeline(unittest.TestCase):
                                  500.0, 50.0, "BOTH_SIDES")
         s = tl["summary"]
         self.assertEqual(s["grid_levels"], 11)
-        self.assertAlmostEqual(s["total_lots"], 1.95)
-        self.assertAlmostEqual(s["floating_pl"], -3255.0)
-        self.assertAlmostEqual(s["drawdown_pct"], 651.0)
+        self.assertAlmostEqual(s["total_lots"], 1.91)
+        self.assertAlmostEqual(s["floating_pl"], -3200.0)
+        self.assertAlmostEqual(s["drawdown_pct"], 640.0)
 
     def test_timeline_has_grid_sequence(self):
         tl = worst_case_timeline(self.cfg, self.prof, self.acct, self.rules,

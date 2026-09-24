@@ -1,0 +1,145 @@
+{
+  "reviewer": "PROJECT_OWNER",
+  "timestamp": "2026-09-24T21:38:15",
+  "source": "Phase 5.3 owner decision document",
+  "actions": [
+    {
+      "candidate_id": "MC-001",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Lot floor ladder confirmed: floor(BaseLot*Mult^(n-1)/step)*step; old round-based SSOT INVALID (4451/4451 clean-cycle checks, E012/E028)",
+      "evidence_refs": [
+        "E012",
+        "E023"
+      ]
+    },
+    {
+      "candidate_id": "MC-002",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Grid spacing ~5 USD confirmed WITH observed distribution and tolerance preserved (median 5.09, E013) — not promoted to exact 5.0000",
+      "evidence_refs": [
+        "E013"
+      ]
+    },
+    {
+      "candidate_id": "MC-003",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "BUY adds DOWN / SELL adds UP confirmed (100.00%/99.82%, E014)",
+      "evidence_refs": [
+        "E014"
+      ]
+    },
+    {
+      "candidate_id": "MC-004",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Both-sides initial exposure confirmed at OBSERVED 99.4% — exceptions retained for audit, not rounded to 100% (E015)",
+      "evidence_refs": [
+        "E015",
+        "E020"
+      ]
+    },
+    {
+      "candidate_id": "MC-007",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Normal resume VERIFIED per owner instruction; restart recovery remains UNKNOWN and separate (E018/E022)",
+      "evidence_refs": [
+        "E018",
+        "E022"
+      ]
+    },
+    {
+      "candidate_id": "MC-008",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Base lot = 0.10 confirmed (99.8% of first entries, E015)",
+      "evidence_refs": [
+        "E015"
+      ]
+    },
+    {
+      "candidate_id": "MC-009",
+      "previous_status": "CANDIDATE",
+      "new_status": "ACCEPTED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "PARTIAL_EXISTS = VERIFIED only. TRIGGER=UNKNOWN, VOLUME_RULE=UNKNOWN, LEVEL_RULE=PARTIAL remain unchanged (E025)",
+      "evidence_refs": [
+        "E025",
+        "E017"
+      ]
+    },
+    {
+      "candidate_id": "MC-005",
+      "previous_status": "CANDIDATE",
+      "new_status": "SUPERSEDED",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Obsolete description (position-level burst interpretation) — superseded by MC-009 (deal-level intra-position analysis, E025)",
+      "superseded_by": "MC-009"
+    },
+    {
+      "candidate_id": "MC-006",
+      "previous_status": "CANDIDATE",
+      "new_status": "CANDIDATE (rule-level: PARTIAL)",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Owner confirmed observed basket-close domain ~= +$1 only. AccumulatorTargetUSD=1.68 REJECTED as V1.68 behavior (90.70% violations, E027). No exact value (incl. 1.00) promoted to verified. Compatible hypotheses retained in registry.",
+      "evidence_refs": [
+        "E016",
+        "E027"
+      ]
+    },
+    {
+      "assumption_id": "LOT_FORMULA_ASSUMPTION_001",
+      "previous_status": "MODEL_ASSUMPTION",
+      "new_status": "OBSERVED_FROM_TESTING",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+      "evidence": "Confirmed by owner MC-001: BaseLot x LotMultiplier^(n-1) observed on 4 real accounts, 812 HIGH-confidence cycles (E012, E028)"
+    },
+    {
+      "assumption_id": "LOT_NORMALIZATION_ASSUMPTION_001",
+      "previous_status": "MODEL_ASSUMPTION",
+      "new_status": "OBSERVED_FROM_TESTING",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+      "evidence": "Confirmed by owner MC-001: normalization is FLOOR to lot step (not round); 100.00% clean-cycle match (E012, E028)"
+    },
+    {
+      "assumption_id": "GRID_DIRECTION_ASSUMPTION_001",
+      "previous_status": "MODEL_ASSUMPTION",
+      "new_status": "OBSERVED_FROM_TESTING",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+      "evidence": "Confirmed by owner MC-003: BUY 100.00% down, SELL 99.82% up (E014)"
+    },
+    {
+      "assumption_id": "BOTH_SIDES_OPEN_AT_START_ASSUMPTION_001",
+      "previous_status": "MODEL_ASSUMPTION",
+      "new_status": "OBSERVED_FROM_TESTING",
+      "reviewer": "PROJECT_OWNER",
+      "timestamp": "2026-09-24T21:38:15",
+      "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+      "evidence": "Confirmed by owner MC-004: 99.4% observed, 5 exception cycles retained for audit (E015)"
+    }
+  ]
+}

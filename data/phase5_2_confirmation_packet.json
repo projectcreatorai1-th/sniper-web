@@ -1,0 +1,385 @@
+{
+  "schema": "SNIPER_PHASE52_CONFIRMATION_PACKET_V1",
+  "generated": "2026-09-24T21:23:02",
+  "dataset": {
+    "335504856": {
+      "sha256": "B2BD8004E6700DED80806832F1D45968D8F21D311AEF1B6B8EF0ADB19F7DC802",
+      "positions": 806,
+      "orders": 1648,
+      "deals": 1648,
+      "account_line": "335504856 (USD, XMGlobal-MT5 9, real, Hedge)"
+    },
+    "391629843": {
+      "sha256": "C8888D7BAC1E227E0194438DC9A66B40B14A9F765C3E2A902746408058BC354A",
+      "positions": 2450,
+      "orders": 5050,
+      "deals": 5050,
+      "account_line": "391629843 (USD, XMGlobal-MT5 14, real, Hedge)"
+    },
+    "411173797": {
+      "sha256": "417F7398103591592B042BF4B39F1BEDF34495EB8C765427ADB9ACFD2CC0F7F2",
+      "positions": 1099,
+      "orders": 2239,
+      "deals": 2239,
+      "account_line": "411173797 (USD, XMGlobal-MT5 16, real, Hedge)"
+    },
+    "440192945": {
+      "sha256": "DA61F581A51CC2047118B09FD2700974528640EB243ECC9C14CD015CCC3D9274",
+      "positions": 808,
+      "orders": 1656,
+      "deals": 1656,
+      "account_line": "440192945 (USD, XMGlobal-MT5 19, real, Hedge)"
+    }
+  },
+  "candidates": [
+    {
+      "candidate_id": "MC-001",
+      "rule_type": "LOT_FORMULA",
+      "description": "Lot(n) = floor(BaseLot * LotMultiplier^(n-1) / lot_step) * lot_step with BaseLot=0.1, LotMultiplier=1.1 (truncation, not round-half-up)",
+      "evidence_refs": [
+        {
+          "evidence_id": "E012",
+          "claim": "Lot progression Lot(n) = floor(0.1 * 1.1^(n-1) / 0.01) * 0.01 (truncation to lot step, NOT round-half-up)",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        },
+        {
+          "evidence_id": "E023",
+          "claim": "Lot sequence on 391629843 Sep 23-24 (0.12/0.14/0.15/0.17 and 0.18/0.20/0.22/0.25/0.27/0.30) fits neither floor nor round formula",
+          "status": "OBSERVED",
+          "confidence": "MEDIUM"
+        }
+      ],
+      "sample_size": "100.0% of 4451 checks (4 accounts)",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "8 checks on 391629843 Sep 23-24 (suspected manual parameter change, E023)",
+      "alternative_explanations": [
+        "round-half-up ladder (fits only 82.90%)",
+        "different multiplier per account (no support)",
+        "equity-scaled lots (no support: 4 synced accounts with different balances used identical lots)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-002",
+      "rule_type": "GRID_SPACING",
+      "description": "GridStepUSD = 5.0 on GOLDmicro (median observed spacing 5.09)",
+      "evidence_refs": [
+        {
+          "evidence_id": "E013",
+          "claim": "Grid spacing per additional same-side entry ~5 USD",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        }
+      ],
+      "sample_size": "n=3,426 spacings; median 5.09; 85.2% in [4.5,5.5]",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "P95 tail to 5.98 (execution timing/slippage)",
+      "alternative_explanations": [
+        "H_PREV_ENTRY",
+        "H_EXTREME"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-003",
+      "rule_type": "GRID_DIRECTION",
+      "description": "BUY grid averages down (adds lower), SELL grid averages up (adds higher)",
+      "evidence_refs": [
+        {
+          "evidence_id": "E014",
+          "claim": "BUY grid adds LOWER, SELL grid adds HIGHER (averaging-down both sides)",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        }
+      ],
+      "sample_size": "BUY down 1,732/1,732 (100.00%); SELL up 1,692/1,695 (99.82%)",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "3 SELL adds below prior entry (0.18%)",
+      "alternative_explanations": [
+        "trend-filtered adds (no support: adds strictly price-spaced)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-004",
+      "rule_type": "BASKET_SCOPE",
+      "description": "Each cycle opens simultaneously with BUY 0.1 + SELL 0.1 and manages both sides independently",
+      "evidence_refs": [
+        {
+          "evidence_id": "E015",
+          "claim": "Every cycle opens a BUY 0.1 + SELL 0.1 pair; base lot 0.1",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        },
+        {
+          "evidence_id": "E020",
+          "claim": "All entries are EA-generated market orders with comment 'CashFlow Buy'/'CashFlow Sell'; closes carry no comment",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        }
+      ],
+      "sample_size": "857/862 cycles start with both sides (99.4%); 72% same second",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "5 unpaired starts (report-window truncation)",
+      "alternative_explanations": [
+        "one-side-only mode parameter (possible but unobserved)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-005",
+      "rule_type": "PARTIAL_CLOSE",
+      "description": "Partial closes release the oldest grid levels mid-cycle while the cycle continues; final close is a single full-basket burst",
+      "evidence_refs": [
+        {
+          "evidence_id": "E017",
+          "claim": "Partial closes occur mid-cycle: single positions close while the basket continues; oldest (lowest-level) volumes close first",
+          "status": "OBSERVED",
+          "confidence": "MEDIUM"
+        }
+      ],
+      "sample_size": "492 deal-level partial closes (unmatched out-deals); profit median 1.06; attribution: 390 FIFO-feasible / 102 ambiguous",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "trigger and volume-rule UNKNOWN (separated statuses); MC-005 wording predates the deal-level correction (E025) — see MC-009",
+      "alternative_explanations": [
+        "final-close burst artifacts (excluded by deal matching)",
+        "per-position take-profit at ~$1 (compatible with profit distribution but evaluation instant unobservable)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-006",
+      "rule_type": "CYCLE_RULE",
+      "description": "Basket closes when total profit reaches a fixed target near $1.0 (AccumTargetUSD); realized median +1.14",
+      "evidence_refs": [
+        {
+          "evidence_id": "E016",
+          "claim": "Basket closes at an approximately FIXED dollar profit near $1.0, independent of basket size",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        }
+      ],
+      "sample_size": "855 winners: P5 +1.03, P25 +1.10, median +1.14; compatible hypotheses: H_GROSS_1_00, H_PER_LOT_0_50, H_PER_LOT_0_85",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "7 near-zero losers (spread events 2026.09.16 21:19:52); deep grids overshoot (lvl10 median 3.20)",
+      "alternative_explanations": [
+        "H_GROSS_1_00 (violations 3.14%)",
+        "H_GROSS_1_10 (violations 24.88%)",
+        "H_GROSS_1_68 (violations 90.7%)",
+        "H_NET_1_00 (violations 6.98%)",
+        "H_PER_LOT_0_50 (violations 0.7%)",
+        "H_PER_LOT_0_85 (violations 1.51%)",
+        "H_PER_LOT_1_68 (violations 25.23%)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-007",
+      "rule_type": "CYCLE_RULE",
+      "description": "After basket close the EA immediately opens the next base-lot pair (<=2s); after pause/restart it resumes at base lot",
+      "evidence_refs": [
+        {
+          "evidence_id": "E018",
+          "claim": "Next cycle starts immediately (same/next second) after basket close",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        },
+        {
+          "evidence_id": "E022",
+          "claim": "After a 7.45h pause the EA resumed with a fresh base-lot 0.1 cycle",
+          "status": "OBSERVED",
+          "confidence": "LOW"
+        }
+      ],
+      "sample_size": "<=2s resume: 857/862 transitions across 4 accounts",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "one 7.45h pause (391629843, E022)",
+      "alternative_explanations": [
+        "timer-scheduled re-entry (refuted: resumes align with close second)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-008",
+      "rule_type": "LOT_FORMULA",
+      "description": "BaseLot = 0.10 on GOLDmicro (first entry of each side in 99.8% of cycle starts)",
+      "evidence_refs": [
+        {
+          "evidence_id": "E015",
+          "claim": "Every cycle opens a BUY 0.1 + SELL 0.1 pair; base lot 0.1",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        }
+      ],
+      "sample_size": "1,715/1,719 first-entry lots = 0.1 (99.8%)",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "4 first entries with 0.11/0.12/0.18 (report-window truncation)",
+      "alternative_explanations": [
+        "base lot scales with equity (refuted: synced accounts, different balances, same 0.1)",
+        "base lot is per-account parameter (possible but unobserved)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    },
+    {
+      "candidate_id": "MC-009",
+      "rule_type": "PARTIAL_CLOSE",
+      "description": "Partial closes are deal-level intra-position volume reductions (unmatched out-deals); final basket close is a single full burst; PARTIAL_TRIGGER and PARTIAL_VOLUME_RULE remain UNKNOWN",
+      "evidence_refs": [
+        {
+          "evidence_id": "E025",
+          "claim": "Partial closes are intra-position: out-deals that match no position-row close; Positions table shows only remaining volume",
+          "status": "OBSERVED",
+          "confidence": "HIGH"
+        },
+        {
+          "evidence_id": "E017",
+          "claim": "Partial closes occur mid-cycle: single positions close while the basket continues; oldest (lowest-level) volumes close first",
+          "status": "OBSERVED",
+          "confidence": "MEDIUM"
+        }
+      ],
+      "sample_size": "492 deal-level partial closes (unmatched out-deals); profit median 1.06; attribution: 390 FIFO-feasible / 102 ambiguous",
+      "accounts": [
+        "335504856",
+        "391629843",
+        "411173797",
+        "440192945"
+      ],
+      "confidence": "HIGH",
+      "exceptions": "trigger and volume-rule UNKNOWN (separated statuses); MC-005 wording predates the deal-level correction (E025) — see MC-009",
+      "alternative_explanations": [
+        "final-close burst artifacts (excluded by deal matching)",
+        "per-position take-profit at ~$1 (compatible with profit distribution but evaluation instant unobservable)"
+      ],
+      "previous_status": "CANDIDATE",
+      "new_status": "PENDING_HUMAN_REVIEW",
+      "confirmation_record": {
+        "reviewer": null,
+        "decision": null,
+        "timestamp": null,
+        "note": "Awaiting project-owner review. Auto-confirm forbidden."
+      }
+    }
+  ],
+  "separated_rule_statuses": {
+    "PARTIAL_EXISTS": "VERIFIED",
+    "PARTIAL_TRIGGER": "UNKNOWN",
+    "PARTIAL_VOLUME_RULE": "UNKNOWN",
+    "PARTIAL_LEVEL_RULE": "PARTIAL",
+    "GRID_TRIGGER_SEMANTICS": "PARTIAL",
+    "BASKET_AMOUNT": "OBSERVED",
+    "BASKET_TRIGGER": "PARTIAL",
+    "EMERGENCY": "UNKNOWN",
+    "RESTART_RECOVERY": "UNKNOWN"
+  },
+  "rules": [
+    "No candidate was auto-confirmed by tooling.",
+    "UNKNOWN rules remain UNKNOWN.",
+    "Synthetic data is not used anywhere in this packet."
+  ]
+}

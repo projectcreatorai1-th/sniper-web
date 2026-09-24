@@ -17,9 +17,9 @@ class TestGridTable(unittest.TestCase):
         self.assertEqual(t.rows[0].level, 1)
         self.assertEqual(t.rows[0].entry_price, 2000.0)
         self.assertEqual(t.rows[4].entry_price, 1980.0)
-        self.assertEqual([r.lot for r in t.rows], [0.1, 0.11, 0.12, 0.13, 0.15])
-        self.assertEqual(t.rows[-1].cumulative_lot, 0.61)
-        self.assertAlmostEqual(t.total_margin, c.margin_used(0.61, 2000.0, self.prof, self.acct))
+        self.assertEqual([r.lot for r in t.rows], [0.1, 0.11, 0.12, 0.13, 0.14])
+        self.assertEqual(t.rows[-1].cumulative_lot, 0.60)
+        self.assertAlmostEqual(t.total_margin, c.margin_used(0.60, 2000.0, self.prof, self.acct))
 
     def test_floating_pl_at_open_negative(self):
         t = build_grid_table(self.cfg, self.prof, self.acct, self.rules, 3, "BUY")

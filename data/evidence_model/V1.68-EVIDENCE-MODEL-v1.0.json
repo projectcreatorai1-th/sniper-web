@@ -1,0 +1,904 @@
+{
+  "model_id": "V1.68-EVIDENCE-MODEL-v1.0",
+  "status": "FROZEN (immutable)",
+  "frozen_at": "2026-09-24T21:48:08",
+  "promoted_from_draft": {
+    "draft_file": "V1.68-EVIDENCE-MODEL-v1.0-draft.json",
+    "draft_sha256": "2C38DD61B6F714120F5856BE28D436CC4830C9B83B24C132316A2B124B4FBF4C"
+  },
+  "superseded_candidates": {
+    "MC-005": "SUPERSEDED by MC-009 (kept for history)"
+  },
+  "rejected_as_v1_68_behavior": {
+    "AccumulatorTargetUSD=1.68_per_basket": "owner decision 2026-09-24; E027 replay 90.70% violations"
+  },
+  "candidates": {
+    "MC-001": {
+      "status": "ACCEPTED",
+      "description": "Lot(n) = floor(BaseLot * LotMultiplier^(n-1) / lot_step) * lot_step with BaseLot=0.1, LotMultiplier=1.1 (truncation, not round-half-up)",
+      "evidence": [
+        "E012",
+        "E023"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "Lot floor ladder confirmed: floor(BaseLot*Mult^(n-1)/step)*step; old round-based SSOT INVALID (4451/4451 clean-cycle checks, E012/E028)"
+    },
+    "MC-002": {
+      "status": "ACCEPTED",
+      "description": "GridStepUSD = 5.0 on GOLDmicro (median observed spacing 5.09)",
+      "evidence": [
+        "E013"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "Grid spacing ~5 USD confirmed WITH observed distribution and tolerance preserved (median 5.09, E013) — not promoted to exact 5.0000"
+    },
+    "MC-003": {
+      "status": "ACCEPTED",
+      "description": "BUY grid averages down (adds lower), SELL grid averages up (adds higher)",
+      "evidence": [
+        "E014"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "BUY adds DOWN / SELL adds UP confirmed (100.00%/99.82%, E014)"
+    },
+    "MC-004": {
+      "status": "ACCEPTED",
+      "description": "Each cycle opens simultaneously with BUY 0.1 + SELL 0.1 and manages both sides independently",
+      "evidence": [
+        "E015",
+        "E020"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "Both-sides initial exposure confirmed at OBSERVED 99.4% — exceptions retained for audit, not rounded to 100% (E015)"
+    },
+    "MC-005": {
+      "status": "SUPERSEDED",
+      "description": "Partial closes release the oldest grid levels mid-cycle while the cycle continues; final close is a single full-basket burst",
+      "evidence": [
+        "E017"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "Obsolete description (position-level burst interpretation) — superseded by MC-009 (deal-level intra-position analysis, E025)"
+    },
+    "MC-006": {
+      "status": "CANDIDATE",
+      "description": "Basket closes when total profit reaches a fixed target near $1.0 (AccumTargetUSD); realized median +1.14",
+      "evidence": [
+        "E016"
+      ],
+      "reviewed_by": "",
+      "review_note": ""
+    },
+    "MC-007": {
+      "status": "ACCEPTED",
+      "description": "After basket close the EA immediately opens the next base-lot pair (<=2s); after pause/restart it resumes at base lot",
+      "evidence": [
+        "E018",
+        "E022"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "Normal resume VERIFIED per owner instruction; restart recovery remains UNKNOWN and separate (E018/E022)"
+    },
+    "MC-008": {
+      "status": "ACCEPTED",
+      "description": "BaseLot = 0.10 on GOLDmicro (first entry of each side in 99.8% of cycle starts)",
+      "evidence": [
+        "E015"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "Base lot = 0.10 confirmed (99.8% of first entries, E015)"
+    },
+    "MC-009": {
+      "status": "ACCEPTED",
+      "description": "Partial closes are deal-level intra-position volume reductions (unmatched out-deals); final basket close is a single full burst; PARTIAL_TRIGGER and PARTIAL_VOLUME_RULE remain UNKNOWN",
+      "evidence": [
+        "E025",
+        "E017"
+      ],
+      "reviewed_by": "PROJECT_OWNER",
+      "review_note": "PARTIAL_EXISTS = VERIFIED only. TRIGGER=UNKNOWN, VOLUME_RULE=UNKNOWN, LEVEL_RULE=PARTIAL remain unchanged (E025)"
+    }
+  },
+  "evidence_registry": [
+    {
+      "evidence_id": "E001",
+      "source_type": "DOCUMENTATION",
+      "source_name": "EA file name / seller manual",
+      "source_reference": "SNIPER CashFlow V 1.68.ex5 (filename); seller PDF manual",
+      "claim": "EA version = 1.68",
+      "observed_value": "1.68",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "DOCUMENTED",
+      "confidence": "HIGH",
+      "timestamp": "",
+      "notes": ""
+    },
+    {
+      "evidence_id": "E002",
+      "source_type": "VIDEO",
+      "source_name": "Installation Video — วิธีติดตั้ง EA SNIPER.mp4",
+      "source_reference": "",
+      "claim": "Observed platform = MT5",
+      "observed_value": "MT5",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "Observed platform/default value during installation workflow; not proof of internal EA logic."
+    },
+    {
+      "evidence_id": "E003",
+      "source_type": "VIDEO",
+      "source_name": "Installation Video — วิธีติดตั้ง EA SNIPER.mp4",
+      "source_reference": "",
+      "claim": "Observed broker = XM Global",
+      "observed_value": "XM Global",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "Observed platform/default value during installation workflow; not proof of internal EA logic."
+    },
+    {
+      "evidence_id": "E004",
+      "source_type": "VIDEO",
+      "source_name": "Installation Video — วิธีติดตั้ง EA SNIPER.mp4",
+      "source_reference": "",
+      "claim": "Observed account type = Hedge",
+      "observed_value": "Hedge",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "Observed platform/default value during installation workflow; not proof of internal EA logic."
+    },
+    {
+      "evidence_id": "E005",
+      "source_type": "VIDEO",
+      "source_name": "Installation Video — วิธีติดตั้ง EA SNIPER.mp4",
+      "source_reference": "",
+      "claim": "Observed symbol = GOLDmicro",
+      "observed_value": "GOLDmicro",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "Observed platform/default value during installation workflow; not proof of internal EA logic. Not a universal symbol requirement."
+    },
+    {
+      "evidence_id": "E006",
+      "source_type": "VIDEO",
+      "source_name": "Installation Video — วิธีติดตั้ง EA SNIPER.mp4",
+      "source_reference": "",
+      "claim": "Observed timeframe = M15",
+      "observed_value": "M15",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "Observed platform/default value during installation workflow; not proof of internal EA logic. OBSERVED TEST ENVIRONMENT - not a required timeframe."
+    },
+    {
+      "evidence_id": "E007",
+      "source_type": "VIDEO",
+      "source_name": "Installation Video — วิธีติดตั้ง EA SNIPER.mp4",
+      "source_reference": "",
+      "claim": "EmergencyDistanceFromCycleUSD observed default = 90.0",
+      "observed_value": "90.0",
+      "ea_version": "1.68",
+      "parameter": "EmergencyDistanceFromCycleUSD",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "Observed platform/default value during installation workflow; not proof of internal EA logic."
+    },
+    {
+      "evidence_id": "E008",
+      "source_type": "DOCUMENTATION",
+      "source_name": "Seller preset image / PDF ($500 recommended)",
+      "source_reference": "builtin_presets(): Seller preset - Capital $500",
+      "claim": "$500 recommended EmergencyDistanceFromCycleUSD = 50.0",
+      "observed_value": "50.0",
+      "ea_version": "1.68",
+      "parameter": "EmergencyDistanceFromCycleUSD",
+      "status": "DOCUMENTED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": ""
+    },
+    {
+      "evidence_id": "E009",
+      "source_type": "DOCUMENTATION",
+      "source_name": "Seller preset image ($3000 recommended)",
+      "source_reference": "builtin_presets(): Seller preset - Capital $3000",
+      "claim": "$3000 recommended values as supplied; values requiring confirmation remain unverified",
+      "observed_value": null,
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "DOCUMENTED",
+      "confidence": "LOW",
+      "timestamp": "",
+      "notes": "Supplied recommendation only - not verified against the EX5."
+    },
+    {
+      "evidence_id": "E010",
+      "source_type": "OTHER",
+      "source_name": "Recorded external baseline (historical)",
+      "source_reference": "",
+      "claim": "EX5 SHA-256/MD5 historical baseline for SNIPER CashFlow V 1.68.ex5",
+      "observed_value": "sha256=31E5176E794C29BE265EBF1B449B1047F2125C57A1CD227B257F89A54BF9CE37; md5=3972D8436537F36F08FDF1E35C45750A",
+      "ea_version": "1.68",
+      "parameter": "",
+      "status": "DOCUMENTED",
+      "confidence": "MEDIUM",
+      "timestamp": "",
+      "notes": "RECORDED_EXTERNAL_BASELINE - provided historical record, not recomputed from a file in this workspace. See core/ex5_integrity.py for the live integrity check."
+    },
+    {
+      "evidence_id": "E011",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Data provenance for Phase 5.1 forensic set",
+      "observed_value": "4 accounts: 335504856/391629843/411173797/440192945 (real, Hedge, USD)",
+      "ea_version": "1.68",
+      "parameter": "-",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "5,163 positions | 10,593 orders | 10,593 deals | 862 complete cycles | 855/862 winning baskets | 335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204"
+    },
+    {
+      "evidence_id": "E012",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Lot progression Lot(n) = floor(0.1 * 1.1^(n-1) / 0.01) * 0.01 (truncation to lot step, NOT round-half-up)",
+      "observed_value": "3,419/3,427 = 99.77% match; 8 exceptions confined to 391629843 Sep 23-24 lot sequence 0.12-0.30 (suspected manual parameter change)",
+      "ea_version": "1.68",
+      "parameter": "LotMultiplier/BaseLot",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "Current SSOT lot_for_level rounds half-up and disagrees at L5/L7/L10/L12/L14+ (82.90% match). Model change requires candidate acceptance - not applied here."
+    },
+    {
+      "evidence_id": "E013",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Grid spacing per additional same-side entry ~5 USD",
+      "observed_value": "n=3,426 | median 5.09 | P5 4.72 | P95 5.98 | 85.2% within [4.5, 5.5]",
+      "ea_version": "1.68",
+      "parameter": "GridStepUSD",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "Spacings are market-execution distances, not exact parameter steps; median 5.09 consistent with GridStepUSD=5.0 + spread/slippage."
+    },
+    {
+      "evidence_id": "E014",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "BUY grid adds LOWER, SELL grid adds HIGHER (averaging-down both sides)",
+      "observed_value": "BUY down 1,732/1,732 = 100.00% | SELL up 1,692/1,695 = 99.82%",
+      "ea_version": "1.68",
+      "parameter": "Grid direction",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": ""
+    },
+    {
+      "evidence_id": "E015",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Every cycle opens a BUY 0.1 + SELL 0.1 pair; base lot 0.1",
+      "observed_value": "Both sides in first 2 entries: 857/862 = 99.4% | first-entry lot 0.1: 1,715/1,719 = 99.8% | 72% of first pairs share the same second",
+      "ea_version": "1.68",
+      "parameter": "BothSides/BaseLot",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": ""
+    },
+    {
+      "evidence_id": "E016",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Basket closes at an approximately FIXED dollar profit near $1.0, independent of basket size",
+      "observed_value": "855 winners: min +0.43 | P5 +1.03 | P25 +1.10 | median +1.14 | 7 near-zero losers (max -0.24, spread events)",
+      "ea_version": "1.68",
+      "parameter": "AccumTargetUSD (basket close trigger)",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "CONTRADICTS the AccumTargetUSD=1.68 per-basket candidate: no cluster near 1.68. gross/lots ratio falls from 2.24 (lvl3) to 1.05 (lvl8) -> trigger is not per-lot. Deep grids overshoot more (lvl9 median 2.10, lvl10 3.20) due to faster P/L ticks."
+    },
+    {
+      "evidence_id": "E017",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Partial closes occur mid-cycle: single positions close while the basket continues; oldest (lowest-level) volumes close first",
+      "observed_value": "255 solo out-deal bursts (of 1,115 total close bursts); partial volumes concentrated 0.10-0.19; partial P/L median +0.24",
+      "ea_version": "1.68",
+      "parameter": "Partial close",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "860 multi-deal bursts match 862 complete cycles ~1:1 -> each cycle ends in ONE full-basket burst. Partial mechanism threshold (per closed volume ~1.68/lot hypothesis) unverified."
+    },
+    {
+      "evidence_id": "E018",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Next cycle starts immediately (same/next second) after basket close",
+      "observed_value": "<=2s resume: 335504856 132/132 | 391629843 401/406 | 411173797 190/190 | 440192945 134/134",
+      "ea_version": "1.68",
+      "parameter": "Cycle resume",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": ""
+    },
+    {
+      "evidence_id": "E019",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "GOLDmicro contract size = 1 (1 lot = 1 oz; 0.1 lot moves $0.10 per $1)",
+      "observed_value": "n=5,083 implied | median 1.0000 | stdev 0.0091 | 70.9% within 0.005",
+      "ea_version": "1.68",
+      "parameter": "Contract size",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "XAUUSD standard contract is 100; GOLDmicro is 100x smaller. All P/L math in observations uses contract=1."
+    },
+    {
+      "evidence_id": "E020",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "All entries are EA-generated market orders with comment 'CashFlow Buy'/'CashFlow Sell'; closes carry no comment",
+      "observed_value": "in-deals with CashFlow comment: 5,184/5,184 = 100% | out-deals with comment: 0/5,609 | non-market orders: 0 | partial fills: 0",
+      "ea_version": "1.68",
+      "parameter": "EA provenance",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": ""
+    },
+    {
+      "evidence_id": "E021",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "No emergency close occurred in the production window",
+      "observed_value": "0/862 baskets closed at significant loss; worst gross -0.24 (spread event); deepest grid 32 levels, 20.07 lots, 28.1h, closed +21.80",
+      "ea_version": "1.68",
+      "parameter": "EmergencyDistanceFromCycleUSD",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "Emergency behaviour remains unobserved in production; E007 (90.0) and E008 (50.0 doc) stand unchanged. Deep-grid survival data bounds the trigger: emergency did NOT fire at floating losses implied by 32-level grid."
+    },
+    {
+      "evidence_id": "E022",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "After a 7.45h pause the EA resumed with a fresh base-lot 0.1 cycle",
+      "observed_value": "391629843: closed 2026.09.23 06:56:12 (+1.15), next cycle 2026.09.23 14:23:12 starts at lot 0.1; all other gaps <=1s",
+      "ea_version": "1.68",
+      "parameter": "Restart recovery",
+      "status": "OBSERVED",
+      "confidence": "LOW",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "Single event; no controlled restart test performed."
+    },
+    {
+      "evidence_id": "E023",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "Lot sequence on 391629843 Sep 23-24 (0.12/0.14/0.15/0.17 and 0.18/0.20/0.22/0.25/0.27/0.30) fits neither floor nor round formula",
+      "observed_value": "8/3,427 levels = 0.23% of all checks",
+      "ea_version": "1.68",
+      "parameter": "Parameter change anomaly",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "Suspected manual parameter change (BaseLot/multiplier) during live run -> lot progression is parameter-driven, supporting the formula structure rather than contradicting it."
+    },
+    {
+      "evidence_id": "E024",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Trade History xlsx export (4 real accounts, XM Global, GOLDmicro)",
+      "source_reference": "335504856=B2BD8004E6700DED; 391629843=C8888D7BAC1E227E; 411173797=417F739810359159; 440192945=DA61F581A51CC204",
+      "claim": "All 4 accounts (same EA+params) opened/closed identical baskets at identical seconds repeatedly",
+      "observed_value": "8 cycle-starts aligned across all 4 accounts; 31 across >=3; simultaneous close bursts e.g. 2026.09.16 21:19:52 in all 4",
+      "ea_version": "1.68",
+      "parameter": "Determinism",
+      "status": "OBSERVED",
+      "confidence": "MEDIUM",
+      "timestamp": "2026-09-24T20:48:56",
+      "notes": "Supports deterministic signal logic (no random entries)."
+    },
+    {
+      "evidence_id": "E025",
+      "source_type": "MT5_CSV",
+      "source_name": "MT5 Deals table — unmatched out-deals (intra-position partials)",
+      "source_reference": "see E011 hashes",
+      "claim": "Partial closes are intra-position: out-deals that match no position-row close; Positions table shows only remaining volume",
+      "observed_value": "492 events | profit median 1.06 | 53.0% in [0.7,1.3] | attribution 390 FIFO-feasible / 102 ambiguous",
+      "ea_version": "1.68",
+      "parameter": "PartialClose",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T21:23:02",
+      "notes": "Corrects E017 interpretation (E017 counted solo bursts; the deal-matching method here is exact). E017 kept for audit trail."
+    },
+    {
+      "evidence_id": "E026",
+      "source_type": "MT5_CSV",
+      "source_name": "Grid trigger hypothesis replay (tools/phase5_2_run.py)",
+      "source_reference": "see E011 hashes",
+      "claim": "Grid add anchor semantics: previous-entry and extreme-anchor hypotheses are indistinguishable; average-price anchor refuted",
+      "observed_value": "n=2,827 adds | H_PREV_ENTRY = H_EXTREME (p5 4.73, med 5.09, p95 5.90, band 93.4%) | H_AVG_PRICE med 7.48 (refuted)",
+      "ea_version": "1.68",
+      "parameter": "GridTriggerSemantics",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T21:24:53",
+      "notes": "Semantics = PARTIAL: in averaging-down ladders the previous entry IS the extreme; only a controlled test or tick data can separate them."
+    },
+    {
+      "evidence_id": "E027",
+      "source_type": "MT5_CSV",
+      "source_name": "Basket close trigger hypothesis replay (860 baskets)",
+      "source_reference": "see E011 hashes",
+      "claim": "Basket close trigger: fixed $1.00 gross compatible; documented 1.68 decisively refuted",
+      "observed_value": "violations: H_GROSS_1_00 3.14% | H_GROSS_1_68 90.70% | H_PER_LOT_0_50 0.70% | H_PER_LOT_0_85 1.51% | compatible set = {GROSS>=1.00, lots*0.50, lots*0.85}",
+      "ea_version": "1.68",
+      "parameter": "AccumTargetUSD",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T21:24:53",
+      "notes": "Resolves the E016/E009 conflict direction: 1.68 per-basket is incompatible with observed closes. Trigger remains PARTIAL (three compatible hypotheses; evaluation instant unobservable)."
+    },
+    {
+      "evidence_id": "E028",
+      "source_type": "MT5_CSV",
+      "source_name": "Lot engine verification on HIGH-confidence cycles",
+      "source_reference": "see E011 hashes",
+      "claim": "Floor lot ladder verified at 100% on anomaly-free cycles",
+      "observed_value": "4,451/4,451 = 100.00% level checks across 812 HIGH-confidence cycles (levels 1-32 observed)",
+      "ea_version": "1.68",
+      "parameter": "LotMultiplier/BaseLot",
+      "status": "OBSERVED",
+      "confidence": "HIGH",
+      "timestamp": "2026-09-24T21:24:53",
+      "notes": "The 8 earlier mismatches live in cycles quarantined by ANOMALOUS_LOTS flags (E023 parameter-change window)."
+    }
+  ],
+  "assumption_overrides": {
+    "BASKET_CLOSE_DOC_001": {
+      "status": "VERIFIED_FROM_DOCUMENTATION",
+      "evidence": ""
+    },
+    "BID_ASK_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "BOTH_SIDES_OPEN_AT_START_ASSUMPTION_001": {
+      "status": "OBSERVED_FROM_TESTING",
+      "evidence": "Confirmed by owner MC-004: 99.4% observed, 5 exception cycles retained for audit (E015)"
+    },
+    "BROKER_MARGIN_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "COMMISSION_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "EA_BEHAVIOR_NOT_VERIFIED_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "EMERGENCY_DOC_001": {
+      "status": "VERIFIED_FROM_DOCUMENTATION",
+      "evidence": ""
+    },
+    "GRID_DIRECTION_ASSUMPTION_001": {
+      "status": "OBSERVED_FROM_TESTING",
+      "evidence": "Confirmed by owner MC-003: BUY 100.00% down, SELL 99.82% up (E014)"
+    },
+    "GRID_DISTANCE_DOC_001": {
+      "status": "VERIFIED_FROM_DOCUMENTATION",
+      "evidence": ""
+    },
+    "LOT_FORMULA_ASSUMPTION_001": {
+      "status": "OBSERVED_FROM_TESTING",
+      "evidence": "Confirmed by owner MC-001: BaseLot x LotMultiplier^(n-1) observed on 4 real accounts, 812 HIGH-confidence cycles (E012, E028)"
+    },
+    "LOT_NORMALIZATION_ASSUMPTION_001": {
+      "status": "OBSERVED_FROM_TESTING",
+      "evidence": "Confirmed by owner MC-001: normalization is FLOOR to lot step (not round); 100.00% clean-cycle match (E012, E028)"
+    },
+    "MAGIC_NUMBER_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "MAX_GRID_DEPTH_UNKNOWN_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "ORDER_EXECUTION_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "PARTIAL_ONCE_DOC_001": {
+      "status": "VERIFIED_FROM_DOCUMENTATION",
+      "evidence": ""
+    },
+    "PRICE_GAP_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "SLIPPAGE_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "SPREAD_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "SWAP_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "SYMBOL_INPUT_NAME_UNKNOWN_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "THAI_TIME_DOC_001": {
+      "status": "VERIFIED_FROM_DOCUMENTATION",
+      "evidence": ""
+    },
+    "TICK_BAR_TIMER_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "TICK_SIZE_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "TICK_VALUE_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    },
+    "USEMARTINGALE_NAMING_NOTE_001": {
+      "status": "VERIFIED_FROM_DOCUMENTATION",
+      "evidence": ""
+    },
+    "VOLUME_STEP_ASSUMPTION_001": {
+      "status": "UNKNOWN",
+      "evidence": ""
+    }
+  },
+  "dataset_hashes": {
+    "335504856": "B2BD8004E6700DED80806832F1D45968D8F21D311AEF1B6B8EF0ADB19F7DC802",
+    "391629843": "C8888D7BAC1E227E0194438DC9A66B40B14A9F765C3E2A902746408058BC354A",
+    "411173797": "417F7398103591592B042BF4B39F1BEDF34495EB8C765427ADB9ACFD2CC0F7F2",
+    "440192945": "DA61F581A51CC2047118B09FD2700974528640EB243ECC9C14CD015CCC3D9274"
+  },
+  "ssot": {
+    "file": "core/calculations.py",
+    "sha256": "0E1A81FE063310D43556025086B6E30E6F0342545B6DA7DE5154806F67C04A00",
+    "change": "normalize_lot: round -> floor (MC-001 owner-confirmed 2026-09-24); regression pins updated accordingly"
+  },
+  "regression": {
+    "main_suite_incl_forensics": "391/391 OK",
+    "web_suite": "125/125 OK",
+    "note": "GUI smoke (12) not present as a separate suite in this repository; its checks are covered by the web live-server tests. No test was deleted or downgraded."
+  },
+  "rules": [
+    {
+      "rule": "Lot Formula (floor ladder)",
+      "status": "VERIFIED",
+      "candidate": "MC-001",
+      "evidence": "E012;E028",
+      "notes": "4451/4451 clean-cycle checks; L1-L32 observed",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Base Lot = 0.10",
+      "status": "VERIFIED",
+      "candidate": "MC-008",
+      "evidence": "E015",
+      "notes": "99.8% of first entries; 4 exceptions retained",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Grid Spacing ~= 5 USD",
+      "status": "VERIFIED",
+      "candidate": "MC-002",
+      "evidence": "E013",
+      "notes": "median 5.09, distribution + tolerance preserved (not exact 5.0000)",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Grid Direction (BUY down / SELL up)",
+      "status": "VERIFIED",
+      "candidate": "MC-003",
+      "evidence": "E014",
+      "notes": "100.00% / 99.82%",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Both-Sides Initial Exposure",
+      "status": "VERIFIED",
+      "candidate": "MC-004",
+      "evidence": "E015",
+      "notes": "OBSERVED 99.4%; 5 exception cycles retained for audit",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Contract Size GOLDmicro = 1.0",
+      "status": "VERIFIED",
+      "candidate": "-(owner)",
+      "evidence": "E019",
+      "notes": "median 1.0000, n=5083; owner confirmation 2026-09-24",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Partial Close EXISTS (deal-level)",
+      "status": "VERIFIED",
+      "candidate": "MC-009",
+      "evidence": "E025",
+      "notes": "492 intra-position partial closes",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Grid Trigger Semantics",
+      "status": "PARTIAL",
+      "candidate": "-(rule)",
+      "evidence": "E026",
+      "notes": "H_PREV_ENTRY vs H_EXTREME indistinguishable; neither promoted",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Basket Trigger Semantics",
+      "status": "PARTIAL",
+      "candidate": "MC-006",
+      "evidence": "E016;E027",
+      "notes": "domain ~= +$1 OBSERVED; compatible set kept; no exact value verified",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Partial Trigger",
+      "status": "UNKNOWN",
+      "candidate": "-(rule)",
+      "evidence": "E025",
+      "notes": "profit-per-event median +1.06 noted; evaluation instant unobservable",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Partial Volume Rule",
+      "status": "UNKNOWN",
+      "candidate": "-(rule)",
+      "evidence": "E025",
+      "notes": "",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Partial Level Rule",
+      "status": "PARTIAL",
+      "candidate": "MC-009",
+      "evidence": "E025",
+      "notes": "FIFO-feasible 390 / ambiguous 102; not resolved",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Normal Resume (<=2s)",
+      "status": "VERIFIED",
+      "candidate": "MC-007",
+      "evidence": "E018",
+      "notes": "restart recovery explicitly EXCLUDED (separate rule)",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Emergency Mechanism",
+      "status": "UNKNOWN",
+      "candidate": "-(rule)",
+      "evidence": "E021",
+      "notes": "0 events observed; 90.0/50.0 doc values stand; not implemented",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "Restart Recovery",
+      "status": "UNKNOWN",
+      "candidate": "-(rule)",
+      "evidence": "E022",
+      "notes": "TEST_R_RESTART_RECOVERY spec retained for future controlled test",
+      "implemented_as_v168_behavior": false
+    },
+    {
+      "rule": "AccumulatorTargetUSD = 1.68 (per basket)",
+      "status": "REJECTED",
+      "candidate": "MC-006",
+      "evidence": "E027",
+      "notes": "90.70% violations on 860 baskets — rejected as V1.68 behavior",
+      "implemented_as_v168_behavior": false
+    }
+  ],
+  "confirmation_audit": {
+    "reviewer": "PROJECT_OWNER",
+    "timestamp": "2026-09-24T21:38:15",
+    "source": "Phase 5.3 owner decision document",
+    "actions": [
+      {
+        "candidate_id": "MC-001",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Lot floor ladder confirmed: floor(BaseLot*Mult^(n-1)/step)*step; old round-based SSOT INVALID (4451/4451 clean-cycle checks, E012/E028)",
+        "evidence_refs": [
+          "E012",
+          "E023"
+        ]
+      },
+      {
+        "candidate_id": "MC-002",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Grid spacing ~5 USD confirmed WITH observed distribution and tolerance preserved (median 5.09, E013) — not promoted to exact 5.0000",
+        "evidence_refs": [
+          "E013"
+        ]
+      },
+      {
+        "candidate_id": "MC-003",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "BUY adds DOWN / SELL adds UP confirmed (100.00%/99.82%, E014)",
+        "evidence_refs": [
+          "E014"
+        ]
+      },
+      {
+        "candidate_id": "MC-004",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Both-sides initial exposure confirmed at OBSERVED 99.4% — exceptions retained for audit, not rounded to 100% (E015)",
+        "evidence_refs": [
+          "E015",
+          "E020"
+        ]
+      },
+      {
+        "candidate_id": "MC-007",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Normal resume VERIFIED per owner instruction; restart recovery remains UNKNOWN and separate (E018/E022)",
+        "evidence_refs": [
+          "E018",
+          "E022"
+        ]
+      },
+      {
+        "candidate_id": "MC-008",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Base lot = 0.10 confirmed (99.8% of first entries, E015)",
+        "evidence_refs": [
+          "E015"
+        ]
+      },
+      {
+        "candidate_id": "MC-009",
+        "previous_status": "CANDIDATE",
+        "new_status": "ACCEPTED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "PARTIAL_EXISTS = VERIFIED only. TRIGGER=UNKNOWN, VOLUME_RULE=UNKNOWN, LEVEL_RULE=PARTIAL remain unchanged (E025)",
+        "evidence_refs": [
+          "E025",
+          "E017"
+        ]
+      },
+      {
+        "candidate_id": "MC-005",
+        "previous_status": "CANDIDATE",
+        "new_status": "SUPERSEDED",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Obsolete description (position-level burst interpretation) — superseded by MC-009 (deal-level intra-position analysis, E025)",
+        "superseded_by": "MC-009"
+      },
+      {
+        "candidate_id": "MC-006",
+        "previous_status": "CANDIDATE",
+        "new_status": "CANDIDATE (rule-level: PARTIAL)",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Owner confirmed observed basket-close domain ~= +$1 only. AccumulatorTargetUSD=1.68 REJECTED as V1.68 behavior (90.70% violations, E027). No exact value (incl. 1.00) promoted to verified. Compatible hypotheses retained in registry.",
+        "evidence_refs": [
+          "E016",
+          "E027"
+        ]
+      },
+      {
+        "assumption_id": "LOT_FORMULA_ASSUMPTION_001",
+        "previous_status": "MODEL_ASSUMPTION",
+        "new_status": "OBSERVED_FROM_TESTING",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+        "evidence": "Confirmed by owner MC-001: BaseLot x LotMultiplier^(n-1) observed on 4 real accounts, 812 HIGH-confidence cycles (E012, E028)"
+      },
+      {
+        "assumption_id": "LOT_NORMALIZATION_ASSUMPTION_001",
+        "previous_status": "MODEL_ASSUMPTION",
+        "new_status": "OBSERVED_FROM_TESTING",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+        "evidence": "Confirmed by owner MC-001: normalization is FLOOR to lot step (not round); 100.00% clean-cycle match (E012, E028)"
+      },
+      {
+        "assumption_id": "GRID_DIRECTION_ASSUMPTION_001",
+        "previous_status": "MODEL_ASSUMPTION",
+        "new_status": "OBSERVED_FROM_TESTING",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+        "evidence": "Confirmed by owner MC-003: BUY 100.00% down, SELL 99.82% up (E014)"
+      },
+      {
+        "assumption_id": "BOTH_SIDES_OPEN_AT_START_ASSUMPTION_001",
+        "previous_status": "MODEL_ASSUMPTION",
+        "new_status": "OBSERVED_FROM_TESTING",
+        "reviewer": "PROJECT_OWNER",
+        "timestamp": "2026-09-24T21:38:15",
+        "reason": "Owner review 2026-09-24 (Phase 5.3 decision document)",
+        "evidence": "Confirmed by owner MC-004: 99.4% observed, 5 exception cycles retained for audit (E015)"
+      }
+    ]
+  },
+  "unknowns_kept_unknown": [
+    "Partial Trigger",
+    "Partial Volume Rule",
+    "Emergency Mechanism",
+    "Restart Recovery"
+  ],
+  "partials_kept_partial": [
+    "Grid Trigger Semantics",
+    "Basket Trigger Semantics",
+    "Partial Level Rule"
+  ]
+}

@@ -1,0 +1,590 @@
+{
+  "generated": "2026-09-24T21:23:02",
+  "sources": {
+    "335504856": {
+      "sha256": "B2BD8004E6700DED80806832F1D45968D8F21D311AEF1B6B8EF0ADB19F7DC802",
+      "positions": 806,
+      "orders": 1648,
+      "deals": 1648,
+      "account_line": "335504856 (USD, XMGlobal-MT5 9, real, Hedge)"
+    },
+    "391629843": {
+      "sha256": "C8888D7BAC1E227E0194438DC9A66B40B14A9F765C3E2A902746408058BC354A",
+      "positions": 2450,
+      "orders": 5050,
+      "deals": 5050,
+      "account_line": "391629843 (USD, XMGlobal-MT5 14, real, Hedge)"
+    },
+    "411173797": {
+      "sha256": "417F7398103591592B042BF4B39F1BEDF34495EB8C765427ADB9ACFD2CC0F7F2",
+      "positions": 1099,
+      "orders": 2239,
+      "deals": 2239,
+      "account_line": "411173797 (USD, XMGlobal-MT5 16, real, Hedge)"
+    },
+    "440192945": {
+      "sha256": "DA61F581A51CC2047118B09FD2700974528640EB243ECC9C14CD015CCC3D9274",
+      "positions": 808,
+      "orders": 1656,
+      "deals": 1656,
+      "account_line": "440192945 (USD, XMGlobal-MT5 19, real, Hedge)"
+    }
+  },
+  "cycle_reconstruction": {
+    "total": 866,
+    "complete": 866,
+    "high_confidence": 812,
+    "confidence_dist": {
+      "MEDIUM": 48,
+      "HIGH": 812,
+      "LOW": 6
+    },
+    "flag_counts": {
+      "TRUNCATED_AT_REPORT_START": 4,
+      "DEEP_GRID": 40,
+      "NEGATIVE_CLOSE": 8,
+      "ANOMALOUS_LOTS": 5,
+      "UNPAIRED_START": 5,
+      "MULTI_BURST_END": 3
+    }
+  },
+  "lot_engine": {
+    "ladder_L1_L50": [
+      0.1,
+      0.11,
+      0.12,
+      0.13,
+      0.14,
+      0.16,
+      0.17,
+      0.19,
+      0.21,
+      0.23,
+      0.25,
+      0.28,
+      0.31,
+      0.34,
+      0.37,
+      0.41,
+      0.45,
+      0.5,
+      0.55,
+      0.61,
+      0.67,
+      0.74,
+      0.81,
+      0.89,
+      0.98,
+      1.08,
+      1.19,
+      1.31,
+      1.44,
+      1.58,
+      1.74,
+      1.91,
+      2.11,
+      2.32,
+      2.55,
+      2.81,
+      3.09,
+      3.4,
+      3.74,
+      4.11,
+      4.52,
+      4.97,
+      5.47,
+      6.02,
+      6.62,
+      7.28,
+      8.01,
+      8.81,
+      9.7,
+      10.67
+    ],
+    "observation_match_pct": 100.0,
+    "checked": 4451
+  },
+  "grid_trigger": {
+    "n_observations": 2827,
+    "replay": {
+      "step_usd": 5.0,
+      "anchors": {
+        "H_PREV_ENTRY": {
+          "n": 2827,
+          "min": -19.8,
+          "p5": 4.73,
+          "median": 5.09,
+          "p95": 5.9,
+          "below_4_5_pct": 2.09,
+          "in_4_5_6_pct": 93.42,
+          "score": 89.24
+        },
+        "H_EXTREME": {
+          "n": 2827,
+          "min": -19.8,
+          "p5": 4.73,
+          "median": 5.09,
+          "p95": 5.9,
+          "below_4_5_pct": 2.09,
+          "in_4_5_6_pct": 93.42,
+          "score": 89.24
+        },
+        "H_AVG_PRICE": {
+          "n": 2827,
+          "min": -15.128,
+          "p5": 4.91,
+          "median": 7.484,
+          "p95": 16.277,
+          "below_4_5_pct": 0.78,
+          "in_4_5_6_pct": 37.25,
+          "score": 35.69
+        },
+        "H_SIDE_ANCHOR_MULT_per_level": {
+          "n": 2827,
+          "min": -3.32,
+          "p5": 4.83,
+          "median": 5.11,
+          "p95": 5.71,
+          "below_4_5_pct": 1.13,
+          "in_4_5_6_pct": 96.0
+        },
+        "H_FIXED_REF_residual": {
+          "n": 2827,
+          "min": 0.0,
+          "p5": 0.028,
+          "median": 0.242,
+          "p95": 0.476,
+          "below_4_5_pct": 100.0,
+          "in_4_5_6_pct": 0.0
+        }
+      }
+    },
+    "conclusion": {
+      "status": "PARTIAL",
+      "supported": [
+        "H_PREV_ENTRY",
+        "H_EXTREME"
+      ],
+      "note": "several anchor hypotheses remain compatible (in averaging-down ladders they coincide); semantics not proven"
+    }
+  },
+  "partial_close": {
+    "PARTIAL_EXISTS": "VERIFIED",
+    "n_events": 492,
+    "per_account": {
+      "335504856": 64,
+      "391629843": 282,
+      "411173797": 74,
+      "440192945": 72
+    },
+    "profit": {
+      "median": 1.06,
+      "mean": 3.298,
+      "min": -7.9,
+      "max": 61.52,
+      "in_0_7_1_3_pct": 53.0
+    },
+    "volume": {
+      "median": 0.15,
+      "min": 0.1,
+      "max": 0.96
+    },
+    "profit_per_lot_median": 9.029,
+    "attribution": {
+      "attributed": 492,
+      "fifo_feasible": 390,
+      "ambiguous": 102,
+      "unattributed": 0
+    },
+    "PARTIAL_TRIGGER": {
+      "status": "UNKNOWN",
+      "note": "profit-per-event median ~ +1.0 matches the basket trigger scale, but the evaluation instant and watched quantity (position / side / basket) are unobservable from close-side data"
+    },
+    "PARTIAL_VOLUME_RULE": {
+      "status": "UNKNOWN",
+      "note": "partial volumes span 0.10-0.17; without the EA's requested-vs-position arithmetic the fraction rule cannot be derived"
+    },
+    "PARTIAL_LEVEL_RULE": {
+      "status": "PARTIAL",
+      "level_distribution_hint": [
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        12,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        13,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        14,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        15,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        17,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        18,
+        19,
+        19,
+        19,
+        19,
+        19,
+        19,
+        19,
+        19,
+        19,
+        19,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        20,
+        21,
+        21,
+        21,
+        21,
+        21,
+        21,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        22,
+        23,
+        23,
+        23,
+        23,
+        24,
+        24,
+        24,
+        24
+      ],
+      "note": "FIFO-feasible attribution only; ambiguity reported, not resolved"
+    }
+  },
+  "basket": {
+    "summary": {
+      "n": 860,
+      "gross_min": -0.24,
+      "gross_p5": 1.02,
+      "gross_p25": 1.1,
+      "gross_median": 1.14,
+      "gross_p75": 1.23,
+      "gross_max": 423.0,
+      "losers": 5,
+      "winners_min": 0.43
+    },
+    "hypotheses": [
+      {
+        "name": "H_GROSS_1_00",
+        "description": "close when gross >= $1.00",
+        "testable": true,
+        "n": 860,
+        "violations": 27,
+        "violation_pct": 3.14,
+        "overshoot_mean": 1.016,
+        "overshoot_p95": 2.32,
+        "mae": 0.994
+      },
+      {
+        "name": "H_GROSS_1_10",
+        "description": "close when gross >= $1.10",
+        "testable": true,
+        "n": 860,
+        "violations": 214,
+        "violation_pct": 24.88,
+        "overshoot_mean": 1.191,
+        "overshoot_p95": 2.95,
+        "mae": 0.915
+      },
+      {
+        "name": "H_GROSS_1_68",
+        "description": "close when gross >= $1.68 (doc candidate)",
+        "testable": true,
+        "n": 860,
+        "violations": 780,
+        "violation_pct": 90.7,
+        "overshoot_mean": 8.428,
+        "overshoot_p95": 13.16,
+        "mae": 1.274
+      },
+      {
+        "name": "H_NET_1_00",
+        "description": "close when net >= $1.00",
+        "testable": true,
+        "n": 860,
+        "violations": 60,
+        "violation_pct": 6.98,
+        "overshoot_mean": 1.05,
+        "overshoot_p95": 2.52,
+        "mae": 1.001
+      },
+      {
+        "name": "H_PER_LOT_0_50",
+        "description": "gross >= lots*0.50",
+        "testable": true,
+        "n": 860,
+        "violations": 6,
+        "violation_pct": 0.7,
+        "overshoot_mean": 1.595,
+        "overshoot_p95": 2.425,
+        "mae": 1.587
+      },
+      {
+        "name": "H_PER_LOT_0_85",
+        "description": "gross >= lots*0.85",
+        "testable": true,
+        "n": 860,
+        "violations": 13,
+        "violation_pct": 1.51,
+        "overshoot_mean": 1.331,
+        "overshoot_p95": 1.897,
+        "mae": 1.318
+      },
+      {
+        "name": "H_PER_LOT_1_68",
+        "description": "gross >= lots*1.68",
+        "testable": true,
+        "n": 860,
+        "violations": 217,
+        "violation_pct": 25.23,
+        "overshoot_mean": 1.02,
+        "overshoot_p95": 0.957,
+        "mae": 0.874
+      }
+    ],
+    "conclusion": {
+      "basket_amount": "OBSERVED",
+      "compatible_hypotheses": [
+        "H_GROSS_1_00",
+        "H_PER_LOT_0_50",
+        "H_PER_LOT_0_85"
+      ],
+      "trigger_status": "PARTIAL",
+      "note": "Close-side data bounds the trigger from below but cannot observe the evaluation instant; tick-level data or a controlled test is required to elevate beyond PARTIAL."
+    }
+  },
+  "emergency": {
+    "emergency_closes_observed": 1,
+    "anomaly_kinds": [
+      "SEQUENCE_INTERRUPTION"
+    ],
+    "status": "UNKNOWN",
+    "note": "No emergency event in production data; E007 (90.0 observed in testing) and E008 (50.0 documented) stand unchanged. Mechanism remains unproven — deep grids survived to profit (32 levels / 20.07 lots / 28.1h closed +21.80), which bounds where the trigger did NOT fire, but does not locate it."
+  },
+  "emergency_anomalies": [
+    {
+      "kind": "SEQUENCE_INTERRUPTION",
+      "cycle": "391629843-C0403",
+      "account": "391629843",
+      "detail": "gap 7.45h before next cycle"
+    }
+  ],
+  "restart": {
+    "pauses": [
+      {
+        "account_id": "391629843",
+        "closed_at": "2026.08.10 15:02:42",
+        "gap_s": 702.0,
+        "next_cycle_start": "2026.08.10 15:14:24",
+        "next_cycle_first_entries": [
+          {
+            "side": "BUY",
+            "volume": 0.1,
+            "price": 4332.09
+          },
+          {
+            "side": "SELL",
+            "volume": 0.1,
+            "price": 4331.5
+          }
+        ],
+        "next_cycle_confidence": "HIGH"
+      },
+      {
+        "account_id": "391629843",
+        "closed_at": "2026.09.23 06:56:12",
+        "gap_s": 26820.0,
+        "next_cycle_start": "2026.09.23 14:23:12",
+        "next_cycle_first_entries": [
+          {
+            "side": "BUY",
+            "volume": 0.1,
+            "price": 4305.06
+          }
+        ],
+        "next_cycle_confidence": "LOW"
+      },
+      {
+        "account_id": "391629843",
+        "closed_at": "2026.09.23 15:06:13",
+        "gap_s": 5778.0,
+        "next_cycle_start": "2026.09.23 16:42:31",
+        "next_cycle_first_entries": [
+          {
+            "side": "BUY",
+            "volume": 0.12,
+            "price": 4294.96
+          }
+        ],
+        "next_cycle_confidence": "LOW"
+      },
+      {
+        "account_id": "391629843",
+        "closed_at": "2026.09.24 04:15:01",
+        "gap_s": 25256.0,
+        "next_cycle_start": "2026.09.24 11:15:57",
+        "next_cycle_first_entries": [
+          {
+            "side": "BUY",
+            "volume": 0.18,
+            "price": 4272.44
+          }
+        ],
+        "next_cycle_confidence": "LOW"
+      }
+    ],
+    "status": "UNKNOWN",
+    "note": "single-event observation only (E022, LOW confidence); controlled test TEST_R_RESTART_RECOVERY required"
+  }
+}

@@ -30,8 +30,8 @@ class TestRegressionBaseline(unittest.TestCase):
     def test_lot_sequence(self):
         lots = [c.lot_for_level(self.cfg, i, self.rules, self.prof).value
                 for i in range(1, 11)]
-        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.15,
-                                0.16, 0.18, 0.19, 0.21, 0.24])
+        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.14,
+                                0.16, 0.17, 0.19, 0.21, 0.23])
 
     def test_cumulative_lots_5_levels(self):
         self.assertEqual(c.cumulative_lots([0.1, 0.11, 0.12, 0.13, 0.15]),
@@ -55,9 +55,9 @@ class TestRegressionBaseline(unittest.TestCase):
         r = simulate_worst_case(self.cfg, self.prof, self.acct, self.rules,
                                 500.0, 50.0, BOTH_SIDES)
         self.assertEqual(r.grid_levels, 11)
-        self.assertAlmostEqual(r.total_lots, 1.95)
-        self.assertAlmostEqual(r.floating_pl, -3255.0)
-        self.assertAlmostEqual(r.drawdown_pct, 651.0)
+        self.assertAlmostEqual(r.total_lots, 1.91)
+        self.assertAlmostEqual(r.floating_pl, -3200.0)
+        self.assertAlmostEqual(r.drawdown_pct, 640.0)
 
     def test_worst_case_50_sell_adverse_symmetry(self):
         rb = simulate_worst_case(self.cfg, self.prof, self.acct, self.rules,
@@ -69,7 +69,7 @@ class TestRegressionBaseline(unittest.TestCase):
 
     def test_basket_target_move_level5(self):
         b = simulate_basket(self.cfg, self.prof, self.rules, "BUY", 5)
-        self.assertAlmostEqual(b.price_move_to_target, 9.04393443, places=6)
+        self.assertAlmostEqual(b.price_move_to_target, 9.19466667, places=6)
         self.assertAlmostEqual(b.partial_realized_pl, 1.0)
         self.assertAlmostEqual(b.partial_close_volume, 0.3)
 
@@ -96,8 +96,8 @@ class TestRegressionBaseline(unittest.TestCase):
         cfg = builtin_presets()["Seller preset - Capital $3000"]
         lots = [c.lot_for_level(cfg, i, self.rules, self.prof).value
                 for i in range(1, 4)]
-        # 0.18, 0.18*1.08=0.1944 -> 0.19, 0.209952 -> 0.21
-        self.assertEqual(lots, [0.18, 0.19, 0.21])
+        # floor ladder (MC-001): 0.18, floor(0.1944)=0.19, floor(0.209952)=0.20
+        self.assertEqual(lots, [0.18, 0.19, 0.20])
 
 
 if __name__ == "__main__":

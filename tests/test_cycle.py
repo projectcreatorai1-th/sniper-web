@@ -117,7 +117,7 @@ class TestModelCycle(unittest.TestCase):
         self.assertEqual(c.source, "model")
         self.assertEqual(c.grid_levels, 5)
         self.assertEqual(c.initial_lot, 0.1)
-        self.assertAlmostEqual(c.total_lots, 0.61)
+        self.assertAlmostEqual(c.total_lots, 0.60)
         self.assertIn("MODEL", c.notes)
         self.assertEqual(len(c.events), 5)
 

@@ -41,15 +41,19 @@ class CalcResult:
 # Lot sizing
 # ===========================================================================
 def normalize_lot(raw_lot: float, profile: SymbolProfile) -> float:
-    """Round a raw lot to the broker's lot step.
+    """Normalize a raw lot to the broker's lot step by FLOORING.
 
-    MODEL ASSUMPTION LOT_NORMALIZATION_ASSUMPTION_001: the EX5's own rounding
-    is undocumented; we round to nearest step without silent min/max clamping
-    (out-of-bound values are surfaced by validation instead).
+    VERIFIED V1.68 BEHAVIOR (owner confirmation 2026-09-24, MC-001):
+    floor(BaseLot x LotMultiplier^(n-1) / lot_step) x lot_step — observed
+    on 4 real accounts, 4451/4451 checks on HIGH-confidence cycles
+    (E012, E028). The earlier round-to-nearest model was INVALID: it
+    disagrees at L5 (0.15 vs 0.14), L7, L10, L12, L14+ (82.90% match).
+    Out-of-bound values are still surfaced by validation instead of
+    silent min/max clamping (LOT_STEP_BOUNDARY_ASSUMPTION_001).
     """
     if profile.lot_step <= 0:
         return round(raw_lot, 8)
-    steps = round(raw_lot / profile.lot_step)
+    steps = math.floor(raw_lot / profile.lot_step + 1e-9)
     return round(steps * profile.lot_step, 8)
 
 

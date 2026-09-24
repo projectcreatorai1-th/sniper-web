@@ -74,10 +74,10 @@ class GridParity(unittest.TestCase):
         status, _, payload = call_app("POST", "/api/grid/calculate",
                                       std_body(levels=10, side="BUY", capital=500.0))
         lots = [r["lot"] for r in payload["data"]["grid"]["rows"]]
-        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.15,
-                                0.16, 0.18, 0.19, 0.21, 0.24])
+        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.14,
+                                0.16, 0.17, 0.19, 0.21, 0.23])
         cums = [r["cumulative_lot"] for r in payload["data"]["grid"]["rows"][:5]]
-        self.assertEqual(cums, [0.1, 0.21, 0.33, 0.46, 0.61])
+        self.assertEqual(cums, [0.1, 0.21, 0.33, 0.46, 0.60])
 
     def test_grid_level3_floating_matches_regression(self):
         status, _, payload = call_app("POST", "/api/grid/calculate",
@@ -112,15 +112,15 @@ class WorstCaseParity(unittest.TestCase):
         self.assertEqual(payload["data"]["results"], expected)
 
     def test_golden_both_sides_50(self):
-        """Regression pin through the API: 11 levels / 1.95 lots / -3255 / 651%."""
+        """Regression pin through the API: 11 levels / 1.91 lots / -3200 / 640% (floor, MC-001)."""
         status, _, payload = call_app("POST", "/api/worst-case/simulate",
                                       std_body(capital=500.0, moves=[50.0],
                                                scenarios=[BOTH_SIDES]))
         r = payload["data"]["results"][0]
         self.assertEqual(r["grid_levels"], 11)
-        self.assertAlmostEqual(r["total_lots"], 1.95)
-        self.assertAlmostEqual(r["floating_pl"], -3255.0)
-        self.assertAlmostEqual(r["drawdown_pct"], 651.0)
+        self.assertAlmostEqual(r["total_lots"], 1.91)
+        self.assertAlmostEqual(r["floating_pl"], -3200.0)
+        self.assertAlmostEqual(r["drawdown_pct"], 640.0)
 
     def test_golden_buy_adverse_10(self):
         status, _, payload = call_app("POST", "/api/worst-case/simulate",
@@ -146,7 +146,7 @@ class BasketParity(unittest.TestCase):
         self.assertEqual(payload["data"]["basket"], expected)
         # regression pin: move-to-target + partial numbers
         b = payload["data"]["basket"]
-        self.assertAlmostEqual(b["price_move_to_target"], 9.04393443, places=6)
+        self.assertAlmostEqual(b["price_move_to_target"], 9.19466667, places=6)
         self.assertAlmostEqual(b["partial_realized_pl"], 1.0)
         self.assertAlmostEqual(b["partial_close_volume"], 0.3)
 
@@ -225,7 +225,7 @@ class PresetParity(unittest.TestCase):
                                       std_body(config=cfg.to_dict(), levels=3,
                                                side="BUY", capital=3000.0))
         lots = [r["lot"] for r in payload["data"]["grid"]["rows"]]
-        self.assertEqual(lots, [0.18, 0.19, 0.21])
+        self.assertEqual(lots, [0.18, 0.19, 0.20])
 
 
 class ValidationParity(unittest.TestCase):

@@ -104,7 +104,7 @@ class LiveServerTest(unittest.TestCase):
                                          std_body(levels=5, side="BUY", capital=500.0))
         self.assertEqual(status, 200)
         lots = [r["lot"] for r in payload["data"]["grid"]["rows"]]
-        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.15])
+        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.14])
 
     def test_worst_case_http_golden(self):
         status, payload = self.post_json(
@@ -113,8 +113,8 @@ class LiveServerTest(unittest.TestCase):
         self.assertEqual(status, 200)
         r = payload["data"]["results"][0]
         self.assertEqual(r["grid_levels"], 11)
-        self.assertAlmostEqual(r["total_lots"], 1.95)
-        self.assertAlmostEqual(r["floating_pl"], -3255.0)
+        self.assertAlmostEqual(r["total_lots"], 1.91)
+        self.assertAlmostEqual(r["floating_pl"], -3200.0)
 
     def test_unknown_api_http(self):
         status, payload = self.get_json("/api/missing")

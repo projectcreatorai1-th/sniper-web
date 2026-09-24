@@ -1,0 +1,32 @@
+{
+  "gate": "EVIDENCE_GATE",
+  "evaluated_at": "2026-09-24T21:48:08",
+  "verified": [
+    "Lot Formula (floor ladder)",
+    "Base Lot = 0.10",
+    "Grid Spacing ~= 5 USD",
+    "Grid Direction (BUY down / SELL up)",
+    "Both-Sides Initial Exposure",
+    "Contract Size GOLDmicro = 1.0",
+    "Partial Close EXISTS (deal-level)",
+    "Normal Resume (<=2s)"
+  ],
+  "partial": [
+    "Grid Trigger Semantics",
+    "Basket Trigger Semantics",
+    "Partial Level Rule"
+  ],
+  "unknown": [
+    "Partial Trigger",
+    "Partial Volume Rule",
+    "Emergency Mechanism",
+    "Restart Recovery"
+  ],
+  "rejected": [
+    "AccumulatorTargetUSD = 1.68 (per basket)"
+  ],
+  "unknown_promoted_to_behavior": [],
+  "conflicting_verified_rules": [],
+  "result": "PASS",
+  "conditions": "PASS allowed with PARTIAL/UNKNOWN provided no UNKNOWN is implemented as V1.68 behavior and no critical verified rule conflicts with evidence (owner Phase 5.3 spec)."
+}

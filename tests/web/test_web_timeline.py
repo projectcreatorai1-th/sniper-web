@@ -49,9 +49,9 @@ class TimelineEndpoints(unittest.TestCase):
         self.assertEqual(s, 200, p)
         wc = p["data"]["timeline"]["summary"]
         self.assertEqual(wc["grid_levels"], 11)
-        self.assertAlmostEqual(wc["total_lots"], 1.95)
-        self.assertAlmostEqual(wc["floating_pl"], -3255.0)
-        self.assertAlmostEqual(wc["drawdown_pct"], 651.0)
+        self.assertAlmostEqual(wc["total_lots"], 1.91)
+        self.assertAlmostEqual(wc["floating_pl"], -3200.0)
+        self.assertAlmostEqual(wc["drawdown_pct"], 640.0)
         events = p["data"]["timeline"]["events"]
         grids = [e for e in events if e["event"] in ("ENTRY", "GRID")]
         self.assertEqual(len(grids), 11)

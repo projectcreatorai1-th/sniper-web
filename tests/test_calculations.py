@@ -12,9 +12,11 @@ class TestNormalizeLot(unittest.TestCase):
     def setUp(self):
         self.prof = SymbolProfile()          # lot_step 0.01
 
-    def test_rounds_to_step(self):
+    def test_floors_to_step(self):
+        # MC-001 (owner-confirmed 2026-09-24): normalization FLOORS to step
         self.assertEqual(c.normalize_lot(0.111, self.prof), 0.11)
-        self.assertEqual(c.normalize_lot(0.116, self.prof), 0.12)
+        self.assertEqual(c.normalize_lot(0.116, self.prof), 0.11)
+        self.assertEqual(c.normalize_lot(0.119, self.prof), 0.11)
         self.assertEqual(c.normalize_lot(0.1, self.prof), 0.1)
 
     def test_zero_step_passthrough(self):
@@ -34,7 +36,7 @@ class TestLotFormula(unittest.TestCase):
     def test_geometric_progression(self):
         lots = [c.lot_for_level(self.cfg, i, self.rules, self.prof).value
                 for i in range(1, 6)]
-        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.15])
+        self.assertEqual(lots, [0.1, 0.11, 0.12, 0.13, 0.14])
 
     def test_optimization_off_is_flat(self):
         self.cfg.UsePositionSizeOptimization = False

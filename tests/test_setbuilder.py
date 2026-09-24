@@ -124,7 +124,7 @@ class TestSetBuilder(TempDirTestMixin, unittest.TestCase):
                          capital=500.0, grid_step=5.0, base_lot=0.1,
                          multiplier=1.1, basket_target=1.68, max_grid=10)
         self.assertEqual(m.max_grid, 10)
-        self.assertAlmostEqual(m.max_single_lot, 0.24)   # 0.1*1.1^9=0.2358->0.24
+        self.assertAlmostEqual(m.max_single_lot, 0.23)   # 0.1*1.1^9=0.2358 floor->0.23 (MC-001)
         self.assertLess(m.estimated_worst_floating_loss, 0)
         self.assertGreater(m.grid_capacity_levels, 0)
         self.assertTrue(m.assumptions)
