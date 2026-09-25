@@ -1,0 +1,68 @@
+name: CI
+
+# SNIPER CashFlow Analyzer — pure stdlib, no dependencies to install.
+# Runs the full unittest suite plus frozen-artifact integrity checks.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Full test suite (unittest)
+        run: python run_tests.py
+
+  artifact-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # spec artifacts + evidence model must all be present
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Three-way spec hash consistency + pinned hashes
+        run: |
+          python - <<'PY'
+          import json, hashlib
+          def canon(o):
+              return hashlib.sha256(json.dumps(
+                  o, sort_keys=True, separators=(",", ":"),
+                  ensure_ascii=False, default=str).encode()).hexdigest().upper()
+          ss = json.load(open("STRATEGY_SPEC/strategy_spec.json"))
+          sv = json.load(open("STRATEGY_SPEC/spec_version.json"))
+          bc = json.load(open("STRATEGY_SPEC/ea_build_contract.json"))
+          a = canon(ss)
+          assert a == sv["strategy_spec_hash"].upper(), "spec_version pin mismatch"
+          assert a == bc["compatibility_requirements"]["strategy_spec_hash"].upper(), \
+              "build contract pin mismatch"
+          assert canon(bc) == sv["ea_build_contract_hash"].upper(), "build contract hash mismatch"
+          def fsha(p):
+              h = hashlib.sha256()
+              with open(p, "rb") as fh: h.update(fh.read())
+              return h.hexdigest().upper()
+          em = fsha("data/evidence_model/V1.68-EVIDENCE-MODEL-v1.0.json")
+          sidecar = open("data/evidence_model/V1.68-EVIDENCE-MODEL-v1.0.sha256.txt").read().strip().upper()
+          assert em == sidecar, "evidence model sidecar mismatch"
+          assert em == sv["evidence_model_hash"].upper(), "evidence model pin mismatch"
+          assert ss["spec_identity"]["evidence_model_hash"].upper() == em
+          rd = fsha("data/our_ea/replay_dataset_v1.json")
+          rds = open("data/our_ea/replay_dataset_v1.json.sha256.txt").read().strip().upper()
+          assert rd == rds, "replay dataset sidecar mismatch"
+          print("artifact integrity OK: spec", a[:12], "· model", em[:12], "· replay", rd[:12])
+          PY
+      - name: Spec provenance freshness (created_from_commit is an ancestor of HEAD)
+        run: |
+          CFC=$(python -c "import json;print(json.load(open('STRATEGY_SPEC/spec_version.json'))['created_from_commit'])")
+          git merge-base --is-ancestor "$CFC" HEAD \
+            || { echo "spec created_from_commit $CFC is not an ancestor of HEAD"; exit 1; }
+          echo "provenance freshness OK ($CFC is an ancestor of HEAD)"
