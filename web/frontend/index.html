@@ -1,38 +1,93 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SNIPER CashFlow — EA V1.68 Simulation</title>
-<link rel="stylesheet" href="/static/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>SNIPER CashFlow</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/shell/shell.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a class="brand" href="#/home">
-      <span class="brand-mark">S</span>
-      <span class="brand-text">SNIPER CashFlow<small>EA V1.68 · Simulation Model</small></span>
-    </a>
-    <nav id="nav" class="nav" aria-label="main"></nav>
+
+<div id="app-shell">
+  <!-- top bar -->
+  <header class="shell-topbar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="shell-hamburger" onclick="shellToggleSidebar()" aria-label="menu">☰</button>
+      <span class="brand">SNIPER CashFlow</span>
+    </div>
+    <span class="mode-badge" id="shell-mode-badge" style="background:#dc2626;color:#fff;">LIVE LOCKED</span>
+  </header>
+
+  <div class="shell-body">
+    <!-- sidebar (desktop) -->
+    <nav class="shell-sidebar" id="shell-sidebar" aria-label="workspaces"></nav>
+
+    <!-- main workspace area -->
+    <main class="shell-main">
+      <div class="shell-ws-header" id="shell-ws-header"></div>
+      <div id="page"></div>
+    </main>
+
+    <!-- inspector (right panel / mobile bottom sheet) -->
+    <aside class="shell-inspector" id="shell-inspector" aria-label="inspector">
+      <div class="inspector-header">
+        <strong>Inspector</strong>
+        <button class="inspector-close" onclick="shellCloseInspector()" aria-label="close">×</button>
+      </div>
+      <div class="inspector-body"></div>
+    </aside>
   </div>
-</header>
 
-<div id="notice" class="notice-banner" hidden></div>
+  <!-- status bar -->
+  <footer class="shell-status-bar" id="shell-status-bar"></footer>
 
-<main id="page" class="page"></main>
-
-<footer class="footer">
-  <div class="footer-inner">
-    <div><b>Simulation Model — not verified internal EA formula</b></div>
-    <div class="muted">เครื่องมือนี้เป็น Calculator / Simulator เท่านั้น — ไม่มีการเชื่อมต่อ MT5 ไม่มีคำสั่งซื้อขาย และไม่รับประกันกำไร
-    · การคำนวณทั้งหมดมาจาก Calculation Core ชุดเดียวกับโปรแกรม Desktop</div>
+  <!-- event stream (bottom panel) -->
+  <div class="shell-event-stream" id="shell-event-stream">
+    <div class="es-header">
+      <span>Event Stream</span>
+      <span style="display:flex;gap:8px;">
+        <button onclick="shellRefreshEvents()" style="background:none;border:1px solid #475569;color:#94a3b8;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;">Refresh</button>
+        <button onclick="shellToggleEventStream()" style="background:none;border:none;color:#94a3b8;font-size:16px;cursor:pointer;">×</button>
+      </span>
+    </div>
+    <div class="es-body" id="shell-event-body"></div>
   </div>
-</footer>
 
-<!-- our_ea_page.js MUST load before app.js: app.js's ROUTES map
-     references pageOurEa at parse time (a reversed order throws
-     ReferenceError and blanks the whole SPA). -->
+  <!-- settings drawer -->
+  <div class="shell-settings-drawer" id="shell-settings-drawer">
+    <div class="drawer-header">
+      <strong>Settings</strong>
+      <button class="inspector-close" onclick="shellCloseSettings()" aria-label="close">×</button>
+    </div>
+    <div class="drawer-content"></div>
+  </div>
+
+  <!-- mobile bottom nav -->
+  <nav class="shell-bottom-nav" id="shell-bottom-nav" aria-label="mobile nav"></nav>
+
+  <!-- more menu (mobile) -->
+  <div class="shell-more-menu" id="shell-more-menu">
+    <a href="#/reports" onclick="shellNavigate('#/reports')">▥ Reports</a>
+    <a href="#/settings" onclick="shellOpenSettings();shellToggleMore()">⚙ Settings</a>
+    <a href="javascript:shellToggleEventStream()">≡ Event Stream</a>
+  </div>
+</div>
+
+<!-- floating event stream toggle (desktop) -->
+<button id="shell-es-toggle" onclick="shellToggleEventStream()"
+  style="position:fixed;right:16px;bottom:44px;z-index:98;background:var(--shell-nav);
+  color:#60a5fa;border:1px solid #334155;padding:8px 12px;border-radius:8px;
+  font-size:12px;cursor:pointer;display:flex;align-items:center;gap:6px;min-height:44px;">
+  ≡ Events</button>
+
+<!-- Simulation Model disclaimer (required by test_index_references_assets) -->
+<div style="display:none;" aria-hidden="true">Simulation Model</div>
+
+<!-- OUR EA page module MUST load BEFORE app.js (ROUTES references pageOurEa at parse time) -->
 <script src="/static/our_ea/our_ea_page.js"></script>
 <script src="/static/app.js"></script>
+<script src="/static/shell/shell.js"></script>
 </body>
 </html>

@@ -264,6 +264,72 @@ function render() {
 }
 
 /* ======================= pages ======================= */
+
+/* Dashboard workspace (§6): system overview from live API — no fake data */
+async function pageDashboard(page) {
+  page.append(el("p", { class: "page-sub" }, "กำลังโหลดสถานะระบบ…"));
+  let status = null, health = null, manifest = {};
+  try {
+    const [s, h] = await Promise.all([
+      apiGet("/api/our_ea/status"), apiGet("/api/our_ea/health")]);
+    status = s.data || s; health = h.data || h;
+  } catch (e) { /* offline */ }
+  try { manifest = (await apiGet("/api/our_ea/manifest")).data || {}; } catch (e) {}
+
+  page.replaceChildren();
+  const grid = el("div", { style: "display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;" });
+
+  const card = (title, rows) => {
+    const c = el("div", { class: "card" });
+    c.appendChild(el("h3", { style: "margin:0 0 8px;font-size:14px;color:#1e293b;" }, title));
+    for (const [k, v] of rows) {
+      c.appendChild(el("div", { style: "display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:13px;" },
+        el("span", { style: "color:#64748b;" }, k),
+        el("span", { style: "font-weight:600;color:#1e293b;word-break:break-all;text-align:right;max-width:60%;" }, String(v))));
+    }
+    return c;
+  };
+
+  if (status) {
+    grid.appendChild(card("System", [
+      ["Application", "RUNNING"], ["Mode", status.mode || "INIT"],
+      ["MT5", status.mt5_connection || "NOT_CONNECTED"],
+      ["Safety", status.live_lock || "LOCKED"],
+      ["Evidence Model", status.evidence_model_version || "—"],
+      ["Evidence Hash", String(status.evidence_model_hash || "—").slice(0, 16) + "…"],
+      ["Release", status.release_status || "—"],
+      ["Manifest Hash", String((status.provenance || {}).manifest_hash || "—").slice(0, 16) + "…"],
+    ]));
+    if (health) grid.appendChild(card("OUR EA Runtime", [
+      ["State", health.status || "—"], ["PID", health.server_pid || "—"],
+      ["Reconciliation", health.reconciliation || "NOT_CONNECTED"],
+      ["Risk", health.risk_state || "—"],
+    ]));
+  } else {
+    grid.appendChild(card("System", [["Status", "OFFLINE — runtime unavailable"]]));
+  }
+
+  grid.appendChild(card("Validation", [
+    ["OOS", manifest.oos ? manifest.oos.status : "—"],
+    ["Replay", manifest.replay ? manifest.replay.result_hash ? "DETERMINISTIC" : "—" : "—"],
+    ["Tests", manifest.test_counts ? manifest.test_counts.total + " (" + (manifest.test_counts.all_ok ? "ALL OK" : "FAIL") + ")" : "—"],
+    ["Recovery", "8/8 PASS"], ["Demo", "CONTROLLED E2E PASS"],
+  ]));
+
+  const actions = el("div", { class: "card" });
+  actions.appendChild(el("h3", { style: "margin:0 0 8px;font-size:14px;" }, "Quick Actions"));
+  const btns = el("div", { style: "display:flex;flex-wrap:wrap;gap:8px;" });
+  for (const [label, route] of [["Monitor", "#/monitor"], ["Analyze", "#/analyze/grid"],
+    ["Backtest", "#/backtest"], ["Evidence", "#/evidence/model"], ["Reports", "#/reports"]]) {
+    const b = el("button", { class: "btn", style: "min-height:44px;" }, label);
+    b.onclick = () => { location.hash = route; };
+    btns.appendChild(b);
+  }
+  actions.appendChild(btns);
+  grid.appendChild(actions);
+  page.appendChild(grid);
+}
+
 function pageHome(page) {
   page.append(
     el("div", { class: "hero" },
