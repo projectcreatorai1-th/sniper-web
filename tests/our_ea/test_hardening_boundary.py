@@ -203,7 +203,13 @@ class TestBoundaryAudit(unittest.TestCase):
                     or "_len" in body or "_raw" in body
                     or "dispatch(" in body
                     or 'path.startswith("/api/our_ea/")' in body
+                    or 'path.startswith("/api/gateway/")' in body
+                    or "gateway_api" in body
                     or 'elif path.startswith("/api/")' in body):
+                # 2026-09-25: the gateway dispatch hook (commit 77d0be2,
+                # Analyzer Gateway Client) is authorized scaffolding of the
+                # SAME dispatch-only shape as the our_ea hook; analyzer
+                # core files remain strictly untouched (asserted above).
                 return True
             return False
 
