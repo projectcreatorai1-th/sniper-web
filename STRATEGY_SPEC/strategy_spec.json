@@ -1,0 +1,352 @@
+{
+  "spec_identity": {
+    "spec_id": "SNIPER-V168-STRATEGY-SPEC",
+    "spec_version": "1.0.0",
+    "schema_version": "1.0.0",
+    "evidence_model_version": "V1.68-EVIDENCE-MODEL-v1.0",
+    "evidence_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+    "generated_from_commit": "9ebb0ce2cf62d0938543f8bb0abfc0c3b5b30252"
+  },
+  "symbol_scope": {
+    "symbol": "GOLDmicro",
+    "contract_size": {
+      "value": 1.0,
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E019"
+      ]
+    },
+    "lot_step": {
+      "value": 0.01,
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E012"
+      ]
+    },
+    "price_digits": {
+      "value": 2,
+      "status": "CONFIGURED"
+    }
+  },
+  "lot_model": {
+    "formula": "Lot(n) = floor(BaseLot * Multiplier^(n-1) / LotStep) * LotStep",
+    "rounding": "FLOOR (truncation to lot step, NOT round-half-up)",
+    "base_lot": {
+      "value": 0.1,
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E015"
+      ],
+      "note": "99.8% of first entries"
+    },
+    "multiplier": {
+      "value": 1.1,
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E012",
+        "E028"
+      ],
+      "note": "4451/4451 clean-cycle checks"
+    },
+    "lot_step": {
+      "value": 0.01,
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E012"
+      ]
+    },
+    "observed_range": {
+      "min_level": 1,
+      "max_level": 32,
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E028"
+      ],
+      "note": "L33+ extrapolated, NOT observed"
+    },
+    "overflow_behavior": {
+      "below_min_lot": "clamp to min_lot",
+      "above_max_lot": "clamp to max_lot",
+      "status": "CONFIGURED",
+      "note": "OUR_EA_POLICY, not historical behavior"
+    }
+  },
+  "grid_model": {
+    "direction": {
+      "buy": {
+        "action": "ADD_LOWER",
+        "status": "VERIFIED",
+        "evidence_refs": [
+          "E014"
+        ],
+        "note": "100.00% (1732/1732)"
+      },
+      "sell": {
+        "action": "ADD_HIGHER",
+        "status": "VERIFIED",
+        "evidence_refs": [
+          "E014"
+        ],
+        "note": "99.82% (1692/1695), 3 exceptions documented"
+      }
+    },
+    "spacing": {
+      "nominal_value": 5.0,
+      "unit": "USD",
+      "status": "VERIFIED",
+      "distribution": {
+        "median": 5.09,
+        "p5": 4.72,
+        "p95": 5.98,
+        "pct_in_band_4.5_5.5": 85.2
+      },
+      "evidence_refs": [
+        "E013"
+      ],
+      "note": "Observed distribution, NOT exact 5.0000"
+    },
+    "trigger_anchor": {
+      "status": "PARTIAL",
+      "compatible_hypotheses": [
+        "H_PREV_ENTRY",
+        "H_EXTREME"
+      ],
+      "hypotheses_indistinguishable": true,
+      "evidence_refs": [
+        "E026"
+      ],
+      "note": "Mathematically equivalent on averaging-down ladders"
+    }
+  },
+  "basket_model": {
+    "close_trigger": {
+      "status": "PARTIAL",
+      "compatible_hypotheses": [
+        {
+          "id": "H_GROSS_1_00",
+          "description": "gross >= $1.00",
+          "violation_rate_pct": 3.14
+        },
+        {
+          "id": "H_PER_LOT_0_50",
+          "description": "gross >= lots * 0.50",
+          "violation_rate_pct": 0.7
+        },
+        {
+          "id": "H_PER_LOT_0_85",
+          "description": "gross >= lots * 0.85",
+          "violation_rate_pct": 1.51
+        }
+      ],
+      "rejected_hypotheses": [
+        {
+          "id": "H_GROSS_1_68",
+          "description": "AccumulatorTargetUSD = 1.68",
+          "rejection_evidence": "E027",
+          "violation_rate_pct": 90.7
+        }
+      ],
+      "evidence_refs": [
+        "E016",
+        "E027"
+      ],
+      "note": "Domain ≈ +$1.0-1.2 OBSERVED; no single hypothesis verified"
+    }
+  },
+  "partial_close_model": {
+    "exists": {
+      "status": "VERIFIED",
+      "observed_events": 492,
+      "evidence_refs": [
+        "E025"
+      ]
+    },
+    "trigger": {
+      "status": "UNKNOWN",
+      "runtime_handling": "MODEL_UNCERTAINTY + skip",
+      "evidence_refs": [
+        "E025"
+      ]
+    },
+    "volume_rule": {
+      "status": "UNKNOWN",
+      "runtime_handling": "MODEL_UNCERTAINTY + skip",
+      "evidence_refs": [
+        "E025"
+      ]
+    },
+    "level_rule": {
+      "status": "PARTIAL",
+      "fifo_feasible": 390,
+      "ambiguous": 102,
+      "evidence_refs": [
+        "E025"
+      ]
+    }
+  },
+  "emergency_model": {
+    "mechanism": {
+      "status": "UNKNOWN",
+      "observed_events": 0,
+      "evidence_refs": [
+        "E021"
+      ],
+      "note": "0 emergency events in 862 production baskets"
+    },
+    "our_ea_policy": {
+      "source": "OUR_EA_POLICY (NOT historical V1.68 behavior)",
+      "max_loss_usd": 50.0,
+      "max_drawdown_pct": 30.0,
+      "max_grid_depth": 12,
+      "kill_switch": true
+    }
+  },
+  "entry_model": {
+    "initial_entry": {
+      "condition": "cycle starts when flat",
+      "action": "open BUY base_lot + SELL base_lot simultaneously",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E015"
+      ],
+      "note": "99.4% both-sides, 72% same-second opening"
+    },
+    "re_entry": {
+      "condition": "after basket close, immediately (<=2s)",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E018"
+      ],
+      "note": "99.75% of transitions"
+    },
+    "restart_entry": {
+      "status": "UNKNOWN",
+      "evidence_refs": [
+        "E022"
+      ],
+      "note": "Single event observed (LOW confidence); controlled test needed"
+    }
+  },
+  "exit_model": {
+    "basket_close": {
+      "condition": "total profit >= configurable hypothesis threshold",
+      "status": "PARTIAL",
+      "evidence_refs": [
+        "E016",
+        "E027"
+      ]
+    },
+    "emergency_close": {
+      "status": "UNKNOWN",
+      "evidence_refs": [
+        "E021"
+      ]
+    },
+    "partial_close": {
+      "status": "PARTIAL (existence verified, trigger UNKNOWN)",
+      "evidence_refs": [
+        "E025"
+      ]
+    }
+  },
+  "signal_generation": {
+    "strategy_type": "GRID_AVERAGING_BOTH_SIDES",
+    "signal_authority": "SNIPER (research/analysis authority)",
+    "entry_signal": {
+      "source": "cycle start condition (flat state)",
+      "direction": "BUY+SELL (both sides)",
+      "status": "VERIFIED"
+    },
+    "grid_add_signal": {
+      "source": "price crosses anchor-step per configured hypothesis",
+      "direction": "derived from side (BUY adds lower, SELL adds higher)",
+      "status": "PARTIAL (anchor hypothesis unresolved)"
+    },
+    "exit_signal": {
+      "source": "basket profit >= hypothesis threshold",
+      "status": "PARTIAL"
+    },
+    "note": "SNIPER generates research signals via Gateway; execution authority = OUR EA"
+  },
+  "uncertainty_policy": {
+    "default_behavior": [
+      "DO_NOT_GUESS",
+      "EMIT_MODEL_UNCERTAINTY",
+      "ENTER_SAFE_STATE",
+      "RECORD_EVIDENCE_GAP",
+      "CONTINUE_ONLY_WHEN_DETERMINISTIC"
+    ],
+    "unknown_rules": [
+      {
+        "id": "R-PARTIAL-TRIGGER",
+        "what": "partial close trigger condition",
+        "resolution": "tick-level data or controlled test"
+      },
+      {
+        "id": "R-PARTIAL-VOLUME",
+        "what": "partial close volume rule",
+        "resolution": "deal-level requested-vs-filled data"
+      },
+      {
+        "id": "R-EMERGENCY",
+        "what": "emergency mechanism",
+        "resolution": "observed emergency event or vendor documentation"
+      },
+      {
+        "id": "R-RESTART-RECOVERY",
+        "what": "V1.68 restart behavior",
+        "resolution": "controlled restart test (TEST_R spec ready)"
+      }
+    ]
+  },
+  "invariants": [
+    {
+      "id": "INV-001",
+      "rule": "Lot step validity: lot must be multiple of lot_step"
+    },
+    {
+      "id": "INV-002",
+      "rule": "No negative lot"
+    },
+    {
+      "id": "INV-003",
+      "rule": "Risk limits never bypassed"
+    },
+    {
+      "id": "INV-004",
+      "rule": "State transitions explicit only"
+    },
+    {
+      "id": "INV-005",
+      "rule": "Duplicate event idempotency"
+    },
+    {
+      "id": "INV-006",
+      "rule": "No direct MT5 execution from SNIPER"
+    },
+    {
+      "id": "INV-007",
+      "rule": "No LIVE execution"
+    },
+    {
+      "id": "INV-008",
+      "rule": "UNKNOWN behavior cannot become execution"
+    },
+    {
+      "id": "INV-009",
+      "rule": "Evidence hash integrity"
+    },
+    {
+      "id": "INV-010",
+      "rule": "Deterministic replay"
+    }
+  ],
+  "evidence_binding_summary": {
+    "total_rules": 16,
+    "verified": 8,
+    "partial": 3,
+    "unknown": 4,
+    "rejected": 1,
+    "all_traceable": true
+  }
+}

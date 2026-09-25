@@ -1,0 +1,44 @@
+{
+  "invariants": [
+    {
+      "id": "INV-001",
+      "rule": "Lot step validity: lot must be multiple of lot_step"
+    },
+    {
+      "id": "INV-002",
+      "rule": "No negative lot"
+    },
+    {
+      "id": "INV-003",
+      "rule": "Risk limits never bypassed"
+    },
+    {
+      "id": "INV-004",
+      "rule": "State transitions explicit only"
+    },
+    {
+      "id": "INV-005",
+      "rule": "Duplicate event idempotency"
+    },
+    {
+      "id": "INV-006",
+      "rule": "No direct MT5 execution from SNIPER"
+    },
+    {
+      "id": "INV-007",
+      "rule": "No LIVE execution"
+    },
+    {
+      "id": "INV-008",
+      "rule": "UNKNOWN behavior cannot become execution"
+    },
+    {
+      "id": "INV-009",
+      "rule": "Evidence hash integrity"
+    },
+    {
+      "id": "INV-010",
+      "rule": "Deterministic replay"
+    }
+  ]
+}

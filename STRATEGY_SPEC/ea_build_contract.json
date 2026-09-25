@@ -1,0 +1,61 @@
+{
+  "contract_version": "1.0.0",
+  "strategy_spec_version": "1.0.0",
+  "strategy_spec_hash": "5C0E69375A03D1BD587D77FF779AEDFD97D65E0D2825D96D20D86AAA457EB3D9",
+  "ea_status": "NOT_CREATED",
+  "required_architecture": {
+    "layers": [
+      "SNIPER",
+      "Strategy Spec",
+      "EA Build Contract",
+      "OUR EA",
+      "1144 Gateway",
+      "MT5"
+    ],
+    "authority": {
+      "SNIPER": "Research/Backtest/Evidence/Signal Authority",
+      "Gateway": "Transport/Event Bus",
+      "OUR_EA": "Strategy Enforcement/Risk/Execution Authority",
+      "MT5": "Trading Terminal"
+    }
+  },
+  "required_modules": [
+    "lot_engine",
+    "grid_engine",
+    "basket_engine",
+    "partial_engine",
+    "state_machine",
+    "risk_guard",
+    "execution_adapter",
+    "persistence",
+    "recovery",
+    "event_ledger",
+    "gateway_client",
+    "market_data_feed",
+    "reconciliation"
+  ],
+  "required_parameters": "See parameter_spec.json",
+  "state_machine_version": "1.0",
+  "safety_requirements": [
+    "LIVE permanently locked until human decision",
+    "No direct MT5 execution from SNIPER",
+    "Risk guard cannot be bypassed",
+    "UNKNOWN behavior → MODEL_UNCERTAINTY + safe state",
+    "Duplicate event idempotency",
+    "Deterministic replay required"
+  ],
+  "test_requirements": [
+    "All VERIFIED rules must pass replay consistency",
+    "All UNKNOWN rules must emit MODEL_UNCERTAINTY",
+    "All PARTIAL rules must not silently choose unsupported behavior",
+    "State machine must reject implicit transitions",
+    "Risk guard must block violations",
+    "Restart recovery must pass 8 scenarios",
+    "E2E signal flow must pass"
+  ],
+  "compatibility_requirements": {
+    "strategy_spec_hash": "5C0E69375A03D1BD587D77FF779AEDFD97D65E0D2825D96D20D86AAA457EB3D9",
+    "evidence_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+    "backward_compatible": true
+  }
+}

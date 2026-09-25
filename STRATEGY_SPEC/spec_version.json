@@ -1,0 +1,17 @@
+{
+  "strategy_id": "SNIPER-V168-STRATEGY-SPEC",
+  "spec_version": "1.0.0",
+  "schema_version": "1.0.0",
+  "evidence_model_version": "V1.68-EVIDENCE-MODEL-v1.0",
+  "evidence_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
+  "strategy_spec_hash": "5C0E69375A03D1BD587D77FF779AEDFD97D65E0D2825D96D20D86AAA457EB3D9",
+  "parameter_spec_hash": "A03F61F2C6FE76FB506789BAD8297C4EF9503F6523FD793ED83DD1EACFE6A9B3",
+  "evidence_binding_hash": "67D472DE0BAC0C4FAED218E8EFF10266D41AE7C8F7D1FB41CC22CCAFA9D74CD8",
+  "ea_build_contract_hash": "2831252BD17CC7717D16BCF8DED95C321537A544F17A328AABABA8E8341BA5D0",
+  "created_from_commit": "9ebb0ce2cf62d0938543f8bb0abfc0c3b5b30252",
+  "generated_at": "2026-09-25T09:14:28",
+  "compatibility": {
+    "semantic_versioning": "MAJOR.MINOR.PATCH",
+    "breaking_change_rule": "Any VERIFIED rule change = MAJOR"
+  }
+}

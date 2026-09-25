@@ -1,0 +1,344 @@
+{
+  "bindings": [
+    {
+      "rule_id": "R-ACCUM-1-68",
+      "rule_name": "AccumulatorTargetUSD = 1.68 (per basket)",
+      "status": "REJECTED",
+      "evidence_refs": [
+        "E027"
+      ],
+      "candidate_refs": [
+        "MC-006"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-BASE-LOT",
+      "rule_name": "Base Lot = 0.10",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E015"
+      ],
+      "candidate_refs": [
+        "MC-008"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-BASKET-TRIGGER",
+      "rule_name": "Basket Trigger Semantics",
+      "status": "PARTIAL",
+      "evidence_refs": [
+        "E016",
+        "E027"
+      ],
+      "candidate_refs": [
+        "MC-006"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-BOTH-SIDES",
+      "rule_name": "Both-Sides Initial Exposure",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E015"
+      ],
+      "candidate_refs": [
+        "MC-004"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-CONTRACT-SIZE",
+      "rule_name": "Contract Size GOLDmicro = 1.0",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E019"
+      ],
+      "candidate_refs": [
+        "-(owner)"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-EMERGENCY",
+      "rule_name": "Emergency Mechanism",
+      "status": "UNKNOWN",
+      "evidence_refs": [
+        "E021"
+      ],
+      "candidate_refs": [
+        "-(rule)"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-GRID-DIRECTION",
+      "rule_name": "Grid Direction (BUY down / SELL up)",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E014"
+      ],
+      "candidate_refs": [
+        "MC-003"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-GRID-SPACING",
+      "rule_name": "Grid Spacing ~= 5 USD",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E013"
+      ],
+      "candidate_refs": [
+        "MC-002"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-GRID-TRIGGER",
+      "rule_name": "Grid Trigger Semantics",
+      "status": "PARTIAL",
+      "evidence_refs": [
+        "E026"
+      ],
+      "candidate_refs": [
+        "-(rule)"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-LOT-FLOOR",
+      "rule_name": "Lot Formula (floor ladder)",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E012",
+        "E028"
+      ],
+      "candidate_refs": [
+        "MC-001"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-NORMAL-RESUME",
+      "rule_name": "Normal Resume (<=2s)",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E018"
+      ],
+      "candidate_refs": [
+        "MC-007"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-PARTIAL-EXISTS",
+      "rule_name": "Partial Close EXISTS (deal-level)",
+      "status": "VERIFIED",
+      "evidence_refs": [
+        "E025"
+      ],
+      "candidate_refs": [
+        "MC-009"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-PARTIAL-LEVEL",
+      "rule_name": "Partial Level Rule",
+      "status": "PARTIAL",
+      "evidence_refs": [
+        "E025"
+      ],
+      "candidate_refs": [
+        "MC-009"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-PARTIAL-TRIGGER",
+      "rule_name": "Partial Trigger",
+      "status": "UNKNOWN",
+      "evidence_refs": [
+        "E025"
+      ],
+      "candidate_refs": [
+        "-(rule)"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-PARTIAL-VOLUME",
+      "rule_name": "Partial Volume Rule",
+      "status": "UNKNOWN",
+      "evidence_refs": [
+        "E025"
+      ],
+      "candidate_refs": [
+        "-(rule)"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    },
+    {
+      "rule_id": "R-RESTART-RECOVERY",
+      "rule_name": "Restart Recovery",
+      "status": "UNKNOWN",
+      "evidence_refs": [
+        "E022"
+      ],
+      "candidate_refs": [
+        "-(rule)"
+      ],
+      "implementation_refs": [
+        "core/our_ea/"
+      ],
+      "test_refs": [
+        "tests/our_ea/"
+      ],
+      "replay_refs": [
+        "core/our_ea/replay.py"
+      ],
+      "chain_complete": true
+    }
+  ],
+  "total_rules": 16,
+  "complete_chains": 16
+}

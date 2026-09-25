@@ -1,0 +1,771 @@
+{
+  "state_machine_version": "1.0",
+  "states": [
+    "IDLE",
+    "INITIALIZING",
+    "WAITING_FOR_ENTRY",
+    "LONG_ACTIVE",
+    "SHORT_ACTIVE",
+    "BOTH_SIDES_ACTIVE",
+    "GRID_ACTIVE",
+    "PARTIAL_CLOSE_PENDING",
+    "BASKET_CLOSE_PENDING",
+    "CLOSING",
+    "CLOSED",
+    "PAUSED",
+    "DISCONNECTED",
+    "RECOVERY",
+    "UNCERTAIN",
+    "ERROR",
+    "SAFE_STOP"
+  ],
+  "state_count": 17,
+  "transitions": [
+    {
+      "from": "BASKET_CLOSE_PENDING",
+      "event": "CLOSE_FAIL",
+      "to": "UNCERTAIN",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BASKET_CLOSE_PENDING",
+      "event": "CLOSE_START",
+      "to": "CLOSING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BASKET_CLOSE_PENDING",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BASKET_CLOSE_PENDING",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BOTH_SIDES_ACTIVE",
+      "event": "ALL_ENTRIES_FAILED",
+      "to": "WAITING_FOR_ENTRY",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BOTH_SIDES_ACTIVE",
+      "event": "BASKET_INTENT",
+      "to": "BASKET_CLOSE_PENDING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BOTH_SIDES_ACTIVE",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BOTH_SIDES_ACTIVE",
+      "event": "GRID_ADD",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BOTH_SIDES_ACTIVE",
+      "event": "PARTIAL_INTENT",
+      "to": "PARTIAL_CLOSE_PENDING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "BOTH_SIDES_ACTIVE",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSED",
+      "event": "CYCLE_STOP",
+      "to": "IDLE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSED",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSED",
+      "event": "RESUME_NEW_CYCLE",
+      "to": "WAITING_FOR_ENTRY",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSED",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSING",
+      "event": "CLOSED_ALL",
+      "to": "CLOSED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSING",
+      "event": "CLOSE_FAIL",
+      "to": "UNCERTAIN",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSING",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "CLOSING",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "DISCONNECTED",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "ERROR",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "ERROR",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "GRID_ACTIVE",
+      "event": "ALL_ENTRIES_FAILED",
+      "to": "WAITING_FOR_ENTRY",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "GRID_ACTIVE",
+      "event": "BASKET_INTENT",
+      "to": "BASKET_CLOSE_PENDING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "GRID_ACTIVE",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "GRID_ACTIVE",
+      "event": "GRID_ADD",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "GRID_ACTIVE",
+      "event": "PARTIAL_INTENT",
+      "to": "PARTIAL_CLOSE_PENDING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "GRID_ACTIVE",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "IDLE",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "IDLE",
+      "event": "INIT",
+      "to": "INITIALIZING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "IDLE",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "INITIALIZING",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "INITIALIZING",
+      "event": "INIT_FAIL",
+      "to": "ERROR",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "INITIALIZING",
+      "event": "INIT_OK",
+      "to": "WAITING_FOR_ENTRY",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "INITIALIZING",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "LONG_ACTIVE",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "LONG_ACTIVE",
+      "event": "GRID_ADD",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "LONG_ACTIVE",
+      "event": "OPEN_SHORT",
+      "to": "BOTH_SIDES_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "LONG_ACTIVE",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PARTIAL_CLOSE_PENDING",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PARTIAL_CLOSE_PENDING",
+      "event": "PARTIAL_DONE",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PARTIAL_CLOSE_PENDING",
+      "event": "PARTIAL_FAIL",
+      "to": "UNCERTAIN",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PARTIAL_CLOSE_PENDING",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PAUSED",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PAUSED",
+      "event": "RESUME",
+      "to": "WAITING_FOR_ENTRY",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "PAUSED",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "RECOVERY",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "RECOVERY",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "SHORT_ACTIVE",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "SHORT_ACTIVE",
+      "event": "GRID_ADD",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "SHORT_ACTIVE",
+      "event": "OPEN_LONG",
+      "to": "BOTH_SIDES_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "SHORT_ACTIVE",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "UNCERTAIN",
+      "event": "BASKET_INTENT",
+      "to": "BASKET_CLOSE_PENDING",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "UNCERTAIN",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "UNCERTAIN",
+      "event": "GRID_ADD",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "UNCERTAIN",
+      "event": "RESOLVED_CONTINUE",
+      "to": "GRID_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "UNCERTAIN",
+      "event": "RESOLVED_SAFE",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "UNCERTAIN",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "CONFIGURED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "WAITING_FOR_ENTRY",
+      "event": "DISCONNECT",
+      "to": "DISCONNECTED",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "WAITING_FOR_ENTRY",
+      "event": "OPEN_BOTH",
+      "to": "BOTH_SIDES_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "WAITING_FOR_ENTRY",
+      "event": "OPEN_LONG",
+      "to": "LONG_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "WAITING_FOR_ENTRY",
+      "event": "OPEN_SHORT",
+      "to": "SHORT_ACTIVE",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    },
+    {
+      "from": "WAITING_FOR_ENTRY",
+      "event": "SAFE_STOP",
+      "to": "SAFE_STOP",
+      "guard": "declared in TRANSITIONS table",
+      "action": "state change + audit log",
+      "status": "VERIFIED",
+      "evidence_refs": [],
+      "test_refs": [
+        "tests/our_ea/test_our_ea.py::TestStateMachine"
+      ]
+    }
+  ],
+  "transition_count": 62,
+  "invariant": "No implicit transitions; undeclared transition raises InvalidTransition"
+}

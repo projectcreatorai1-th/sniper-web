@@ -1,0 +1,366 @@
+{
+  "parameters": [
+    {
+      "parameter_id": "PARAM-LOT-BASE",
+      "name": "BaseLot",
+      "type": "float",
+      "unit": "lots",
+      "value": 0.1,
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E015"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-LOT-MULT",
+      "name": "LotMultiplier",
+      "type": "float",
+      "unit": "ratio",
+      "value": 1.1,
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E012",
+        "E028"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-LOT-STEP",
+      "name": "LotStep",
+      "type": "float",
+      "unit": "lots",
+      "value": 0.01,
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E012"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-LOT-ROUNDING",
+      "name": "LotRounding",
+      "type": "enum",
+      "unit": "mode",
+      "value": "FLOOR",
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E012",
+        "E028"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": "floor to step, NOT round-half-up (MC-001 confirmed)"
+    },
+    {
+      "parameter_id": "PARAM-GRID-STEP",
+      "name": "GridStepUSD",
+      "type": "float",
+      "unit": "USD",
+      "value": 5.0,
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E013"
+      ],
+      "default": null,
+      "allowed_range": {
+        "min": 1.0,
+        "max": 50.0
+      },
+      "configurable": true,
+      "notes": "Nominal value; observed distribution median 5.09"
+    },
+    {
+      "parameter_id": "PARAM-GRID-ANCHOR",
+      "name": "GridTriggerHypothesis",
+      "type": "enum",
+      "unit": "hypothesis_id",
+      "value": "H_PREV_ENTRY",
+      "status": "PARTIAL",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E026"
+      ],
+      "default": null,
+      "allowed_range": [
+        "H_PREV_ENTRY",
+        "H_EXTREME"
+      ],
+      "configurable": true,
+      "notes": "Hypotheses indistinguishable; selection is a declared config choice"
+    },
+    {
+      "parameter_id": "PARAM-GRID-BUY-DIR",
+      "name": "GridBuyDirection",
+      "type": "enum",
+      "unit": "direction",
+      "value": "DOWN",
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E014"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-GRID-SELL-DIR",
+      "name": "GridSellDirection",
+      "type": "enum",
+      "unit": "direction",
+      "value": "UP",
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E014"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-BASKET-TRIGGER",
+      "name": "BasketCloseHypothesis",
+      "type": "enum",
+      "unit": "hypothesis_id",
+      "value": "H_GROSS_1_00",
+      "status": "PARTIAL",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E016",
+        "E027"
+      ],
+      "default": null,
+      "allowed_range": [
+        "H_GROSS_1_00",
+        "H_PER_LOT_0_50",
+        "H_PER_LOT_0_85"
+      ],
+      "configurable": true,
+      "notes": "3 compatible hypotheses; H_GROSS_1_68 REJECTED"
+    },
+    {
+      "parameter_id": "PARAM-PARTIAL-ENABLED",
+      "name": "PartialCloseEnabled",
+      "type": "boolean",
+      "unit": "bool",
+      "value": false,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": "Trigger/volume UNKNOWN; disabled by default per safety policy"
+    },
+    {
+      "parameter_id": "PARAM-RISK-MAX-LOSS",
+      "name": "MaxLossUSD",
+      "type": "float",
+      "unit": "USD",
+      "value": 50.0,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-MAX-DD",
+      "name": "MaxDrawdownPct",
+      "type": "float",
+      "unit": "percent",
+      "value": 30.0,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-MAX-DEPTH",
+      "name": "MaxGridDepth",
+      "type": "int",
+      "unit": "levels",
+      "value": 12,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-MAX-POS",
+      "name": "MaxPositions",
+      "type": "int",
+      "unit": "count",
+      "value": 12,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-MAX-LOT",
+      "name": "MaxTotalLot",
+      "type": "float",
+      "unit": "lots",
+      "value": 2.0,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-MAX-SPREAD",
+      "name": "MaxSpreadUSD",
+      "type": "float",
+      "unit": "USD",
+      "value": 0.6,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-CONSEC-FAIL",
+      "name": "MaxConsecutiveFailures",
+      "type": "int",
+      "unit": "count",
+      "value": 3,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-RISK-TICK-VOL",
+      "name": "MaxTickVolatilityUSD",
+      "type": "float",
+      "unit": "USD",
+      "value": 25.0,
+      "status": "CONFIGURED",
+      "source": "our_ea_policy",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-STATE-INITIAL",
+      "name": "InitialState",
+      "type": "enum",
+      "unit": "state",
+      "value": "IDLE",
+      "status": "CONFIGURED",
+      "source": "our_ea_implementation",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-CONTRACT-SIZE",
+      "name": "ContractSize",
+      "type": "float",
+      "unit": "ratio",
+      "value": 1.0,
+      "status": "VERIFIED",
+      "source": "frozen_evidence_model",
+      "evidence_refs": [
+        "E019"
+      ],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-CONTRACT-STEP",
+      "name": "PriceDigits",
+      "type": "int",
+      "unit": "digits",
+      "value": 2,
+      "status": "CONFIGURED",
+      "source": "our_ea_config",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    },
+    {
+      "parameter_id": "PARAM-GW-ENDPOINT",
+      "name": "GatewayEndpoint",
+      "type": "string",
+      "unit": "url",
+      "value": "",
+      "status": "CONFIGURED",
+      "source": "our_ea_config",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": "No hardcoded production endpoint"
+    },
+    {
+      "parameter_id": "PARAM-GW-HEARTBEAT",
+      "name": "HeartbeatIntervalSec",
+      "type": "float",
+      "unit": "seconds",
+      "value": 30.0,
+      "status": "CONFIGURED",
+      "source": "our_ea_config",
+      "evidence_refs": [],
+      "default": null,
+      "allowed_range": null,
+      "configurable": false,
+      "notes": ""
+    }
+  ],
+  "summary": {
+    "total": 23,
+    "verified": 8,
+    "partial": 2,
+    "configured": 13,
+    "unknown": 0
+  }
+}
