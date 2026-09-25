@@ -5,7 +5,7 @@
     "schema_version": "1.0.0",
     "evidence_model_version": "V1.68-EVIDENCE-MODEL-v1.0",
     "evidence_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
-    "generated_from_commit": "9ebb0ce2cf62d0938543f8bb0abfc0c3b5b30252"
+    "generated_from_commit": "b7c87b426c73630b62c59ea7673e3ac872f2de19"
   },
   "symbol_scope": {
     "symbol": "GOLDmicro",
