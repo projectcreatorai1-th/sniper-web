@@ -3,3 +3,6 @@ __pycache__/
 *.pid
 data/
 .web_upload/
+
+# local security-scanner state
+.mimosa/

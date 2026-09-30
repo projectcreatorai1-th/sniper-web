@@ -1,7 +1,7 @@
 {
   "contract_version": "1.0.0",
   "strategy_spec_version": "1.0.0",
-  "strategy_spec_hash": "4648DFBB8AD54B8274EB5F81C87EA47F5AEE18DF7F90DAB1A90099B6F0E7C89E",
+  "strategy_spec_hash": "68C5E07EA63C3842C8BDEFF956604C84081D706496833A91340062B6B0D25C37",
   "ea_status": "NOT_CREATED",
   "required_architecture": {
     "layers": [
@@ -54,7 +54,7 @@
     "E2E signal flow must pass"
   ],
   "compatibility_requirements": {
-    "strategy_spec_hash": "4648DFBB8AD54B8274EB5F81C87EA47F5AEE18DF7F90DAB1A90099B6F0E7C89E",
+    "strategy_spec_hash": "68C5E07EA63C3842C8BDEFF956604C84081D706496833A91340062B6B0D25C37",
     "evidence_model_hash": "124F08984284E880F268C37E6A4583A8653B5EB1B80EB5C45BBB64F58AC3D4AE",
     "backward_compatible": true
   }

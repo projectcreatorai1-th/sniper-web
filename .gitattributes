@@ -1,0 +1,6 @@
+# Frozen artifacts are hash-pinned over their original CRLF worktree bytes
+# (sidecar .sha256.txt files). Force CRLF on checkout everywhere — including
+# Linux CI — so raw-byte hash verification is identical on every platform.
+# Commits normalize CRLF back to LF, so the stored blobs never change.
+data/evidence_model/** text eol=crlf
+data/our_ea/** text eol=crlf
